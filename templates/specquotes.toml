@@ -1,0 +1,28 @@
+# greatspectations spec-quote drift config for cashu-cf
+#
+# Tool: https://github.com/rustyrussell/greatspectations
+# Spec: https://github.com/cashubtc/nuts (Cashu NUT specifications)
+#
+# Comment marker syntax in TypeScript source:
+#   // NUT #07: <verbatim spec quote>
+#   // NUT #07/Section Hint: <quote with disambiguation>
+#   // ... <continuation: must immediately follow previous quote from this source>
+#
+# Setup (one-time, local):
+#   git clone --depth=1 https://github.com/cashubtc/nuts.git nuts
+#   pip install git+https://github.com/rustyrussell/greatspectations.git
+#
+# Run:
+#   npm run spec:check     # exit 0 = all quotes match, exit 1 = drift detected
+#   npm run spec:coverage  # reports uncovered MUST/SHOULD clauses
+
+[sources.NUT]
+format = "markdown"
+dir = "nuts"
+pattern = "{id:02d}.md"
+# comment_marker defaults to "NUT" (uppercase of source name)
+
+[sources.errors]
+format = "markdown"
+file = "nuts/error_codes.md"
+# comment_marker defaults to "ERRORS" (uppercase of source name)
