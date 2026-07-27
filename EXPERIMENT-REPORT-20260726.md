@@ -1,20 +1,24 @@
 # Cashu Multi-Implementation Audit Experiment — Final Report
 
 > **Date**: 2026-07-26
-> **Duration**: ~8 hours
+> **Duration**: ~10 hours
 > **Auditor**: GLM-5.2 in opencode (Sisyphus agent)
-> **Scope**: 3 Cashu implementations × 3-layer audit framework
+> **Scope**: 4 Cashu implementations × 3-layer audit framework
+> **Updated**: v0.17.3 audit + Nutshell post-quote audit + gonuts-tollgate
 
 ## Executive Summary
 
 We built and validated a 3-layer spec compliance audit framework for the Cashu ecosystem, applying it across 3 implementations (cashu-cf, CDK, Nutshell). The framework uses greatspectations for mechanical spec-quote drift detection (Layer 1), inline reference-implementation notes for cross-impl awareness (Layer 2), and reusable AI audit prompts for deep semantic review (Layer 3).
 
 **Key results**:
-- **375 spec-quote comments** across 3 implementations (all pass mechanical verification)
-- **55+ AI audit signoffs** covering 21+ NUTs per implementation
+- **390 spec-quote comments** across 3 implementations (all pass mechanical verification)
+- **59 AI audit signoffs** covering 21+ NUTs per implementation
 - **2 spec violations found** in CDK (both also present in Nutshell)
 - **CDK #2252 found 75% outdated** — 6 of 8 documented divergences don't match current Nutshell code
 - **1 real bug fixed** in cashu-cf (ISSUE-023: NUT-04 output validation `===` vs `<=`)
+- **v0.17.3 audit: PASS** — no regressions vs v0.15.1, quote discipline improved
+- **Nutshell post-quote audit: PASS** — 51/52 quotes accurate, 0 new findings from quotes
+- **All 3 implementations audited with quotes in place** — quotes improve traceability but don't reveal hidden bugs
 
 ## What was built
 
@@ -22,10 +26,11 @@ We built and validated a 3-layer spec compliance audit framework for the Cashu e
 
 | Implementation | Language | Quotes | Comment style | CI | Repo |
 |---|---|---|---|---|---|
-| cashu-cf | TypeScript | 121 | `// NUT #NN:` | ✅ Blocking | [Amperstrand/cashu-cf](https://github.com/Amperstrand/cashu-cf) main |
-| CDK (experiment) | Rust | 125 | `// NUT #NN:` + `// BIP #NN:` | ✅ Non-blocking | [Amperstrand/cdk](https://github.com/Amperstrand/cdk) `experiment/greatspectations-audit` |
+| cashu-cf | TypeScript | 124 | `// NUT #NN:` | ✅ Blocking | [Amperstrand/cashu-cf](https://github.com/Amperstrand/cashu-cf) main |
+| CDK v0.15.1 (experiment) | Rust | 125 | `// NUT #NN:` + `// BIP #NN:` | ✅ Non-blocking | [Amperstrand/cdk](https://github.com/Amperstrand/cdk) `experiment/greatspectations-audit` |
+| CDK v0.17.3 (experiment) | Rust | 137 | `// NUT #NN:` + `// BIP #NN:` | ✅ Non-blocking | [Amperstrand/cdk](https://github.com/Amperstrand/cdk) `experiment/greatspectations-v0.17.3` |
 | Nutshell (experiment) | Python | 129 | `# NUT #NN:` | ✅ Non-blocking | [Amperstrand/nutshell](https://github.com/Amperstrand/nutshell) `experiment/greatspectations-audit` |
-| **Total** | 3 languages | **375** | 2 comment styles | 3 CI workflows | 3 repos |
+| **Total** | 3 languages | **390** (515 with both CDK versions) | 2 comment styles | 4 CI workflows | 4 branches |
 
 **Spec sources covered**: Cashu NUTs (markdown, 31 specs), Bitcoin BIPs (mediawiki, BIP-340 + BIP-39).
 
@@ -43,9 +48,10 @@ Inline `// REF-CDK:` / `// REF-NUTSHELL:` / `# REF-CDK:` / `# REF-NUTSHELL:` com
 
 | Artifact | Count | Description |
 |---|---|---|
-| Audit signoffs | 55+ | Per-NUT per-implementation verdicts with file:line evidence |
+| Audit signoffs | 59 | Per-NUT per-implementation verdicts with file:line evidence |
 | Cross-impl comparisons | 10+ | NUT-00 through NUT-09 showing where impls agree/diverge |
-| Audit prompts | 3 | NUT-04, NUT-10-11-14, general NUT-XX template |
+| Post-quote audits | 3 | CDK v0.15.1, CDK v0.17.3, Nutshell — all with quotes in place |
+| Audit prompts | 4 | NUT-04, NUT-10-11-14, general template, release audit runbook |
 | Divergence database | 3 | NUT-10-11-14 corrected table, CDK #2252 finding, CDK violation analysis |
 | Learnings doc | 1 | Patterns, friction points, adoption guide |
 | Templates | 2 | specquotes.toml, spec-quotes-guide |
