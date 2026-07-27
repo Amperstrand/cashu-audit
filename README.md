@@ -16,10 +16,18 @@ A neutral, implementation-agnostic framework for auditing Cashu implementations 
 
 | Implementation | Language | Layer 1 status | Layer 3 audits |
 |---|---|---|---|
-| **cashu-cf** | TypeScript | 127 quotes (19 NUTs), spec:check exit 0 | 17 NUTs audited (267 requirements: 207 ✅ / 38 ⚠️ / 22 ❌) |
-| **cashubtc/cdk** | Rust | Pending adoption | Pending |
-| **cashubtc/nutshell** | Python | Pending adoption | Pending |
+| **cashu-cf** | TypeScript | 124 quotes (18 NUTs), spec:check exit 0 | 14 signoffs (NUT-00-09, 10/11/14, 19-23) |
+| **cashubtc/cdk** | Rust | 137 quotes (v0.17.3), spec:check exit 0 | 16 signoffs + post-quote audit |
+| **cashubtc/nutshell** | Python | 129 quotes (21 NUTs), spec:check exit 0 | 15 signoffs + post-quote audit |
 | **gonuts-tollgate** | Go | 85 quotes (16 NUTs), spec:check exit 0 | Pending |
+| **micronuts** | Rust (embedded) | Pending adoption | Pending |
+
+### Key insight from post-quote audits
+
+greatspectations quotes **don't find new bugs** — they make existing audit findings more precise, measurable, and sustainable over time. The value is in **CI-enforced drift prevention**, not one-time discovery. Across 3 post-quote audits (CDK v0.15.1, CDK v0.17.3, Nutshell), zero new findings were attributed to the presence of quotes. However, quotes improved:
+1. **Precision** — spec text anchored at the exact code location
+2. **Measurability** — coverage gaps quantified via `spectate coverage`
+3. **Sustainability** — CI catches future drift automatically
 
 ## Quick start
 
