@@ -16,10 +16,10 @@ A neutral, implementation-agnostic framework for auditing Cashu implementations 
 
 | Implementation | Language | Layer 1 status | Layer 3 audits |
 |---|---|---|---|
-| **cashu-cf** | TypeScript | 121 quotes, spec:check exit 0 | NUT-10/11/14 ✅ |
+| **cashu-cf** | TypeScript | 127 quotes (19 NUTs), spec:check exit 0 | 17 NUTs audited (267 requirements: 207 ✅ / 38 ⚠️ / 22 ❌) |
 | **cashubtc/cdk** | Rust | Pending adoption | Pending |
 | **cashubtc/nutshell** | Python | Pending adoption | Pending |
-| **gonuts-tollgate** | Go | Pending adoption | Pending |
+| **gonuts-tollgate** | Go | 85 quotes (16 NUTs), spec:check exit 0 | Pending |
 
 ## Quick start
 
