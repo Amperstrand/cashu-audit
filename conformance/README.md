@@ -86,11 +86,24 @@ conformance/
 
 ## Findings
 
-### cashu-cf (testnut.cashu.exchange)
+### cashu-cf (testnut.cashu.exchange) — 43/54 PASS (80%)
 
-- **FAIL** `p2pk_locktime_after_expiry_primary_still_works` — drops primary
-  P2PK pathway after locktime expiry. Same bug as [nutshell #1009](https://github.com/cashubtc/nutshell/issues/1009).
-  NUT-11 says primary conditions "continue to apply" after locktime.
+4 distinct bugs found. See [reports/FINDINGS-testnut-20260728.md](reports/FINDINGS-testnut-20260728.md) for full details.
+
+**Bug #1: P2PK primary pathway dropped after locktime** (3 failures)
+Same bug as [nutshell #1009](https://github.com/cashubtc/nutshell/issues/1009).
+NUT-11 says primary conditions "continue to apply" after locktime expiry.
+
+**Bug #2: HTLC receiver path fails after locktime** (2 failures)
+Same pathway independence bug — receiver/preimage path dropped after locktime.
+
+**Bug #3: HTLC refund requires preimage** (2 failures)
+NUT-14 refund path should work with refund signatures only. cashu-cf
+incorrectly requires a preimage.
+
+**Bug #4: HTLC + SIG_ALL signature verification broken** (4 failures)
+Zero valid signatures returned for HTLC + SIG_ALL proofs. P2PK + SIG_ALL
+works correctly. Bug is specific to HTLC + SIG_ALL code path.
 
 ## Future: Wallet auditing
 
