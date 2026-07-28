@@ -56,6 +56,9 @@ class MintClient:
             raise RuntimeError(f"swap failed ({code}): {data}")
         return data
 
+    def try_swap(self, inputs: list[dict], outputs: list[dict]) -> tuple[int, dict | str]:
+        return self._post("/v1/swap", {"inputs": inputs, "outputs": outputs})
+
     def melt_quote(self, invoice: str, unit: str = "sat") -> dict:
         code, data = self._post("/v1/melt/quote/bolt11", {"request": invoice, "unit": unit})
         if code != 200:

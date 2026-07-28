@@ -35,7 +35,7 @@ def pubkey_neg(pub: PublicKey) -> PublicKey:
 
 
 def pubkey_add(a: PublicKey, b: PublicKey) -> PublicKey:
-    return a.combine_keys([b])
+    return a.combine([b])
 
 
 def pubkey_mul(pub: PublicKey, scalar_hex: str) -> PublicKey:

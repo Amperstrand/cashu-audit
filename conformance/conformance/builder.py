@@ -215,13 +215,7 @@ class ProofBuilder:
         signatures = result.get("signatures", [])
 
         keyset_id, keys = self.get_active_keyset()
-        mint_pubkey_hex = keys.get(1, "")
-        if not mint_pubkey_hex:
-            info = self.mint.get_keys(keyset_id)
-            ks_keys = info.get("keysets", {}).get(keyset_id, {})
-            mint_pubkey_hex = ks_keys.get("1", ks_keys.get("0", ""))
-
-        return self.unblind_signatures(signatures, outputs, mint_pubkey_hex)
+        return self.unblind_signatures(signatures, outputs, keys)
 
     def sign_p2pk_witness(self, proofs: list[Proof], keypair: KeyPair) -> str:
         import json as _json
