@@ -96,3 +96,13 @@ V4 decode error overwritten by V3 fallback error. Users see "invalid V3 token" f
 Audited by **GLM-5.2** in **opencode** on **2026-07-28**.
 Target: OpenTollGate/gonuts-tollgate @ opentollgate/main (997bb03)
 Previous audit: 2026-07-26 against Amperstrand fork (386aaf2)
+
+---
+
+## Post-Fix Update #2 (2026-07-28 15:30)
+
+### NUT-14 HTLC Signature Bypass → ✅ FIXED
+
+**Fix**: PR #18 on OpenTollGate/gonuts-tollgate. Changed `AddWitnessHTLC` and `VerifyHTLCProof` to require signatures when `pubkeys` are present, even if `n_sigs` is not explicitly set. Defaults to `n_sigs = 1` when pubkeys present but n_sigs omitted.
+
+**Updated verdict**: PASS ✅

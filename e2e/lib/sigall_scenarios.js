@@ -87,7 +87,7 @@ async function createSIGALLProofs(e2e, count, config) {
  * Try a SIG_ALL swap with correct message format.
  * Pre-computes outputs, builds spec-compliant message, signs it.
  */
-async function trySIGALLSwapWithMessage(e2e, proofs, keysetId, secretStr, alice) {
+async function trySIGALLSwapWithMessage(e2e, proofs, keysetId, secretStr, signer, opts = {}) {
   const keysets = await e2e.getKeysets();
   const ksInfo = keysets.keysets.find(k => k.id === keysetId);
   const feePpk = ksInfo?.input_fee_ppk || 0;
@@ -95,7 +95,6 @@ async function trySIGALLSwapWithMessage(e2e, proofs, keysetId, secretStr, alice)
   const fee = Math.ceil((proofs.length * feePpk) / 1000);
   const outputTotal = Math.max(1, totalInput - fee);
 
-  // Pre-compute outputs FIRST so we know B_ values
   const outputs = [];
   for (const amt of decomposeAmount(outputTotal)) {
     const secret = bytesToHex(randomBytes(32));
@@ -103,47 +102,46 @@ async function trySIGALLSwapWithMessage(e2e, proofs, keysetId, secretStr, alice)
     outputs.push({ amount: amt, id: keysetId, B_: bytesToHex(blinded.B_.toRawBytes(true)) });
   }
 
-  // Build ALL candidate messages the mint might try
   const messages = [];
-
-  // Format 1: Spec — secrets + C's + amounts + B_'s
   let specMsg = '';
   for (const p of proofs) { specMsg += p.secret; specMsg += p.C; }
   for (const o of outputs) { specMsg += String(o.amount); specMsg += o.B_; }
   messages.push(specMsg);
 
-  // Format 2: Legacy Nutshell — secrets + B_'s (no C's, no amounts)
   let legacyMsg = '';
   for (const p of proofs) { legacyMsg += p.secret; }
   for (const o of outputs) { legacyMsg += o.B_; }
   messages.push(legacyMsg);
 
-  // Format 3: Secrets only (simplest)
   let secretsOnly = proofs.map(p => p.secret).join('');
   messages.push(secretsOnly);
 
-  // Try each message format — sign with whichever the alice provides
-  let bestWitness = null;
   for (const msg of messages) {
-    try {
-      const sig = alice ? schnorrSign(msg, alice.priv) : null;
-      const witness = sig ? JSON.stringify({ signatures: [sig] }) : undefined;
-      const swapInputs = proofs.map((p, i) => {
-        const input = { amount: p.amount, secret: p.secret, C: p.C, id: p.id };
-        if (i === 0 && witness !== undefined) input.witness = witness;
-        return input;
-      });
+    const sig = signer ? schnorrSign(msg, signer.priv) : null;
+    let witnessObj = {};
+    if (opts.preimage) witnessObj.preimage = opts.preimage;
+    if (sig) witnessObj.signatures = [sig];
+    const witness = Object.keys(witnessObj).length > 0 ? JSON.stringify(witnessObj) : undefined;
 
-      const resp = await e2e.http('POST', '/v1/swap', { inputs: swapInputs, outputs });
-      if (resp.status === 200) {
-        return { accepted: true, status: resp.status, data: resp.data, message: msg.slice(0, 40) };
-      }
-    } catch (e) { /* try next format */ }
+    if (witness === undefined && !opts.allowNoWitness) continue;
+
+    const swapInputs = proofs.map((p, i) => {
+      const input = { amount: p.amount, secret: p.secret, C: p.C, id: p.id };
+      if (i === 0 && witness !== undefined) input.witness = witness;
+      return input;
+    });
+
+    const resp = await e2e.http('POST', '/v1/swap', { inputs: swapInputs, outputs });
+    if (resp.status === 200) {
+      return { accepted: true, status: resp.status, data: resp.data, message: msg.slice(0, 40) };
+    }
   }
 
-  // If none worked, try one more time with the spec format to get the error
-  const specSig = alice ? schnorrSign(messages[0], alice.priv) : null;
-  const witness = specSig ? JSON.stringify({ signatures: [specSig] }) : undefined;
+  const sig = signer ? schnorrSign(messages[0], signer.priv) : null;
+  let witnessObj = {};
+  if (opts.preimage) witnessObj.preimage = opts.preimage;
+  if (sig) witnessObj.signatures = [sig];
+  const witness = Object.keys(witnessObj).length > 0 ? JSON.stringify(witnessObj) : undefined;
   const swapInputs = proofs.map((p, i) => {
     const input = { amount: p.amount, secret: p.secret, C: p.C, id: p.id };
     if (i === 0 && witness !== undefined) input.witness = witness;
@@ -256,7 +254,7 @@ async function scenario_htlc_sigall_preimage_only_succeeds(e2e) {
   const hashLock = bytesToHex(sha256(hexToBytes(preimage)));
   const secret = JSON.stringify(['HTLC', { nonce: 'ff'.repeat(8), data: hashLock, tags: [['sigflag', 'SIG_ALL']] }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, null);
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, null, { preimage });
   return {
     name: 'htlc_sigall_preimage_only_succeeds',
     pass: result.accepted,
@@ -270,7 +268,7 @@ async function scenario_htlc_sigall_preimage_and_sig_succeeds(e2e) {
   const hashLock = bytesToHex(sha256(hexToBytes(preimage)));
   const secret = JSON.stringify(['HTLC', { nonce: '10'.repeat(8), data: hashLock, tags: [['sigflag', 'SIG_ALL'], ['pubkeys', alice.compressed], ['n_sigs', '1']] }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, alice);
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, alice, { preimage });
   return {
     name: 'htlc_sigall_preimage_and_sig_succeeds',
     pass: result.accepted,
@@ -285,7 +283,7 @@ async function scenario_htlc_sigall_locktime_refund_succeeds(e2e) {
   const hashLock = bytesToHex(sha256(hexToBytes(preimage)));
   const secret = JSON.stringify(['HTLC', { nonce: '11'.repeat(8), data: hashLock, tags: [['sigflag', 'SIG_ALL'], ['pubkeys', alice.compressed], ['n_sigs', '1'], ['locktime', '1'], ['refund', refund.compressed], ['n_sigs_refund', '1']] }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, refund);
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, refund, { preimage });
   return {
     name: 'htlc_sigall_locktime_refund_succeeds',
     pass: result.accepted,
