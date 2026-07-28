@@ -25,6 +25,7 @@ from conformance.builder import (
     generate_htlc_preimage,
     set_htlc_witness,
     sigall_swap_message,
+    sigall_swap_message_for,
 )
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
@@ -108,7 +109,7 @@ def _try_spend_sigall(
 
     swap_outputs = builder.create_outputs(swap_total, lambda: generate_secret())
     output_amounts = [(o.amount, o.B_) for o in swap_outputs]
-    message = sigall_swap_message(proofs, output_amounts)
+    message = sigall_swap_message_for(mint.base_url, proofs, output_amounts)
 
     witness: dict = {}
     if preimage is not None:

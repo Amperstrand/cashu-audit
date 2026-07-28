@@ -24,6 +24,7 @@ from conformance.builder import (
     build_p2pk_secret,
     build_htlc_secret,
     sigall_melt_message,
+    sigall_melt_message_for,
     set_sigall_witness,
     generate_htlc_preimage,
     set_htlc_witness,
@@ -206,7 +207,7 @@ def _(mint: MintClient) -> ScenarioResult:
     # includes output amounts and B_ values, then appends quote_id.
     change = _change_outputs(builder, proofs)
     output_amounts = [(o.amount, o.B_) for o in change]
-    message = sigall_melt_message(proofs, output_amounts, quote_id)
+    message = sigall_melt_message_for(mint.base_url, proofs, output_amounts, quote_id)
     set_sigall_witness(proofs, key, message)
 
     inputs = [p.to_dict() for p in proofs]
@@ -364,7 +365,7 @@ def _(mint: MintClient) -> ScenarioResult:
     # SIG_ALL: sign the melt message (inputs + outputs + quote_id)
     change = _change_outputs(builder, proofs)
     output_amounts = [(o.amount, o.B_) for o in change]
-    message = sigall_melt_message(proofs, output_amounts, quote_id)
+    message = sigall_melt_message_for(mint.base_url, proofs, output_amounts, quote_id)
     msg_hash = hashlib.sha256(message.encode("utf-8")).digest()
     sig = key.sign_schnorr(msg_hash)
 

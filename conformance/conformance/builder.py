@@ -106,6 +106,15 @@ class ProofBuilder:
     def __init__(self, mint: MintClient):
         self.mint = mint
         self._keyset_cache: tuple[str, dict[int, str]] | None = None
+        self._fee_ppk = 0
+        if get_sigall_mode(mint.base_url) == "standard":
+            try:
+                info = mint.get_mint_info()
+                version = info.get("version", "").lower()
+                if "nutshell" in version:
+                    set_sigall_mode(mint.base_url, "legacy")
+            except Exception:
+                pass
 
     def get_active_keyset(self, unit: str = "sat") -> tuple[str, dict[int, str]]:
         if self._keyset_cache:
