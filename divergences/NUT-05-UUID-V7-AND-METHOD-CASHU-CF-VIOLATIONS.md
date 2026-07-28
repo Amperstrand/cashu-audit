@@ -25,3 +25,4 @@ quote responses omit the `method` field.
 ## Resolution
 
 Filed as [ISSUE-034](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-034-nut05-uuid-v7-and-method-field.md) (P1).
+✅ **Fixed** (commit `c1cb6a2`, 2026-07-27).

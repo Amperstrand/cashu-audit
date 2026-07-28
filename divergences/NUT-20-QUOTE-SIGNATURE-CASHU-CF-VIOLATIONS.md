@@ -37,3 +37,4 @@ NUT-20 locked quotes — signatures from spec-compliant wallets are rejected.
 ## Resolution
 
 Filed as [ISSUE-033](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-033-nut20-quote-signature-format.md) (P0).
+✅ **Fixed** (commit `d295576`, 2026-07-27).

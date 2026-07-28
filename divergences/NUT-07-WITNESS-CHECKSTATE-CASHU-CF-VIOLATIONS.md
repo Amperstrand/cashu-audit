@@ -17,3 +17,4 @@ with NUT-10 spending conditions.
 ## Resolution
 
 Filed as [ISSUE-035](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-035-nut07-witness-field-checkstate.md) (P2).
+✅ **Fixed** (commit `6641395`, 2026-07-27).

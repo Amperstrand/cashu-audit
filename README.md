@@ -15,13 +15,32 @@ A neutral, implementation-agnostic framework for auditing Cashu implementations 
 
 ## Implementations covered
 
-| Implementation | Language | Layer 1 status | Layer 3 audits |
-|---|---|---|---|
-| **cashu-cf** | TypeScript | 124 quotes (18 NUTs), spec:check exit 0 | 14 signoffs (NUT-00-09, 10/11/14, 19-23) |
-| **cashubtc/cdk** | Rust | 137 quotes (v0.17.3), spec:check exit 0 | 16 signoffs + post-quote audit |
-| **cashubtc/nutshell** | Python | 129 quotes (21 NUTs), spec:check exit 0 | 15 signoffs + post-quote audit |
-| **gonuts-tollgate** | Go | 85 quotes (16 NUTs), spec:check exit 0 | Pending |
-| **micronuts** | Rust (embedded) | Pending adoption | Pending |
+| Implementation | Language | Layer 1 status | Layer 3 audits | Resolution Status |
+|---|---|---|---|---|
+| **cashu-cf** | TypeScript | 124 quotes (18 NUTs), spec:check exit 0 | 17 signoffs (all NUTs) | ✅ All 17 NUTs compliant (ISSUE-029–037 fixed) |
+| **cashubtc/cdk** | Rust | 137 quotes (v0.17.3), spec:check exit 0 | 16 signoffs + post-quote audit | ✅ PASS, no regressions |
+| **cashubtc/nutshell** | Python | 129 quotes (21 NUTs), spec:check exit 0 | 15 signoffs + post-quote audit | ✅ Reference implementation |
+| **gonuts-tollgate** | Go | 85 quotes (16 NUTs), spec:check exit 0 | 5 signoffs (optional NUTs) | ⚠️ NUT-04 accounting fields missing |
+| **micronuts** | Rust (embedded) | Pending adoption | Pending | N/A |
+
+### cashu-cf Spec Compliance Resolution (2026-07-28)
+
+All 9 audit findings from the July 2026 LLM spec audit have been fixed:
+
+| Issue | NUT | Finding | Status |
+|-------|-----|---------|--------|
+| ISSUE-029 | NUT-04 | Missing `amount_paid`/`amount_issued`/`updated_at` | ✅ Fixed |
+| ISSUE-030 | NUT-11 | P2PK sigflag, x-coord dedup, locktime | ✅ Fixed |
+| ISSUE-031 | NUT-14 | HTLC sender pathway blocked | ✅ Fixed |
+| ISSUE-032 | NUT-29 | Batch mint 10 validation gaps | ✅ Fixed |
+| ISSUE-033 | NUT-20 | Quote signature wrong message format | ✅ Fixed |
+| ISSUE-034 | NUT-05 | UUID v7 + `method` field missing | ✅ Fixed |
+| ISSUE-035 | NUT-07 | `witness` always null | ✅ Fixed |
+| ISSUE-036 | NUT-10 | Witness on regular proof accepted | ✅ Fixed |
+| ISSUE-037 | NUT-00 | V4 token URL trailing slash | ✅ Fixed |
+
+Post-fix security review found and fixed 5 additional vulnerabilities (H1–H5).
+Full report: [SECURITY-REVIEW-CASHU-CF-2026-07-28.md](divergences/SECURITY-REVIEW-CASHU-CF-2026-07-28.md)
 
 ### Key insight from post-quote audits
 

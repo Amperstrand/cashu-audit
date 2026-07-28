@@ -16,3 +16,4 @@ V4 token mint URLs are not normalized — trailing slashes are not stripped.
 ## Resolution
 
 Filed as [ISSUE-037](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-037-nut00-v4-token-url-trailing-slash.md) (P2).
+✅ **Fixed** (commit `b1bddf8`, 2026-07-27).

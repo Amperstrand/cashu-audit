@@ -27,4 +27,4 @@ Full report: [NUT-14-result.md](../signoffs/cashu-cf/NUT-14-result-20260727.md)
 ## Resolution
 
 Filed as [ISSUE-031](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-031-nut14-htlc-spec-violations.md).
-Fix in progress (2026-07-27).
+✅ **Fixed** (commit `1d1e401`, 2026-07-27).

@@ -23,3 +23,4 @@ being rejected. Nutshell explicitly rejects this as defense-in-depth.
 ## Resolution
 
 Filed as [ISSUE-036](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-036-nut10-witness-on-regular-proof.md) (P2).
+✅ **Fixed** (2026-07-28).

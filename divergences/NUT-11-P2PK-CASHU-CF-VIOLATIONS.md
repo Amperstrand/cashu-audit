@@ -30,4 +30,4 @@ Full report: [NUT-11-result.md](../signoffs/cashu-cf/NUT-11-result-20260727.md)
 ## Resolution
 
 Filed as [ISSUE-030](https://github.com/Amperstrand/cashu-cf/blob/main/docs/issues/ISSUE-030-nut11-p2pk-spec-violations.md).
-Fix in progress (2026-07-27).
+✅ **Fixed** (commit `1d1e401`, 2026-07-27).
