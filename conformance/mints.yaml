@@ -1,7 +1,20 @@
 mints:
+  # Amperstrand mints (cashu-cf)
   - name: testnut
     url: https://testnut.cashu.exchange
     type: cashu-cf
   - name: rugs
     url: https://rugs.cashu.exchange
     type: cashu-cf
+  
+  # Nutshell (Python reference) — start locally:
+  # docker run -d -p 3338:3338 --name nutshell -e MINT_LIGHTNING_BACKEND=FakeWallet -e MINT_PRIVATE_KEY=<hex> cashubtc/nutshell:latest
+  # - name: nutshell-local
+  #   url: http://localhost:3338
+  #   type: nutshell
+  
+  # CDK (Rust reference) — start locally:
+  # docker run -d -p 3339:3338 --name cdk-mintd ghcr.io/cashubtc/cdk-mintd:latest
+  # - name: cdk-local
+  #   url: http://localhost:3339
+  #   type: cdk
