@@ -15,8 +15,10 @@ from conformance.builder import (
     build_p2pk_secret,
     build_htlc_secret,
     sigall_swap_message,
+    sigall_swap_message_for,
     set_sigall_witness,
     generate_htlc_preimage,
+    try_sigall_spend,
 )
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
@@ -60,8 +62,12 @@ def _attempt_swap(mint: MintClient, proofs: list[Proof], api_outputs: list[dict]
     return mint.try_swap(inputs, api_outputs)
 
 
-def _sign_sigall(proofs: list[Proof], keys: list[KeyPair], output_amounts):
-    msg = sigall_swap_message(proofs, output_amounts)
+def _signed_sigall_swap(mint, proofs, keys, api_outputs, output_amounts) -> tuple[int, object]:
+    return try_sigall_spend(mint, proofs, keys, output_amounts, api_outputs)
+
+
+def _sign_sigall(mint, proofs, keys, output_amounts):
+    msg = sigall_swap_message_for(mint.base_url, proofs, output_amounts)
     msg_hash = hashlib.sha256(msg.encode("utf-8")).digest()
     sigs = [k.sign_schnorr(msg_hash) for k in keys]
     proofs[0].witness = json.dumps({"signatures": sigs})
@@ -108,7 +114,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [keys[0], keys[1]], output_amounts)
+    _sign_sigall(mint, proofs, [keys[0], keys[1]], output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_multisig_2of3", "NUT-11 P2PK SIG_ALL", Result.PASS, "2-of-3 accepted")
@@ -123,7 +129,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [wrong_key], output_amounts)
+    _sign_sigall(mint, proofs, [wrong_key], output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_wrong_signer_fails", "NUT-11 P2PK SIG_ALL", Result.PASS, "rejected")
@@ -168,14 +174,14 @@ def _(mint: MintClient) -> ScenarioResult:
 
     proofs1 = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs1, output_amounts1 = _prepare_outputs(builder, proofs1)
-    _sign_sigall(proofs1, [key], output_amounts1)
+    _sign_sigall(mint, proofs1, [key], output_amounts1)
     code1, body1 = _attempt_swap(mint, proofs1, api_outputs1)
     if not expect_success(code1, body1):
         return ScenarioResult("p2pk_sigall_locktime_before_expiry_primary_only", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"primary failed: {code1}")
 
     proofs2 = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs2, output_amounts2 = _prepare_outputs(builder, proofs2)
-    _sign_sigall(proofs2, [refund_key], output_amounts2)
+    _sign_sigall(mint, proofs2, [refund_key], output_amounts2)
     code2, body2 = _attempt_swap(mint, proofs2, api_outputs2)
     if not expect_reject(code2, body2):
         return ScenarioResult("p2pk_sigall_locktime_before_expiry_primary_only", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"refund should be blocked: {code2}")
@@ -198,7 +204,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [key], output_amounts)
+    _sign_sigall(mint, proofs, [key], output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.PASS, "primary works after expiry")
@@ -236,7 +242,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [keys[0], keys[1]], output_amounts)
+    _sign_sigall(mint, proofs, [keys[0], keys[1]], output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_multisig_locktime_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.PASS, "multisig primary works after locktime")
@@ -252,7 +258,7 @@ def _(mint: MintClient) -> ScenarioResult:
     proofs_b = _swap_for_p2pk(builder, mint, lambda: build_p2pk_secret(key_b.pub_hex, sigflag="SIG_ALL"), amount=4)
     combined = proofs_a + proofs_b
     api_outputs, output_amounts = _prepare_outputs(builder, combined)
-    _sign_sigall(combined, [key_a], output_amounts)
+    _sign_sigall(mint, combined, [key_a], output_amounts)
     code, body = _attempt_swap(mint, combined, api_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_mixed_proofs_different_data_fail", "NUT-11 P2PK SIG_ALL", Result.PASS, "mixed data rejected")
@@ -268,7 +274,7 @@ def _(mint: MintClient) -> ScenarioResult:
     proofs_htlc = _swap_for_p2pk(builder, mint, lambda: build_htlc_secret(hash_hex, sigflag="SIG_ALL"), amount=4)
     combined = proofs_p2pk + proofs_htlc
     api_outputs, output_amounts = _prepare_outputs(builder, combined)
-    _sign_sigall(combined, [key], output_amounts)
+    _sign_sigall(mint, combined, [key], output_amounts)
     code, body = _attempt_swap(mint, combined, api_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_mixed_proofs_different_kind_fail", "NUT-11 P2PK SIG_ALL", Result.PASS, "mixed kind rejected")
@@ -284,7 +290,7 @@ def _(mint: MintClient) -> ScenarioResult:
     proofs_b = _swap_for_p2pk(builder, mint, lambda: build_p2pk_secret(key.pub_hex, pubkeys=[extra_key.pub_hex], n_sigs=2, sigflag="SIG_ALL"), amount=4)
     combined = proofs_a + proofs_b
     api_outputs, output_amounts = _prepare_outputs(builder, combined)
-    _sign_sigall(combined, [key], output_amounts)
+    _sign_sigall(mint, combined, [key], output_amounts)
     code, body = _attempt_swap(mint, combined, api_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_mixed_proofs_different_tags_fail", "NUT-11 P2PK SIG_ALL", Result.PASS, "mixed tags rejected")
@@ -305,7 +311,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [keys[0], keys[1]], output_amounts)
+    _sign_sigall(mint, proofs, [keys[0], keys[1]], output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_multisig_before_locktime", "NUT-11 P2PK SIG_ALL", Result.PASS, "2-of-3 before locktime accepted")
@@ -324,7 +330,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [keys[0], keys[1], keys[2]], output_amounts)
+    _sign_sigall(mint, proofs, [keys[0], keys[1], keys[2]], output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_more_signatures_than_required", "NUT-11 P2PK SIG_ALL", Result.PASS, "extra sigs accepted")
@@ -346,7 +352,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, refund_keys, output_amounts)
+    _sign_sigall(mint, proofs, refund_keys, output_amounts)
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_refund_multisig_2of2", "NUT-11 P2PK SIG_ALL", Result.PASS, "2-of-2 refund accepted")
@@ -360,7 +366,7 @@ def _(mint: MintClient) -> ScenarioResult:
     builder = ProofBuilder(mint)
     proofs = _swap_for_p2pk(builder, mint, secret_fn)
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
-    _sign_sigall(proofs, [key], output_amounts)
+    _sign_sigall(mint, proofs, [key], output_amounts)
     tampered_outputs = [dict(o) for o in api_outputs]
     if tampered_outputs:
         orig = tampered_outputs[0]["amount"]

@@ -250,8 +250,44 @@ def sigall_swap_message(inputs: list[Proof], output_amounts: list[tuple[int, str
     return msg
 
 
+def sigall_swap_message_legacy(inputs: list[Proof], output_amounts: list[tuple[int, str]]) -> str:
+    msg = ""
+    for p in inputs:
+        msg += p.secret
+    for _, b_hex in output_amounts:
+        msg += b_hex
+    return msg
+
+
+_SIGALL_MODE_CACHE: dict[str, str] = {}
+
+
+def get_sigall_mode(mint_url: str) -> str:
+    return _SIGALL_MODE_CACHE.get(mint_url, "standard")
+
+
+def set_sigall_mode(mint_url: str, mode: str):
+    _SIGALL_MODE_CACHE[mint_url] = mode
+
+
+def sigall_swap_message_for(mint_url: str, inputs: list[Proof], output_amounts: list[tuple[int, str]]) -> str:
+    if get_sigall_mode(mint_url) == "legacy":
+        return sigall_swap_message_legacy(inputs, output_amounts)
+    return sigall_swap_message(inputs, output_amounts)
+
+
 def sigall_melt_message(inputs: list[Proof], output_amounts: list[tuple[int, str]], quote_id: str) -> str:
     return sigall_swap_message(inputs, output_amounts) + quote_id
+
+
+def sigall_melt_message_legacy(inputs: list[Proof], output_amounts: list[tuple[int, str]], quote_id: str) -> str:
+    return sigall_swap_message_legacy(inputs, output_amounts) + quote_id
+
+
+def sigall_melt_message_for(mint_url: str, inputs: list[Proof], output_amounts: list[tuple[int, str]], quote_id: str) -> str:
+    if get_sigall_mode(mint_url) == "legacy":
+        return sigall_melt_message_legacy(inputs, output_amounts, quote_id)
+    return sigall_melt_message(inputs, output_amounts, quote_id)
 
 
 def set_sigall_witness(proofs: list[Proof], keypair: KeyPair, message: str):
@@ -259,6 +295,53 @@ def set_sigall_witness(proofs: list[Proof], keypair: KeyPair, message: str):
     msg_hash = hashlib.sha256(message.encode("utf-8")).digest()
     sig = keypair.sign_schnorr(msg_hash)
     proofs[0].witness = json.dumps({"signatures": [sig]})
+
+
+def try_sigall_spend(
+    mint,
+    proofs: list[Proof],
+    sign_keys: list[KeyPair] | None,
+    output_amounts: list[tuple[int, str]],
+    api_outputs: list[dict],
+    preimage: str | None = None,
+) -> tuple[int, object]:
+    import hashlib
+    url = mint.base_url
+    cached = get_sigall_mode(url)
+
+    modes_to_try = [cached] if cached != "standard" else ["standard", "legacy"]
+    if cached == "legacy":
+        modes_to_try = ["legacy"]
+
+    last_code, last_body = 400, {}
+    for mode in modes_to_try:
+        if mode == "legacy":
+            msg = sigall_swap_message_legacy(proofs, output_amounts)
+        else:
+            msg = sigall_swap_message(proofs, output_amounts)
+
+        msg_hash = hashlib.sha256(msg.encode("utf-8")).digest()
+        witness: dict = {}
+        if preimage is not None:
+            witness["preimage"] = preimage
+        if sign_keys:
+            witness["signatures"] = [k.sign_schnorr(msg_hash) for k in sign_keys]
+        for p in proofs:
+            p.witness = None
+        proofs[0].witness = json.dumps(witness)
+
+        last_code, last_body = mint.try_swap([p.to_dict() for p in proofs], api_outputs)
+
+        body_str = str(last_body)
+        if last_code == 200:
+            set_sigall_mode(url, mode)
+            return last_code, last_body
+        if "0 < " in body_str and sign_keys and mode == "standard" and cached == "standard":
+            set_sigall_mode(url, "legacy")
+            continue
+        return last_code, last_body
+
+    return last_code, last_body
 
 
 def generate_htlc_preimage() -> tuple[str, str]:
