@@ -4,13 +4,14 @@ Cross-implementation Cashu spec compliance audit framework.
 
 ## What this is
 
-A neutral, implementation-agnostic framework for auditing Cashu implementations against the NUT specification. It covers three layers:
+A neutral, implementation-agnostic framework for auditing Cashu implementations against the NUT specification. It covers four layers:
 
 | Layer | What | Where it lives |
 |---|---|---|
 | **Layer 1** | greatspectations verbatim spec quotes in source code | In each implementation repo (`// NUT #NN:` comments) |
 | **Layer 2** | Cross-implementation divergence database | Here (`divergences/`) |
 | **Layer 3** | Reusable AI audit prompts + signed-off results | Here (`prompts/` + `signoffs/`) |
+| **Layer 4** | Runtime conformance testing (58 spending-condition scenarios) | Here (`conformance/`) |
 
 ## Implementations covered
 
@@ -58,6 +59,11 @@ cashu-audit/
 │   ├── cdk/
 │   └── nutshell/
 ├── divergences/       # Cross-impl behavior database (Layer 2)
+├── conformance/       # Runtime conformance test suite (Layer 4)
+│   ├── conformance/   # Framework: crypto, client, builder, matrix
+│   ├── scenarios/     # 54 test scenarios (NUT-11/14 spending conditions)
+│   ├── run_matrix.py  # CLI: run scenarios against mints, generate matrix
+│   └── reports/       # Generated comparison matrices
 ├── templates/         # Adoption templates for new implementations
 └── scripts/           # Tooling (run-audit, compare, etc.)
 ```

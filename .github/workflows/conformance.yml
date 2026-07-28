@@ -1,0 +1,34 @@
+name: Conformance
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r conformance/requirements.txt
+
+      - name: Run conformance suite
+        run: |
+          cd conformance
+          python run_matrix.py \
+            --mint https://testnut.cashu.exchange \
+            --mint https://rugs.cashu.exchange \
+            --output reports/conformance-$(date +%Y%m%d).md
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conformance-reports
+          path: conformance/reports/

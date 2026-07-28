@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.eggs/
+reports/*.md
+!reports/.gitkeep

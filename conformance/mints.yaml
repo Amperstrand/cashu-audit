@@ -1,0 +1,7 @@
+mints:
+  - name: testnut
+    url: https://testnut.cashu.exchange
+    type: cashu-cf
+  - name: rugs
+    url: https://rugs.cashu.exchange
+    type: cashu-cf

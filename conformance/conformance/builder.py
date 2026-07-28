@@ -219,8 +219,49 @@ class ProofBuilder:
 
     def sign_p2pk_witness(self, proofs: list[Proof], keypair: KeyPair) -> str:
         import json as _json
+        import hashlib
         sigs = []
         for p in proofs:
-            sig = keypair.sign_schnorr(p.secret.encode("utf-8"))
+            msg = hashlib.sha256(p.secret.encode("utf-8")).digest()
+            sig = keypair.sign_schnorr(msg)
             sigs.append(sig)
         return _json.dumps({"signatures": sigs})
+
+
+def sigall_swap_message(inputs: list[Proof], output_amounts: list[tuple[int, str]]) -> str:
+    msg = ""
+    for p in inputs:
+        msg += p.secret
+        msg += p.C
+    for amount, b_hex in output_amounts:
+        msg += str(amount)
+        msg += b_hex
+    return msg
+
+
+def sigall_melt_message(inputs: list[Proof], output_amounts: list[tuple[int, str]], quote_id: str) -> str:
+    return sigall_swap_message(inputs, output_amounts) + quote_id
+
+
+def set_sigall_witness(proofs: list[Proof], keypair: KeyPair, message: str):
+    import hashlib
+    msg_hash = hashlib.sha256(message.encode("utf-8")).digest()
+    sig = keypair.sign_schnorr(msg_hash)
+    proofs[0].witness = json.dumps({"signatures": [sig]})
+
+
+def generate_htlc_preimage() -> tuple[str, str]:
+    import hashlib
+    import os
+    preimage_bytes = os.urandom(32)
+    preimage_hex = preimage_bytes.hex()
+    hash_hex = hashlib.sha256(preimage_bytes).hexdigest()
+    return preimage_hex, hash_hex
+
+
+def set_htlc_witness(proofs: list[Proof], preimage: str, signatures: list[str] | None = None):
+    witness: dict = {"preimage": preimage}
+    if signatures:
+        witness["signatures"] = signatures
+    for p in proofs:
+        p.witness = json.dumps(witness)

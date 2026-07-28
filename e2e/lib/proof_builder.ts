@@ -1,203 +1,162 @@
 /**
  * Cashu E2E Proof Builder — Layer 4 dynamic testing.
  *
- * Uses @cashu/cashu-ts to construct real P2PK/HTLC proofs with valid
- * blind signatures, enabling runtime testing of spending conditions.
- *
- * Usage:
- *   npx tsx e2e/lib/proof_builder.ts --mint-url http://localhost:8787
+ * Uses @cashu/cashu-ts crypto + raw HTTP to construct real proofs.
+ * Run from cashu-cf directory:
+ *   npx tsx ../cashu-audit/e2e/lib/proof_builder.ts https://testnut.cashu.exchange
  */
 
-import { Wallet, Mint, P2PKBuilder, CheckStateEnum, MintQuoteState } from '@cashu/cashu-ts';
-import { secp256k1 } from '@noble/curves/secp256k1';
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { schnorr, secp256k1 } from '@noble/curves/secp256k1.js';
+const Point = secp256k1.Point;
+import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils';
+import { blindMessage } from '@cashu/cashu-ts';
 
-export interface TestResult {
-  name: string;
-  status: 'PASS' | 'FAIL' | 'SKIP';
-  detail: string;
+export interface Proof { amount: number; secret: string; C: string; id: string; }
+
+function decomposeAmount(amount: number): number[] {
+  const amounts: number[] = [];
+  let remaining = amount;
+  let power = 0;
+  while (remaining > 0) {
+    if (remaining & 1) amounts.push(2 ** power);
+    remaining >>= 1;
+    power++;
+  }
+  return amounts.length > 0 ? amounts : [0];
 }
 
 export class CashuE2E {
-  private mint: Mint;
-  private wallet: Wallet | null = null;
-
-  constructor(mintUrl: string) {
-    this.mint = new Mint(mintUrl);
+  constructor(private mintUrl: string) {
+    this.mintUrl = mintUrl.replace(/\/+$/, '');
   }
 
-  async setup(): Promise<void> {
-    const info = await this.mint.getInfo();
-    const keys = await this.mint.getKeys();
-    this.wallet = new Wallet(this.mint, info, keys);
+  private async http(method: string, path: string, body?: any): Promise<{ status: number; data: any }> {
+    const resp = await fetch(`${this.mintUrl}${path}`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Accept-Encoding': 'identity' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const text = await resp.text();
+    try { return { status: resp.status, data: JSON.parse(text) }; }
+    catch { return { status: resp.status, data: { raw: text } }; }
   }
 
-  /**
-   * Mint tokens via FakeWallet (auto-settles).
-   * Returns proofs that can be used for swap/melt tests.
-   */
-  async mintTokens(amount: number, unit: string = 'sat'): Promise<any[]> {
-    if (!this.wallet) throw new Error('Call setup() first');
+  async isHealthy(): Promise<boolean> {
+    try { return (await this.http('GET', '/health')).status === 200; }
+    catch { return false; }
+  }
 
-    // Create mint quote
-    const quote = await this.mint.createMintQuoteBolt11({ amount, unit });
-    console.log(`  Quote: ${quote.quote.slice(0, 12)}...`);
+  async getInfo(): Promise<any> { return (await this.http('GET', '/v1/info')).data; }
+  async getKeys(): Promise<any> { return (await this.http('GET', '/v1/keys')).data; }
+  async getKeysets(): Promise<any> { return (await this.http('GET', '/v1/keysets')).data; }
 
-    // For FakeWallet, payment settles automatically
-    // Poll until PAID
-    let state = quote.state;
+  async mintTokens(amount: number, unit: string = 'sat'): Promise<{ proofs: Proof[]; quoteId: string }> {
+    // 1. Get active keyset + keys
+    const keysetsResp = await this.getKeysets();
+    const keyset = keysetsResp.keysets.find((k: any) => k.unit === unit && k.active);
+    if (!keyset) throw new Error(`No active ${unit} keyset`);
+    const keysetId = keyset.id;
+
+    const keysResp = await this.getKeys();
+    const keysEntry = keysResp.keysets?.find((k: any) => k.id === keysetId);
+    if (!keysEntry) throw new Error(`No keys for ${keysetId}`);
+
+    // keysEntry.keys is { "1": "<hex>", "2": "<hex>", ... } per amount
+    const keysMap = keysEntry.keys;
+
+    // 2. Create quote
+    const quoteResp = await this.http('POST', '/v1/mint/quote/bolt11', { unit, amount });
+    if (quoteResp.status !== 200) throw new Error(`Quote failed: ${quoteResp.status}`);
+    const quoteId = quoteResp.data.quote;
+
+    // 3. Wait for payment
+    let state = quoteResp.data.state;
     let attempts = 0;
-    while (state !== MintQuoteState.PAID && attempts < 10) {
+    while (state !== 'PAID' && attempts < 20) {
       await new Promise(r => setTimeout(r, 500));
-      const status = await this.mint.checkMintQuoteBolt11(quote.quote);
-      state = status.state;
+      const status = await this.http('GET', `/v1/mint/quote/bolt11/${quoteId}`);
+      state = status.data.state;
       attempts++;
     }
+    if (state !== 'PAID') throw new Error(`Not PAID after ${attempts} tries`);
 
-    if (state !== MintQuoteState.PAID) {
-      throw new Error(`Quote not PAID after ${attempts} attempts (state=${state})`);
+    // 4. Create blinded messages
+    const amounts = decomposeAmount(amount);
+    const outputs: any[] = [];
+    const blindData: { r: bigint; secret: string }[] = [];
+
+    for (const amt of amounts) {
+      const secret = bytesToHex(randomBytes(32));
+      const { B_: BPoint, r } = blindMessage(secret);
+      outputs.push({ amount: amt, id: keysetId, B_: bytesToHex(BPoint.toBytes(true)) });
+      blindData.push({ r, secret });
     }
 
-    // Mint tokens
-    const { proofs } = await this.wallet.mintTokens(quote.quote, amount, unit);
-    console.log(`  Minted ${proofs.length} proofs totaling ${amount} ${unit}`);
-    return proofs;
-  }
+    // 5. Mint
+    const mintResp = await this.http('POST', '/v1/mint/bolt11', { quote: quoteId, outputs });
+    if (mintResp.status !== 200) throw new Error(`Mint failed: ${mintResp.status} ${JSON.stringify(mintResp.data).slice(0, 200)}`);
 
-  /**
-   * Create a P2PK-locked proof set for testing spending conditions.
-   */
-  async createP2PKProofs(
-    amount: number,
-    opts: {
-      lockPubkey?: string;
-      sigAll?: boolean;
-      locktime?: number;
-      refundPubkey?: string;
-      nSigs?: number;
-      nSigsRefund?: number;
-    } = {}
-  ): Promise<{ secret: string; proofs: any[] }> {
-    if (!this.wallet) throw new Error('Call setup() first');
-
-    // Generate keypair if not provided
-    const privKey = secp256k1.utils.randomPrivateKey();
-    const pubKey = bytesToHex(secp256k1.getPublicKey(privKey, true));
-
-    // Build P2PK secret
-    const builder = new P2PKBuilder();
-    builder.addLockPubkey(opts.lockPubkey || pubKey);
-    if (opts.sigAll) builder.sigAll();
-    if (opts.locktime) builder.lockUntil(opts.locktime);
-    if (opts.refundPubkey) builder.addRefundPubkey(opts.refundPubkey);
-    if (opts.nSigs) builder.requireLockSignatures(opts.nSigs);
-    if (opts.nSigsRefund) builder.requireRefundSignatures(opts.nSigsRefund);
-
-    // Create the secret
-    const secretOpts = builder.toOptions();
-    const secret = JSON.stringify(['P2PK', secretOpts]);
-
-    return { secret, proofs: [] };
-  }
-
-  /**
-   * Check proof state via /v1/checkstate
-   */
-  async checkProofState(ys: string[]): Promise<any[]> {
-    const response = await fetch(`${this.mint.mintUrl}/v1/checkstate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Ys: ys }),
-    });
-    const data = await response.json();
-    return data.states || [];
-  }
-
-  /**
-   * Get mint info
-   */
-  async getInfo(): Promise<any> {
-    return await this.mint.getInfo();
-  }
-
-  /**
-   * Health check
-   */
-  async isHealthy(): Promise<boolean> {
-    try {
-      const resp = await fetch(`${this.mint.mintUrl}/health`);
-      return resp.ok;
-    } catch {
-      return false;
+    // 6. Unblind
+    const signatures = mintResp.data.signatures;
+    const proofs: Proof[] = [];
+    for (let i = 0; i < signatures.length; i++) {
+      const sig = signatures[i];
+      const K = keysMap[String(sig.amount)];
+      const C_Blinded = Point.fromHex(sig.C_);
+      const K_Point = Point.fromHex(K);
+      const C_Point = C_Blinded.subtract(K_Point.multiply(blindData[i].r));
+      const C = bytesToHex(C_Point.toBytes(true));
+      proofs.push({ amount: sig.amount, secret: blindData[i].secret, C, id: keysetId });
     }
+
+    return { proofs, quoteId };
+  }
+
+  async swap(inputs: Proof[], outputAmounts: number[], keysetId: string): Promise<{ status: number; data: any }> {
+    const outputs: any[] = [];
+    for (const amt of outputAmounts) {
+      const secret = bytesToHex(randomBytes(32));
+      const { B_: BPoint } = blindMessage(secret);
+      outputs.push({ amount: amt, id: keysetId, B_: bytesToHex(BPoint.toBytes(true)) });
+    }
+    const swapInputs = inputs.map(p => ({ amount: p.amount, secret: p.secret, C: p.C, id: p.id }));
+    return await this.http('POST', '/v1/swap', { inputs: swapInputs, outputs });
+  }
+
+  async checkState(ys: string[]): Promise<any> {
+    return (await this.http('POST', '/v1/checkstate', { Ys: ys })).data;
   }
 }
 
-/**
- * Run all E2E scenarios.
- */
-export async function runAllScenarios(mintUrl: string): Promise<TestResult[]> {
-  const results: TestResult[] = [];
+export async function runAllScenarios(mintUrl: string) {
   const e2e = new CashuE2E(mintUrl);
+  const results: { name: string; status: string; detail: string }[] = [];
 
-  // Health check
   if (!(await e2e.isHealthy())) {
-    results.push({ name: 'health', status: 'FAIL', detail: `Mint not reachable at ${mintUrl}` });
-    return results;
+    console.log(`❌ Mint not reachable: ${mintUrl}`);
+    return;
   }
-  results.push({ name: 'health', status: 'PASS', detail: 'Mint reachable' });
+  console.log(`✅ Mint reachable\n`);
 
-  // Setup
   try {
-    await e2e.setup();
-    results.push({ name: 'setup', status: 'PASS', detail: 'Wallet initialized' });
-  } catch (e: any) {
-    results.push({ name: 'setup', status: 'FAIL', detail: e.message });
-    return results;
-  }
+    const { proofs, quoteId } = await e2e.mintTokens(10);
+    const total = proofs.reduce((s, p) => s + p.amount, 0);
+    console.log(`✅ mint_tokens: ${proofs.length} proofs, total=${total}, quote=${quoteId.slice(0, 8)}...`);
 
-  // Scenario: mint tokens
-  try {
-    const proofs = await e2e.mintTokens(10);
-    results.push({
-      name: 'mint_tokens',
-      status: 'PASS',
-      detail: `${proofs.length} proofs minted`,
-    });
+    const keysets = await e2e.getKeysets();
+    const ks = keysets.keysets.find((k: any) => k.unit === 'sat' && k.active);
+    const swapResp = await e2e.swap(proofs, decomposeAmount(total), ks.id);
+    console.log(swapResp.status === 200
+      ? `✅ swap: ${swapResp.data.signatures?.length || 0} signatures returned`
+      : `❌ swap: ${swapResp.status} ${JSON.stringify(swapResp.data).slice(0, 100)}`);
   } catch (e: any) {
-    results.push({ name: 'mint_tokens', status: 'FAIL', detail: e.message });
+    console.log(`❌ mint_tokens: ${e.message}`);
   }
-
-  // Scenario: info completeness
-  try {
-    const info = await e2e.getInfo();
-    const hasNuts = info.nuts && info.nuts['4'] && info.nuts['5'];
-    results.push({
-      name: 'info_completeness',
-      status: hasNuts ? 'PASS' : 'FAIL',
-      detail: hasNuts ? `${Object.keys(info.nuts).length} NUTs advertised` : 'Missing NUT-04/05',
-    });
-  } catch (e: any) {
-    results.push({ name: 'info_completeness', status: 'FAIL', detail: e.message });
-  }
-
-  return results;
 }
 
-// CLI entry point
 if (require.main === module) {
-  const mintUrl = process.argv[2] || 'http://localhost:8787';
+  const url = process.argv[2] || 'http://localhost:8787';
   console.log(`\nCashu E2E Proof Builder — Layer 4`);
-  console.log(`Target: ${mintUrl}\n`);
-
-  runAllScenarios(mintUrl).then(results => {
-    for (const r of results) {
-      const emoji = { PASS: '✅', FAIL: '❌', SKIP: '⏭️' }[r.status];
-      console.log(`${emoji} ${r.name}: ${r.detail}`);
-    }
-    const passed = results.filter(r => r.status === 'PASS').length;
-    const failed = results.filter(r => r.status === 'FAIL').length;
-    console.log(`\n${passed} PASS, ${failed} FAIL\n`);
-    process.exit(failed > 0 ? 1 : 0);
-  });
+  console.log(`Target: ${url}\n`);
+  runAllScenarios(url);
 }

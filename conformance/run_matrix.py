@@ -19,7 +19,12 @@ from conformance.client import MintClient
 from conformance.scenarios import all_scenarios, ScenarioResult, Result
 from conformance.matrix import generate_matrix
 
-import scenarios.nut11_p2pk_siginputs
+# Auto-import all scenario modules to register them
+import importlib
+import pkgutil
+import scenarios as _scenarios_pkg
+for _finder, _name, _ispkg in pkgutil.iter_modules(_scenarios_pkg.__path__):
+    importlib.import_module(f"scenarios.{_name}")
 
 
 def run_all(mint_url: str) -> list[ScenarioResult]:
