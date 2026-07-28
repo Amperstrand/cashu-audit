@@ -87,3 +87,24 @@ Test results (Nutshell, legacy SIG_ALL mode):
 **Conclusion:** The SIG_ALL verification path has a separate code path for
 locktime handling that doesn't implement pathway independence correctly.
 Both Nutshell and cashu-cf independently have this bug. CDK does not.
+
+## Bug #4 root cause confirmed: HTLC handler ignores SIG_ALL signatures
+
+**Definitive test (2026-07-28):**
+
+| Test | Config | Result |
+|------|--------|--------|
+| A | HTLC + SIG_ALL, witness on proofs[0] only | 403 "0 < 1" |
+| B | HTLC + SIG_ALL, witness on ALL proofs | 403 "0 < 1" |
+| C | P2PK + SIG_ALL, witness on proofs[0] only | 200 ✅ |
+
+P2PK + SIG_ALL works correctly. HTLC + SIG_ALL fails regardless of
+witness placement. The SIG_ALL message format is correct (proven by
+P2PK success). The issue is in cashu-cf's HTLC spending condition
+handler — it does not properly verify SIG_ALL signatures for HTLC secrets.
+
+**Likely cause:** cashu-cf's HTLC handler has a separate code path that
+either doesn't extract pubkeys from the HTLC secret's tags for SIG_ALL
+verification, or incorrectly treats the HTLC `data` field (a SHA-256
+hash) as a signing pubkey (which would always fail since a hash is not
+a valid secp256k1 public key).
