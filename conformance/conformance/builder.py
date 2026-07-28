@@ -111,7 +111,7 @@ class ProofBuilder:
             try:
                 info = mint.get_mint_info()
                 version = info.get("version", "").lower()
-                if "nutshell" in version:
+                if "nutshell" in version and "cf" not in version:
                     set_sigall_mode(mint.base_url, "legacy")
             except Exception:
                 pass
