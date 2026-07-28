@@ -13,13 +13,12 @@ import time
 
 from conformance.builder import ProofBuilder
 from conformance.client import MintClient
-from conformance.crypto import generate_secret, hash_to_curve
+from conformance.crypto import generate_secret
 from conformance.scenarios import (
     scenario,
     ScenarioResult,
     Result,
     expect_reject,
-    expect_success,
 )
 
 
