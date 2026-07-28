@@ -54,7 +54,7 @@ def _swap_for_htlc(
     regular = builder.mint_proofs(amount)
     total = sum(p.amount for p in regular)
     num_inputs = len(regular)
-    swap_amount = total - num_inputs
+    swap_amount = total - builder.calc_fee(num_inputs)
     if swap_amount < 1:
         raise RuntimeError(
             f"Amount too small: {total} - {num_inputs} fee = {swap_amount}"
@@ -67,7 +67,7 @@ def _try_spend(
 ) -> tuple[int, object]:
     """Spend proofs via swap — SIG_INPUTS (witness already set per-proof)."""
     total = sum(p.amount for p in proofs)
-    fee = len(proofs)
+    fee = builder.calc_fee(len(proofs))
     swap_total = max(1, total - fee)
     inputs = [p.to_dict() for p in proofs]
     outputs = builder.outputs_to_api(
@@ -103,7 +103,7 @@ def _try_spend_sigall(
 ) -> tuple[int, object]:
     """SIG_ALL spend: build message, sign, witness on proofs[0], swap."""
     total = sum(p.amount for p in proofs)
-    fee = len(proofs)
+    fee = builder.calc_fee(len(proofs))
     swap_total = max(1, total - fee)
 
     swap_outputs = builder.create_outputs(swap_total, lambda: generate_secret())

@@ -112,9 +112,11 @@ class ProofBuilder:
             return self._keyset_cache
         keysets = self.mint.get_keysets()
         active_id = None
+        active_fee_ppk = 0
         for ks in keysets.get("keysets", []):
             if ks.get("unit") == unit and ks.get("active"):
                 active_id = ks["id"]
+                active_fee_ppk = ks.get("input_fee_ppk", 0)
                 break
         if not active_id:
             raise RuntimeError(f"No active {unit} keyset")
@@ -135,7 +137,12 @@ class ProofBuilder:
                         pass
                 break
         self._keyset_cache = (active_id, keys)
+        self._fee_ppk = active_fee_ppk
         return self._keyset_cache
+
+    def calc_fee(self, num_inputs: int) -> int:
+        fee_ppk = getattr(self, "_fee_ppk", 0)
+        return -(-num_inputs * fee_ppk // 1000)
 
     def _amount_to_powers(self, amount: int) -> list[int]:
         powers = []

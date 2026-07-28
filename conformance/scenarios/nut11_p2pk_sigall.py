@@ -38,7 +38,7 @@ def _swap_for_p2pk(
     regular = builder.mint_proofs(amount)
     total = sum(p.amount for p in regular)
     num_inputs = len(regular)
-    swap_amount = total - num_inputs
+    swap_amount = total - builder.calc_fee(num_inputs)
     if swap_amount < 1:
         raise RuntimeError(f"Amount too small: {total} - {num_inputs} fee = {swap_amount}")
     p2pk_proofs = builder.swap_to_p2pk(regular, secret_fn, swap_amount)
@@ -47,7 +47,7 @@ def _swap_for_p2pk(
 
 def _prepare_outputs(builder: ProofBuilder, proofs: list[Proof]):
     total = sum(p.amount for p in proofs)
-    fee = len(proofs)
+    fee = builder.calc_fee(len(proofs))
     swap_total = max(1, total - fee)
     outputs = builder.create_outputs(swap_total, lambda: generate_secret())
     api_outputs = builder.outputs_to_api(outputs)
