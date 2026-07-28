@@ -368,9 +368,11 @@ def _(mint: MintClient) -> ScenarioResult:
     api_outputs, output_amounts = _prepare_outputs(builder, proofs)
     _sign_sigall(mint, proofs, [key], output_amounts)
     tampered_outputs = [dict(o) for o in api_outputs]
-    if tampered_outputs:
-        orig = tampered_outputs[0]["amount"]
-        tampered_outputs[0]["amount"] = 1 if orig != 1 else 2
+    if len(tampered_outputs) >= 2:
+        tampered_outputs[0]["B_"], tampered_outputs[1]["B_"] = \
+            tampered_outputs[1]["B_"], tampered_outputs[0]["B_"]
+    elif tampered_outputs:
+        tampered_outputs[0]["B_"] = "0" + tampered_outputs[0]["B_"][1:]
     code, body = _attempt_swap(mint, proofs, tampered_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_output_amounts_swapped_fail", "NUT-11 P2PK SIG_ALL", Result.PASS, "tampered outputs rejected")
