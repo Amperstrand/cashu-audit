@@ -69,11 +69,10 @@ def _set_witness(proofs: list[Proof], key: KeyPair) -> None:
 
 
 def _create_melt_quote(mint: MintClient) -> str:
-    """Create a melt quote for a dummy invoice (FakeWallet auto-pays).
-
-    Returns the quote_id. Sleeps briefly to let the FakeWallet process.
-    """
-    resp = mint.melt_quote("lnbc1000n1p")
+    """Create a melt quote using a real BOLT11 invoice from the mint's FakeWallet."""
+    mint_resp = mint.mint_quote(4)
+    invoice = mint_resp.get("request", "lnbc1000n1p")
+    resp = mint.melt_quote(invoice)
     time.sleep(2)
     return resp["quote"]
 
