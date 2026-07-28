@@ -72,7 +72,7 @@ def _create_melt_quote(mint: MintClient) -> str:
 
     Returns the quote_id. Sleeps briefly to let the FakeWallet process.
     """
-    resp = mint.melt_quote("dummy-melt-invoice")
+    resp = mint.melt_quote("lnbc1000n1p")
     time.sleep(2)
     return resp["quote"]
 
