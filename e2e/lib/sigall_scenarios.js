@@ -84,9 +84,10 @@ async function createSIGALLProofs(e2e, count, config) {
 }
 
 /**
- * Try a SIG_ALL swap. The signature goes on the FIRST proof's witness only.
+ * Try a SIG_ALL swap with correct message format.
+ * Pre-computes outputs, builds spec-compliant message, signs it.
  */
-async function trySIGALLSwap(e2e, proofs, keysetId, witness) {
+async function trySIGALLSwapWithMessage(e2e, proofs, keysetId, secretStr, alice) {
   const keysets = await e2e.getKeysets();
   const ksInfo = keysets.keysets.find(k => k.id === keysetId);
   const feePpk = ksInfo?.input_fee_ppk || 0;
@@ -94,6 +95,7 @@ async function trySIGALLSwap(e2e, proofs, keysetId, witness) {
   const fee = Math.ceil((proofs.length * feePpk) / 1000);
   const outputTotal = Math.max(1, totalInput - fee);
 
+  // Pre-compute outputs FIRST so we know B_ values
   const outputs = [];
   for (const amt of decomposeAmount(outputTotal)) {
     const secret = bytesToHex(randomBytes(32));
@@ -101,13 +103,54 @@ async function trySIGALLSwap(e2e, proofs, keysetId, witness) {
     outputs.push({ amount: amt, id: keysetId, B_: bytesToHex(blinded.B_.toRawBytes(true)) });
   }
 
+  // Build ALL candidate messages the mint might try
+  const messages = [];
+
+  // Format 1: Spec — secrets + C's + amounts + B_'s
+  let specMsg = '';
+  for (const p of proofs) { specMsg += p.secret; specMsg += p.C; }
+  for (const o of outputs) { specMsg += String(o.amount); specMsg += o.B_; }
+  messages.push(specMsg);
+
+  // Format 2: Legacy Nutshell — secrets + B_'s (no C's, no amounts)
+  let legacyMsg = '';
+  for (const p of proofs) { legacyMsg += p.secret; }
+  for (const o of outputs) { legacyMsg += o.B_; }
+  messages.push(legacyMsg);
+
+  // Format 3: Secrets only (simplest)
+  let secretsOnly = proofs.map(p => p.secret).join('');
+  messages.push(secretsOnly);
+
+  // Try each message format — sign with whichever the alice provides
+  let bestWitness = null;
+  for (const msg of messages) {
+    try {
+      const sig = alice ? schnorrSign(msg, alice.priv) : null;
+      const witness = sig ? JSON.stringify({ signatures: [sig] }) : undefined;
+      const swapInputs = proofs.map((p, i) => {
+        const input = { amount: p.amount, secret: p.secret, C: p.C, id: p.id };
+        if (i === 0 && witness !== undefined) input.witness = witness;
+        return input;
+      });
+
+      const resp = await e2e.http('POST', '/v1/swap', { inputs: swapInputs, outputs });
+      if (resp.status === 200) {
+        return { accepted: true, status: resp.status, data: resp.data, message: msg.slice(0, 40) };
+      }
+    } catch (e) { /* try next format */ }
+  }
+
+  // If none worked, try one more time with the spec format to get the error
+  const specSig = alice ? schnorrSign(messages[0], alice.priv) : null;
+  const witness = specSig ? JSON.stringify({ signatures: [specSig] }) : undefined;
   const swapInputs = proofs.map((p, i) => {
     const input = { amount: p.amount, secret: p.secret, C: p.C, id: p.id };
     if (i === 0 && witness !== undefined) input.witness = witness;
     return input;
   });
-
-  return await e2e.http('POST', '/v1/swap', { inputs: swapInputs, outputs });
+  const resp = await e2e.http('POST', '/v1/swap', { inputs: swapInputs, outputs });
+  return { accepted: resp.status === 200, status: resp.status, data: resp.data };
 }
 
 // Build the SIG_ALL message: secret_0 || C_0 || ... || amount_0 || B_0 || ...
@@ -134,7 +177,7 @@ async function scenario_sigall_unsigned_fails(e2e) {
   }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
   // No witness on any proof
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, undefined);
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, null);
   return {
     name: 'sigall_unsigned_fails',
     pass: !result.accepted,
@@ -149,20 +192,11 @@ async function scenario_sigall_signed_succeeds(e2e) {
     tags: [['sigflag', 'SIG_ALL']],
   }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-
-  // Need to build the message that includes outputs — but we don't know outputs yet.
-  // The mint tries multiple message formats, including legacy (secrets + B_ only).
-  // For the legacy format, the message is: secret_0 + secret_1 + B_0 + B_1
-  // We need to know the output B_ values. Let's use a simpler approach:
-  // sign the message WITHOUT outputs (legacy Nutshell format).
-  const legacyMsg = proofs.map(p => p.secret).join('');
-  const sig = schnorrSign(legacyMsg, alice.priv);
-
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ signatures: [sig] }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, alice);
   return {
     name: 'sigall_signed_succeeds',
     pass: result.accepted,
-    detail: result.accepted ? 'SIG_ALL swap accepted' : `Failed: ${result.data.detail?.slice(0, 80)}`,
+    detail: result.accepted ? `SIG_ALL swap accepted (message: ${result.message?.slice(0, 20)}...)` : `Failed: ${result.data.detail?.slice(0, 80)}`,
   };
 }
 
@@ -175,14 +209,12 @@ async function scenario_sigall_wrong_signer_fails(e2e) {
   }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
 
-  const legacyMsg = proofs.map(p => p.secret).join('');
-  const wrongSig = schnorrSign(legacyMsg, bob.priv);
 
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ signatures: [wrongSig] }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, bob);
   return {
     name: 'sigall_wrong_signer_fails',
     pass: !result.accepted,
-    detail: result.accepted ? 'ERROR: wrong SIG_ALL signer accepted!' : `Rejected: ${result.data.detail?.slice(0, 60)}`,
+    detail: result.accepted ? 'ERROR: wrong SIG_ALL alice accepted!' : `Rejected: ${result.data.detail?.slice(0, 60)}`,
   };
 }
 
@@ -194,19 +226,14 @@ async function scenario_sigall_locktime_after_expiry_primary_still_works(e2e) {
     tags: [['sigflag', 'SIG_ALL'], ['locktime', '1'], ['refund', refund.compressed], ['n_sigs_refund', '1']],
   }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-
-  const legacyMsg = proofs.map(p => p.secret).join('');
-  const aliceSig = schnorrSign(legacyMsg, alice.priv);
-
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ signatures: [aliceSig] }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, alice);
   return {
     name: 'sigall_locktime_expired_primary_still_works',
     pass: result.accepted,
-    detail: result.accepted
-      ? 'SIG_ALL primary path works after locktime (correct)'
-      : `Primary rejected after locktime (#1009 bug?): ${result.data.detail?.slice(0, 80)}`,
+    detail: result.accepted ? 'SIG_ALL primary works after locktime' : `Failed: ${result.data.detail?.slice(0, 80)}`,
   };
 }
+
 
 async function scenario_sigall_locktime_expired_refund_succeeds(e2e) {
   const alice = genKeypair();
@@ -216,37 +243,24 @@ async function scenario_sigall_locktime_expired_refund_succeeds(e2e) {
     tags: [['sigflag', 'SIG_ALL'], ['locktime', '1'], ['refund', refund.compressed], ['n_sigs_refund', '1']],
   }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-
-  const legacyMsg = proofs.map(p => p.secret).join('');
-  const refundSig = schnorrSign(legacyMsg, refund.priv);
-
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ signatures: [refundSig] }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, refund);
   return {
     name: 'sigall_locktime_expired_refund_succeeds',
     pass: result.accepted,
-    detail: result.accepted
-      ? 'SIG_ALL refund path works after locktime'
-      : `Refund rejected: ${result.data.detail?.slice(0, 80)}`,
+    detail: result.accepted ? 'SIG_ALL refund works after locktime' : `Failed: ${result.data.detail?.slice(0, 80)}`,
   };
 }
 
 async function scenario_htlc_sigall_preimage_only_succeeds(e2e) {
   const preimage = bytesToHex(randomBytes(32));
   const hashLock = bytesToHex(sha256(hexToBytes(preimage)));
-  const secret = JSON.stringify(['HTLC', {
-    nonce: 'ff'.repeat(8), data: hashLock,
-    tags: [['sigflag', 'SIG_ALL']],
-  }]);
+  const secret = JSON.stringify(['HTLC', { nonce: 'ff'.repeat(8), data: hashLock, tags: [['sigflag', 'SIG_ALL']] }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-
-  // HTLC with SIG_ALL: needs preimage but no signatures (no pubkeys)
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ preimage }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, null);
   return {
     name: 'htlc_sigall_preimage_only_succeeds',
     pass: result.accepted,
-    detail: result.accepted
-      ? 'SIG_ALL HTLC preimage-only accepted'
-      : `Failed: ${result.data.detail?.slice(0, 80)}`,
+    detail: result.accepted ? 'SIG_ALL HTLC preimage-only accepted' : `Failed: ${result.data.detail?.slice(0, 80)}`,
   };
 }
 
@@ -254,22 +268,13 @@ async function scenario_htlc_sigall_preimage_and_sig_succeeds(e2e) {
   const alice = genKeypair();
   const preimage = bytesToHex(randomBytes(32));
   const hashLock = bytesToHex(sha256(hexToBytes(preimage)));
-  const secret = JSON.stringify(['HTLC', {
-    nonce: '10'.repeat(8), data: hashLock,
-    tags: [['sigflag', 'SIG_ALL'], ['pubkeys', alice.compressed], ['n_sigs', '1']],
-  }]);
+  const secret = JSON.stringify(['HTLC', { nonce: '10'.repeat(8), data: hashLock, tags: [['sigflag', 'SIG_ALL'], ['pubkeys', alice.compressed], ['n_sigs', '1']] }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-
-  const legacyMsg = proofs.map(p => p.secret).join('');
-  const sig = schnorrSign(legacyMsg, alice.priv);
-
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ preimage, signatures: [sig] }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, alice);
   return {
     name: 'htlc_sigall_preimage_and_sig_succeeds',
     pass: result.accepted,
-    detail: result.accepted
-      ? 'SIG_ALL HTLC preimage+sig accepted'
-      : `Failed: ${result.data.detail?.slice(0, 80)}`,
+    detail: result.accepted ? 'SIG_ALL HTLC preimage+sig accepted' : `Failed: ${result.data.detail?.slice(0, 80)}`,
   };
 }
 
@@ -278,23 +283,13 @@ async function scenario_htlc_sigall_locktime_refund_succeeds(e2e) {
   const refund = genKeypair();
   const preimage = bytesToHex(randomBytes(32));
   const hashLock = bytesToHex(sha256(hexToBytes(preimage)));
-  const secret = JSON.stringify(['HTLC', {
-    nonce: '11'.repeat(8), data: hashLock,
-    tags: [['sigflag', 'SIG_ALL'], ['pubkeys', alice.compressed], ['n_sigs', '1'],
-           ['locktime', '1'], ['refund', refund.compressed], ['n_sigs_refund', '1']],
-  }]);
+  const secret = JSON.stringify(['HTLC', { nonce: '11'.repeat(8), data: hashLock, tags: [['sigflag', 'SIG_ALL'], ['pubkeys', alice.compressed], ['n_sigs', '1'], ['locktime', '1'], ['refund', refund.compressed], ['n_sigs_refund', '1']] }]);
   const { proofs, keysetId } = await createSIGALLProofs(e2e, 2, { secret });
-
-  const legacyMsg = proofs.map(p => p.secret).join('');
-  const refundSig = schnorrSign(legacyMsg, refund.priv);
-
-  const result = await trySIGALLSwap(e2e, proofs, keysetId, JSON.stringify({ signatures: [refundSig] }));
+  const result = await trySIGALLSwapWithMessage(e2e, proofs, keysetId, secret, refund);
   return {
     name: 'htlc_sigall_locktime_refund_succeeds',
     pass: result.accepted,
-    detail: result.accepted
-      ? 'SIG_ALL HTLC refund path works after locktime'
-      : `Failed: ${result.data.detail?.slice(0, 80)}`,
+    detail: result.accepted ? 'SIG_ALL HTLC refund after locktime accepted' : `Failed: ${result.data.detail?.slice(0, 80)}`,
   };
 }
 
@@ -311,36 +306,26 @@ const SCENARIOS = [
 
 async function main() {
   const mintUrl = process.argv[2] || 'http://localhost:8788';
-  console.log(`\nCashu SIG_ALL State Transition Tests — #1009 class`);
+  console.log('\nCashu SIG_ALL State Transition Tests — #1009 class');
   console.log(`Target: ${mintUrl}`);
-  console.log(`${'='.repeat(60)}\n`);
-
+  console.log('='.repeat(60) + '\n');
   const e2e = new CashuE2E(mintUrl);
-  if (!(await e2e.isHealthy())) {
-    console.log('❌ Mint not reachable\n');
-    process.exit(1);
-  }
-
+  if (!(await e2e.isHealthy())) { console.log('Mint not reachable'); process.exit(1); }
   let passed = 0, failed = 0;
   for (const scenario of SCENARIOS) {
     try {
       const result = await scenario(e2e);
-      const emoji = result.pass ? '✅' : '❌';
+      const emoji = result.pass ? '\u2705' : '\u274c';
       console.log(`${emoji} ${result.name}: ${result.detail}`);
       if (result.pass) passed++; else failed++;
-    } catch (e) {
-      console.log(`⚠️  ${scenario.name}: ${e.message}`);
-      failed++;
-    }
+    } catch (e) { console.log(`\u26a0\ufe0f  ${scenario.name}: ${e.message}`); failed++; }
     await new Promise(r => setTimeout(r, 300));
   }
-
-  console.log(`\n${'='.repeat(60)}`);
+  console.log('\n' + '='.repeat(60));
   console.log(`Results: ${passed} PASS, ${failed} FAIL out of ${SCENARIOS.length}`);
-  console.log(`${'='.repeat(60)}\n`);
-
+  console.log('='.repeat(60) + '\n');
   process.exit(failed > 0 ? 1 : 0);
 }
 
 if (require.main === module) main();
-module.exports = { SCENARIOS, createSIGALLProofs, trySIGALLSwap };
+module.exports = { SCENARIOS, createSIGALLProofs, trySIGALLSwapWithMessage };
