@@ -80,3 +80,57 @@ class MintClient:
     def get_mint_info(self) -> dict:
         _, data = self._get("/v1/info")
         return data
+
+    # ─── NUT-04 quote status ──────────────────────────────────────────────
+
+    def check_mint_quote(self, quote_id: str) -> dict:
+        """GET /v1/mint/quote/bolt11/{quote_id} — check mint quote status."""
+        code, data = self._get(f"/v1/mint/quote/bolt11/{quote_id}")
+        if code != 200:
+            raise RuntimeError(f"check_mint_quote failed ({code}): {data}")
+        return data
+
+    # ─── NUT-20 locked quotes ─────────────────────────────────────────────
+
+    def mint_quote_with_pubkey(
+        self, amount: int, pubkey: str, unit: str = "sat"
+    ) -> dict:
+        """Create a mint quote with a NUT-20 locking pubkey."""
+        code, data = self._post(
+            "/v1/mint/quote/bolt11",
+            {"amount": amount, "unit": unit, "pubkey": pubkey},
+        )
+        if code != 200:
+            raise RuntimeError(f"mint_quote_with_pubkey failed ({code}): {data}")
+        return data
+
+    def try_mint(
+        self,
+        quote: str,
+        outputs: list[dict],
+        signature: str | None = None,
+    ) -> tuple[int, dict | str]:
+        """POST /v1/mint/bolt11 returning (status, body) without raising."""
+        body: dict[str, Any] = {"quote": quote, "outputs": outputs}
+        if signature is not None:
+            body["signature"] = signature
+        return self._post("/v1/mint/bolt11", body)
+
+    # ─── NUT-29 batch operations ──────────────────────────────────────────
+
+    def batch_check_quotes(
+        self, quote_ids: list[str]
+    ) -> tuple[int, dict | str]:
+        """POST /v1/mint/quote/bolt11/check — batch check quote states."""
+        return self._post(
+            "/v1/mint/quote/bolt11/check", {"quotes": quote_ids}
+        )
+
+    def try_batch_mint(
+        self, quotes: list[str], outputs: list[dict]
+    ) -> tuple[int, dict | str]:
+        """POST /v1/mint/bolt11/batch — batch mint, returns (status, body)."""
+        return self._post(
+            "/v1/mint/bolt11/batch",
+            {"quotes": quotes, "outputs": outputs},
+        )
