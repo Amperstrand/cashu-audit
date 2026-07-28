@@ -22,7 +22,7 @@ python run_matrix.py \
 
 ## Scenario taxonomy
 
-58 scenarios organized by spending condition type × signature flag × transaction type:
+69 scenarios organized by category:
 
 | Category | Count | What it tests |
 |----------|-------|---------------|
@@ -31,7 +31,8 @@ python run_matrix.py \
 | NUT-12 HTLC SIG_INPUTS | 8 | Hash-lock verification, preimage + signature |
 | NUT-12 HTLC SIG_ALL | 8 | HTLC + aggregated signatures |
 | Melt spending conditions | 12 | P2PK/HTLC in melt pathway, SIG_ALL melt messages |
-| **Total** | **54** | |
+| NUT-00/03/04/05/07 Basics | 15 | Swap, mint quote, melt, checkstate, restore, token format |
+| **Total** | **69** | |
 
 Each scenario:
 1. Mints regular proofs via NUT-04 (FakeWallet auto-pays)
@@ -86,24 +87,43 @@ conformance/
 
 ## Findings
 
-### cashu-cf (testnut.cashu.exchange) — 43/54 PASS (80%)
+### Multi-mint comparison (138 tests = 69 × 2 mints)
 
-4 distinct bugs found. See [reports/FINDINGS-testnut-20260728.md](reports/FINDINGS-testnut-20260728.md) for full details.
+| Mint | Pass | Fail | Rate |
+|------|------|------|------|
+| **Nutshell v0.20.0** | 60 | 9 | 87% |
+| **cashu-cf (testnut)** | 61 | 8 | 88% |
+| **Combined** | 121 | 17 | **88%** |
 
-**Bug #1: P2PK primary pathway dropped after locktime** (3 failures)
-Same bug as [nutshell #1009](https://github.com/cashubtc/nutshell/issues/1009).
-NUT-11 says primary conditions "continue to apply" after locktime expiry.
+### Bugs found and fixed in cashu-cf
 
-**Bug #2: HTLC receiver path fails after locktime** (2 failures)
-Same pathway independence bug — receiver/preimage path dropped after locktime.
+| Bug | Issue | Status | Fix |
+|-----|-------|--------|-----|
+| #1 Locktime drops primary pathway | [cashu-cf#37](https://github.com/Amperstrand/cashu-cf/issues/37) | **FIXED** | Deploy 1d1e401 |
+| #2 HTLC receiver path after locktime | [cashu-cf#37](https://github.com/Amperstrand/cashu-cf/issues/37) | **FIXED** | Deploy 1d1e401 |
+| #3 HTLC refund requires preimage | [cashu-cf#38](https://github.com/Amperstrand/cashu-cf/issues/38) | **FIXED** | Deploy 1d1e401 |
+| #4 HTLC + SIG_ALL sig verification | [cashu-cf#39](https://github.com/Amperstrand/cashu-cf/issues/39) | **PARTIAL** | Deploy a0347e3 (3/5 fixed) |
+| #5 Shared SIG_ALL + locktime | [nutshell #1100](https://github.com/cashubtc/nutshell/issues/1100) | **UPSTREAM** | Filed on nutshell |
 
-**Bug #3: HTLC refund requires preimage** (2 failures)
-NUT-14 refund path should work with refund signatures only. cashu-cf
-incorrectly requires a preimage.
+### Remaining failures (8 cashu-cf, 9 Nutshell)
 
-**Bug #4: HTLC + SIG_ALL signature verification broken** (4 failures)
-Zero valid signatures returned for HTLC + SIG_ALL proofs. P2PK + SIG_ALL
-works correctly. Bug is specific to HTLC + SIG_ALL code path.
+**cashu-cf only (8):**
+- 2 melt SIG_ALL scenarios (message format + HTLC)
+- 2 locktime + anyone-can-spend edge cases
+- 1 output tampering accepted (security concern)
+- 1 HTLC SIG_ALL preimage-only
+- 1 HTLC SIG_ALL locktime refund
+- 1 swap double-spend not rejected at swap level
+
+**Shared (3):**
+- `p2pk_sigall_locktime_after_expiry_primary_still_works` (Bug #5)
+- `p2pk_sigall_multisig_locktime_primary_still_works` (Bug #5)
+- `htlc_sigall_receiver_path_after_locktime` (Bug #5)
+
+**Nutshell only (6):**
+- `mint_quote_zero_amount_fails` — Nutshell accepts amount=0
+- `melt_valid_proofs_succeeds` — both mints fail this (test artifact)
+- `mint_info_nut19_supported` — Nutshell doesn't report NUT-19
 
 ## Future: Wallet auditing
 
