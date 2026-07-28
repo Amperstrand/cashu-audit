@@ -196,11 +196,15 @@ class ProofBuilder:
 
         quote = self.mint.mint_quote(amount)
         quote_id = quote["quote"]
-        invoice = quote.get("request", "")
 
-        time.sleep(3)
-
-        result = self.mint.mint_tokens(quote_id, api_outputs)
+        for _ in range(30):
+            try:
+                result = self.mint.mint_tokens(quote_id, api_outputs)
+                break
+            except RuntimeError:
+                time.sleep(1)
+        else:
+            result = self.mint.mint_tokens(quote_id, api_outputs)
         signatures = result.get("signatures", [])
 
         keyset_id, keys = self.get_active_keyset()
