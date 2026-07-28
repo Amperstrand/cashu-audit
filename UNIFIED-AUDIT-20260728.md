@@ -1,3 +1,5 @@
+## ⚠️ CORRECTION (2026-07-28 16:00): V4 token "bug" (#326) was a test artifact. V4 decodes correctly on gonuts v0.10.0. See issue #326 closure for details.
+
 # Unified Cashu Audit: OpenTollGate Ecosystem — 2026-07-28
 
 ## Executive Summary
