@@ -60,3 +60,30 @@ impossible. Or the SIG_ALL message verification path for HTLC secrets
 has a separate code path that doesn't extract pubkeys from tags correctly.
 
 **CDK status:** PASS for all HTLC SIG_ALL scenarios.
+
+## Bug #5: SIG_ALL + locktime drops primary pathway (shared, 3 failures)
+
+**Affected scenarios:**
+- `p2pk_sigall_locktime_after_expiry_primary_still_works`
+- `p2pk_sigall_multisig_locktime_primary_still_works`
+- `htlc_sigall_receiver_path_after_locktime`
+
+**Root cause (confirmed by testing):**
+
+After locktime expiry with sigflag=SIG_ALL, both Nutshell and cashu-cf
+check ONLY refund signatures, ignoring primary signatures entirely.
+
+Test results (Nutshell, legacy SIG_ALL mode):
+- Primary key signature → 400 "signature threshold not met. 0 < 1"
+- Refund key signature → 200 (success)
+- Both signatures → would succeed but proofs already spent by refund test
+
+**Contrast with SIG_INPUTS:**
+- SIG_INPUTS + locktime: Nutshell correctly keeps primary pathway (8/8 HTLC pass)
+- SIG_ALL + locktime: Nutshell drops primary pathway (3 shared failures)
+
+**CDK:** Passes all 3 scenarios — handles both pathways regardless of sigflag.
+
+**Conclusion:** The SIG_ALL verification path has a separate code path for
+locktime handling that doesn't implement pathway independence correctly.
+Both Nutshell and cashu-cf independently have this bug. CDK does not.
