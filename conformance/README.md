@@ -20,11 +20,14 @@ python3 run_matrix.py --mint https://testnut.cashu.exchange
 | NUT-08 | 6 | Fee calculation and validation |
 | NUT-09 | 1 | Restore signatures |
 | NUT-11 | 20+ | P2PK SIG_INPUTS + SIG_ALL (swap + melt) |
+| NUT-13 | 3 | Deterministic secrets (BIP32 derivation, restore) |
 | NUT-14 | 10+ | HTLC spending conditions (swap + melt) |
+| NUT-18 | 2 | Payment request CBOR decode |
 | NUT-19 | 1 | Cache headers |
 | NUT-20 | 4 | Quote signature validation |
+| NUT-26 | 2 | Bech32m payment request encoding |
 | NUT-29 | 3 | Batch mint/check operations |
-| **Total** | **80+** | |
+| **Total** | **107** | |
 
 ## Adding Scenarios
 

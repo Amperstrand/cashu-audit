@@ -5,7 +5,7 @@ Payment requests are CBOR-encoded and base64url-encoded with a ``creq``
 prefix.  The mint does not process payment requests directly, but these
 tests verify the encoding/decoding conformance using spec test vectors.
 
-Format: ``creq`` + base64url( version_byte + CBOR_map )
+Format: ``creq`` + ``A`` (version char) + base64url( CBOR_map )
 """
 from __future__ import annotations
 
@@ -110,14 +110,18 @@ def _cbor_decode(data: bytes, offset: int = 0) -> tuple[Any, int]:
 
 
 def _decode_creq(creq_str: str) -> dict[str, Any]:
-    """Decode a ``creq…`` payment request string to a dict."""
-    if not creq_str.startswith("creq"):
-        raise ValueError("not a creq payment request")
-    raw = base64.urlsafe_b64decode(creq_str[4:])
-    version = raw[0]
-    if version != 0:
-        raise ValueError(f"unsupported payment request version: {version}")
-    decoded, _ = _cbor_decode(raw, 1)
+    """Decode a ``creqA…`` payment request string to a dict.
+
+    Format: ``creq`` + ``A`` (version char) + base64url(CBOR(map)).
+    """
+    if not creq_str.startswith("creqA"):
+        raise ValueError("not a creqA payment request")
+    b64_data = creq_str[5:]
+    pad = (-len(b64_data)) % 4
+    if pad:
+        b64_data += "=" * pad
+    raw = base64.urlsafe_b64decode(b64_data)
+    decoded, _ = _cbor_decode(raw, 0)
     return decoded
 
 

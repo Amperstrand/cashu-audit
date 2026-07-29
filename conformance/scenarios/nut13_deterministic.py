@@ -36,9 +36,6 @@ _TV_SECRET_0 = (
 _TV_SECRET_1 = (
     "8f2b39e8e594a4056eb1e6dbb4b0c38ef13b1b2c751f64f810ec04ee35b77270"
 )
-_TV_R_0 = (
-    "ad00d431add9c673e843d4c2bf9a778a5f402b985b8da2d5550bf39cda41d679"
-)
 
 
 # ─── BIP-32 / BIP-39 helpers ─────────────────────────────────────────────
@@ -65,21 +62,24 @@ def _mnemonic_to_seed(mnemonic: str, passphrase: str = "") -> bytes:
 
 def _bip32_master(seed: bytes) -> tuple[bytes, bytes]:
     """Derive BIP-32 master private key and chain code from seed."""
-    I = hmac.new(b"Bitcoin seed", seed, hashlib.sha512).digest()
-    return I[:32], I[32:]
+    digest = hmac.new(b"Bitcoin seed", seed, hashlib.sha512).digest()
+    return digest[:32], digest[32:]
 
 
 def _ckd_priv(
     parent_key: bytes, parent_chain: bytes, index: int
 ) -> tuple[bytes, bytes]:
-    """BIP-32 CKDpriv — hardened only (NUT-13 paths are all hardened)."""
-    if index >= 0x80000000:
+    """BIP-32 CKDpriv — supports hardened and non-hardened derivation."""
+    from coincurve import PrivateKey as _PK
+
+    if index >= 0x80000000:  # hardened
         data = b"\x00" + parent_key + index.to_bytes(4, "big")
-    else:
-        raise ValueError("NUT-13 uses hardened-only derivation")
-    I = hmac.new(parent_chain, data, hashlib.sha512).digest()
-    il = int.from_bytes(I[:32], "big")
-    ir = I[32:]
+    else:  # non-hardened: need parent public key
+        parent_pub = _PK(parent_key).public_key.format(compressed=True)
+        data = parent_pub + index.to_bytes(4, "big")
+    digest = hmac.new(parent_chain, data, hashlib.sha512).digest()
+    il = int.from_bytes(digest[:32], "big")
+    ir = digest[32:]
     ki = (il + int.from_bytes(parent_key, "big")) % _N
     if ki == 0:
         raise ValueError("derived key is zero — invalid")
@@ -177,8 +177,8 @@ def _(mint: MintClient) -> ScenarioResult:
     seed = _mnemonic_to_seed(_TV_MNEMONIC)
     master_key, master_chain = _bip32_master(seed)
 
-    # counter=0 → path m/129372'/0'/864559728'/0'
-    path_0 = f"m/129372'/0'/{_TV_KEYSET_ID_INT}'/0'"
+    # counter=0 → secret path m/129372'/0'/864559728'/0'/0
+    path_0 = f"m/129372'/0'/{_TV_KEYSET_ID_INT}'/0'/0"
     secret_0 = _derive_path(master_key, master_chain, path_0).hex()
     if secret_0 != _TV_SECRET_0:
         return ScenarioResult(
@@ -189,8 +189,8 @@ def _(mint: MintClient) -> ScenarioResult:
             f"got {secret_0[:32]}…",
         )
 
-    # counter=1 → path m/129372'/0'/864559728'/1'
-    path_1 = f"m/129372'/0'/{_TV_KEYSET_ID_INT}'/1'"
+    # counter=1 → secret path m/129372'/0'/864559728'/1'/0
+    path_1 = f"m/129372'/0'/{_TV_KEYSET_ID_INT}'/1'/0"
     secret_1 = _derive_path(master_key, master_chain, path_1).hex()
     if secret_1 != _TV_SECRET_1:
         return ScenarioResult(
