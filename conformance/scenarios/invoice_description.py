@@ -51,7 +51,16 @@ def _try_decode_bolt11(invoice: str) -> dict | None:
 
 @scenario("invoice_description_truncated_quote_id", CAT)
 def _(mint: MintClient) -> ScenarioResult:
-    """Decode BOLT11 invoice, verify description contains 16-char quote ID prefix."""
+    """Decode BOLT11 invoice, verify description contains 16-char quote ID prefix.
+
+    Skips on FakeWallet mints (testnut) because they return dummy invoices
+    like 'dummy-mint-8-...' instead of real BOLT11 strings.
+
+    To run this scenario, target a mint with a real Lightning backend:
+    - Local Nutshell + LNbits testnet (MINT_LIGHTNING_BACKEND=LNbits)
+    - cashu-cf with a Strike/LNbits API key configured
+    - rugs.cashu.exchange (uses LNbits, but no FakeWallet auto-pay)
+    """
     quote = mint.mint_quote(8)
     qid = quote.get("quote", "")
     invoice = quote.get("request", "")

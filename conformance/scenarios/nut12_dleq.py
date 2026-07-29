@@ -206,7 +206,19 @@ def _(mint: MintClient) -> ScenarioResult:
 
 @scenario("dleq_proof_absent_graceful", CAT)
 def _(mint: MintClient) -> ScenarioResult:
-    """When DLEQ is absent, proofs are still spendable (graceful degradation)."""
+    """When DLEQ is absent, proofs are still spendable (graceful degradation).
+
+    Skips on mints that DO provide DLEQ proofs (testnut, Nutshell, CDK).
+    This is the correct behavior — the test only applies when DLEQ is absent.
+
+    To run this scenario, target a mint that does NOT implement NUT-12:
+    - An older cashu-cf deployment before DLEQ was implemented
+    - A minimal/educational mint without NUT-12 support
+    - A fork with createDLEQProof() calls disabled
+
+    Note: cashu-cf fix #44 now omits dleq gracefully on generation failure,
+    so the absent case is handled correctly even without running this test.
+    """
     builder = ProofBuilder(mint)
     outputs, signatures = _mint_with_raw_sigs(builder, mint, 8)
     if not signatures:

@@ -22,7 +22,14 @@ from conformance.scenarios import (
 
 @scenario("fee_zero_ppk_swap_succeeds", "NUT-08 Fees")
 def _(mint: MintClient) -> ScenarioResult:
-    """With fee_ppk=0, swap output amount equals input amount (no fee deducted)."""
+    """With fee_ppk=0, swap output amount equals input amount (no fee deducted).
+
+    Skips on testnut (fee_ppk=10) and any mint with non-zero input fees.
+
+    To run this scenario, target a mint configured with input_fee_ppk=0:
+    - Local Nutshell: MINT_INPUT_FEE_PPK=0 in .env
+    - cashu-cf: KEYSETS={"sat":{"1":{"input_fee_ppk":0}}} in wrangler.toml
+    """
     builder = ProofBuilder(mint)
     builder.get_active_keyset()
     fee_ppk = builder._fee_ppk
