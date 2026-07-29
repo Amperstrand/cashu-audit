@@ -313,3 +313,62 @@ module.exports = {
   genKeypair,
   schnorrSign,
 };
+
+async function scenario_locktime_expired_no_refund_anyone_can_spend(e2e) {
+  const alice = genKeypair();
+  const secretStr = JSON.stringify(['P2PK', {
+    nonce: '12'.repeat(8),
+    data: alice.compressed,
+    tags: [['locktime', '1']],  // Expired locktime, NO refund keys
+  }]);
+  // No witness — proof should be spendable by anyone after locktime
+  const { id: keysetId, keys: mintKeys } = await e2e.getActiveKeyset();
+  const amounts = decomposeAmount(8);
+  const outputs = [];
+  const tokenData = [];
+  for (const amt of amounts) {
+    const sb = new TextEncoder().encode(secretStr);
+    const b = blindMessage(sb);
+    outputs.push({ amount: amt, id: keysetId, B_: bytesToHex(b.B_.toRawBytes(true)) });
+    tokenData.push({ secretStr, r: b.r, amount: amt });
+  }
+  const quoteResp = await e2e.http('POST', '/v1/mint/quote/bolt11', { unit: 'sat', amount: 8 });
+  let state = quoteResp.data.state;
+  for (let i = 0; i < 20 && state !== 'PAID'; i++) {
+    await new Promise(r => setTimeout(r, 500));
+    state = (await e2e.http('GET', `/v1/mint/quote/bolt11/${quoteResp.data.quote}`)).data.state;
+  }
+  const mintResp = await e2e.http('POST', '/v1/mint/bolt11', { quote: quoteResp.data.quote, outputs });
+  const proofs = [];
+  for (let i = 0; i < mintResp.data.signatures.length; i++) {
+    const sig = mintResp.data.signatures[i];
+    const td = tokenData[i];
+    const A = pointFromHex(mintKeys[td.amount.toString()]);
+    const C_ = pointFromHex(sig.C_);
+    const C = unblindSignature(C_, td.r, A);
+    proofs.push({ amount: td.amount, id: keysetId, secret: td.secretStr, C: bytesToHex(C.toRawBytes(true)) });
+  }
+  // Swap WITHOUT witness — should succeed (anyone-can-spend)
+  const keysets = await e2e.getKeysets();
+  const ksInfo = keysets.keysets.find(k => k.id === keysetId);
+  const fee = Math.ceil((proofs.length * (ksInfo?.input_fee_ppk || 0)) / 1000);
+  const outTotal = Math.max(1, 8 - fee);
+  const swapOutputs = [];
+  for (const amt of decomposeAmount(outTotal)) {
+    const sb = new TextEncoder().encode(bytesToHex(randomBytes(32)));
+    const b = blindMessage(sb);
+    swapOutputs.push({ amount: amt, id: keysetId, B_: bytesToHex(b.B_.toRawBytes(true)) });
+  }
+  const swapResp = await e2e.http('POST', '/v1/swap', {
+    inputs: proofs.map(p => ({ amount: p.amount, secret: p.secret, C: p.C, id: p.id })),
+    outputs: swapOutputs,
+  });
+  return {
+    name: 'p2pk_locktime_expired_no_refund_anyone_can_spend',
+    pass: swapResp.status === 200,
+    detail: swapResp.status === 200 ? 'Anyone-can-spend swap accepted (no witness needed)' : `Failed: ${JSON.stringify(swapResp.data).slice(0, 80)}`,
+  };
+}
+
+// Add to SCENARIOS list
+SCENARIOS.push(scenario_locktime_expired_no_refund_anyone_can_spend);
