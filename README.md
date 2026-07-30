@@ -18,6 +18,42 @@ python3 run_matrix.py --mint https://testnut.cashu.exchange --mint https://rugs.
 python3 run_matrix.py --mints mints.yaml
 ```
 
+## Python version requirement (important)
+
+`coincurve` (the secp256k1 binding used for BDHKE crypto) ships prebuilt
+wheels for **CPython 3.9–3.13 only**. It does NOT yet ship wheels for
+**Python 3.14** (released Oct 2025; upstream typically lags 1–3 months).
+
+On a system with Python 3.14 as the default, `pip install coincurve` falls
+back to a source build that fails with:
+
+```
+RuntimeError: Expected exactly one LICENSE file in cffi distribution, got 0
+```
+
+(a separate hatchling/cffi packaging bug, exposed whenever prebuilt wheels
+are unavailable).
+
+### Permanent fix — use Python 3.13 via Homebrew + a project venv
+
+```bash
+brew install python@3.13
+/usr/local/opt/python@3.13/bin/python3.13 -m venv .venv
+source .venv/bin/activate
+pip install -r conformance/requirements.txt
+python3 conformance/run_matrix.py --mint https://testnut.cashu.exchange
+```
+
+This isolates cashu-audit from system Python upgrades and uses prebuilt
+wheels — install completes in seconds, no source build, no LICENSE-file bug.
+
+### When can I go back to system Python?
+
+Once `coincurve` publishes cp314 wheels (watch
+<https://pypi.org/project/coincurve/#files> for a `cp314` row). At that
+point the `.venv` can be recreated with system Python and the brew
+dependency retired.
+
 ## Architecture
 
 ```
