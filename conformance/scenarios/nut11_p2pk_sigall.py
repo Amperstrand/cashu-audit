@@ -372,7 +372,13 @@ def _(mint: MintClient) -> ScenarioResult:
         tampered_outputs[0]["B_"], tampered_outputs[1]["B_"] = \
             tampered_outputs[1]["B_"], tampered_outputs[0]["B_"]
     elif tampered_outputs:
-        tampered_outputs[0]["B_"] = "0" + tampered_outputs[0]["B_"][1:]
+        original_b = tampered_outputs[0]["B_"]
+        if len(original_b) > 1 and original_b[1] == "2":
+            tampered_outputs[0]["B_"] = "03" + original_b[2:]
+        elif len(original_b) > 1 and original_b[1] == "3":
+            tampered_outputs[0]["B_"] = "02" + original_b[2:]
+        else:
+            tampered_outputs[0]["B_"] = "00" + original_b[2:]
     code, body = _attempt_swap(mint, proofs, tampered_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_output_amounts_swapped_fail", "NUT-11 P2PK SIG_ALL", Result.PASS, "tampered outputs rejected")
