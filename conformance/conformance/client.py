@@ -5,6 +5,9 @@ import requests
 from typing import Any
 
 
+# Round-robin counter for bark multi-wallet payments
+_bark_rr_idx = 0
+
 class MintClient:
     def __init__(self, base_url: str, timeout: int = 30):
         self.base_url = base_url.rstrip("/")
@@ -45,11 +48,11 @@ class MintClient:
         # Auto-pay via bark with round-robin across multiple wallets
         invoice = data.get("request", "")
         if invoice and not invoice.startswith("dummy-"):
-            import subprocess, os
-            _rr_state = {"idx": 0}
+            import subprocess
+            global _bark_rr_idx
             _WALLETS = [".bark1", ".bark2", ".bark3", ".bark4", ".bark5"]
-            wallet = _WALLETS[_rr_state["idx"] % len(_WALLETS)]
-            _rr_state["idx"] += 1
+            wallet = _WALLETS[_bark_rr_idx % len(_WALLETS)]
+            _bark_rr_idx += 1
             try:
                 subprocess.run(
                     f"ssh -o ConnectTimeout=5 root@inr2.cashu.exchange 'sudo -u t4 timeout 30 bark --datadir /home/t4/{wallet} ln pay invoice --wait {invoice}'",
@@ -117,6 +120,21 @@ class MintClient:
         )
         if code != 200:
             raise RuntimeError(f"mint_quote_with_pubkey failed ({code}): {data}")
+        # Auto-pay via bark (same as mint_quote — see round-robin pattern)
+        invoice = data.get("request", "")
+        if invoice and not invoice.startswith("dummy-"):
+            import subprocess
+            global _bark_rr_idx
+            _WALLETS = [".bark1", ".bark2", ".bark3", ".bark4", ".bark5"]
+            wallet = _WALLETS[_bark_rr_idx % len(_WALLETS)]
+            _bark_rr_idx += 1
+            try:
+                subprocess.run(
+                    f"ssh -o ConnectTimeout=5 root@inr2.cashu.exchange 'sudo -u t4 timeout 30 bark --datadir /home/t4/{wallet} ln pay invoice --wait {invoice}'",
+                    shell=True, timeout=45, capture_output=True
+                )
+            except Exception:
+                pass
         return data
 
     def try_mint(
