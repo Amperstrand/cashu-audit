@@ -212,15 +212,6 @@ class ProofBuilder:
 
         quote = self.mint.mint_quote(amount)
         quote_id = quote["quote"]
-        invoice = quote.get("request", "")
-        if invoice and not invoice.startswith("dummy-"):
-            import subprocess
-            try:
-                subprocess.run(["ssh", "-o", "ConnectTimeout=5", "root@inr2.cashu.exchange",
-                    f"sudo -u t4 timeout 30 bark ln pay invoice --wait {invoice}"],
-                    timeout=45, capture_output=True)
-            except Exception:
-                pass
 
         for _ in range(30):
             try:

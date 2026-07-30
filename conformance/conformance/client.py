@@ -42,6 +42,21 @@ class MintClient:
         code, data = self._post("/v1/mint/quote/bolt11", {"amount": amount, "unit": unit})
         if code != 200:
             raise RuntimeError(f"mint_quote failed ({code}): {data}")
+        # Auto-pay via bark with round-robin across multiple wallets
+        invoice = data.get("request", "")
+        if invoice and not invoice.startswith("dummy-"):
+            import subprocess, os
+            _rr_state = {"idx": 0}
+            _WALLETS = [".bark1", ".bark2", ".bark3", ".bark4", ".bark5"]
+            wallet = _WALLETS[_rr_state["idx"] % len(_WALLETS)]
+            _rr_state["idx"] += 1
+            try:
+                subprocess.run(
+                    f"ssh -o ConnectTimeout=5 root@inr2.cashu.exchange 'sudo -u t4 timeout 30 bark --datadir /home/t4/{wallet} ln pay invoice --wait {invoice}'",
+                    shell=True, timeout=45, capture_output=True
+                )
+            except Exception:
+                pass
         return data
 
     def mint_tokens(self, quote: str, outputs: list[dict]) -> dict:
