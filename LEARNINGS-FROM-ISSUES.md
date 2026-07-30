@@ -121,3 +121,50 @@ Based on these learnings, the general NUT audit prompt should now include:
 - [ ] Locktime + refund + SIG_ALL matrix covered
 - [ ] Race conditions tested where applicable
 ```
+
+---
+
+## Patterns from the 2026-07-30 review pass (ISSUE-050 + refactor review)
+
+> These extend the catalog past ISSUE-044, drawn from auditing a large test-cleanup
+> effort + a state-machine refactor extraction. Full checklist: `prompts/CASHU-MINT-AUDIT-CHECKLIST.md`.
+
+### Pattern 4: False-green suites — skips hiding active-feature coverage
+
+**Found in**: cashu-cf ISSUE-050 cleanup (7 `MintCoordinatorDO` crash-recovery tests skipped rather than rewritten; 3 proof/DLEQ-determinism skips).
+
+**Pattern**: a test-count reduction achieved by `.skip`-ping hard-to-fix tests on ACTIVE features (not removed ones). The suite looks greener but coverage actually shrinks. The hardest categories (crash recovery, concurrency, crypto determinism) are the most likely to be punted this way.
+
+**How to catch earlier**: after any "test cleanup" PR, run `grep -rn "\.skip" test/` and require each skip to reference a follow-up issue or name the removed feature. Skips without reasons = finding. Compare the "Test Files" + "skipped" counts run-over-run — a rising skip count during a "fix" effort is the smell.
+
+**Prompt improvement**: add a "skip audit" step to the release runbook: enumerate all skips, classify each as removed-feature (ok) vs active-feature-coverage-gap (finding).
+
+### Pattern 5: JS Number() precision loss on amounts > MAX_SAFE_INTEGER
+
+**Found in**: cashu-cf `deriveKeysetIdFromPublicHexMap` (keyset-ID derivation for large-amount keysets). Hidden behind a skipped test, not filed as a bug.
+
+**Pattern**: Cashu amounts are integers, but in JS any `Number(amount)` on amounts > 2^53 silently loses precision. Amounts feed keyset-ID derivation, fee calc, and signature hashes — so precision loss = wrong keyset ID / wrong signature = silent fund corruption.
+
+**How to catch earlier**: `grep -rn "Number(" src/` over every amount→hash/derive/fee path. CDK (Rust `u64`) and Nutshell (Python arbitrary-precision int) are immune; **JS/TS implementations are the risk zone**. Any `Number()` on an amount that could exceed 2^53 is a finding.
+
+**Prompt improvement**: add "audit all amount-to-hash/derive conversions for Number vs BigInt" to the crypto/keyset audit prompt.
+
+### Pattern 6: CAS atomicity as a first-class audit dimension
+
+**Found in**: cashu-cf ISSUE-049 (concurrent double-melt TOCTOU), verified preserved through the T6 state-machine extraction.
+
+**Pattern**: mint/swap/melt quote state machines are the fund-safety boundary. The question is always: is the UNPAID→PENDING transition a SINGLE atomic conditional write, or a read-check-write with a TOCTOU at the `await`? On Durable Objects / event-loop runtimes, `await` yields control — so a 600-line gap between read and write is a live race window even single-threaded.
+
+**How to catch earlier**: for every state-machine transition, trace: (a) is there exactly ONE entry path, (b) is it atomic on the storage backend (SQL conditional UPDATE yes; KV put no), (c) does the race-loser get a clean rejection BEFORE any side effect (proof reservation, payment dispatch). This is now Section 2 of the audit checklist.
+
+**Prompt improvement**: add "enumerate every UNPAID→PENDING path; verify single + atomic" to the concurrency audit prompt. CDK's `verify_and_set_melt_quote_pending` and Nutshell's `_verify_spent_proofs_and_set_pending` are the reference atomic primitives.
+
+### Pattern 7: Wontfix decisions with unflagged future-work dependencies
+
+**Found in**: cashu-cf ISSUE-052 (wontfix on Failed/Unknown melt states — sound, but safety depends on T11 saga recovery which isn't implemented).
+
+**Pattern**: a wontfix that reasons "X will handle this" where X is unimplemented future work. The decision is correct as a target design but unsafe today, and the gap is invisible because the wontfix label reads as "resolved."
+
+**How to catch earlier**: for every wontfix, ask (a) is the binding constraint real (verify empirically), (b) does the decision depend on unimplemented work. Every "X will handle it" must link X as a precondition; if X is unimplemented, the wontfix is really a "deferred" with an open dependency.
+
+**Prompt improvement**: add a "wontfix dependency audit" — for each wontfix, list any unimplemented preconditions and their tracking issues.
