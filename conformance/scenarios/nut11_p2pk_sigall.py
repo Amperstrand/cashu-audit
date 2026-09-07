@@ -372,7 +372,12 @@ def _(mint: MintClient) -> ScenarioResult:
         tampered_outputs[0]["B_"], tampered_outputs[1]["B_"] = \
             tampered_outputs[1]["B_"], tampered_outputs[0]["B_"]
     elif tampered_outputs:
-        tampered_outputs[0]["B_"] = "0" + tampered_outputs[0]["B_"][1:]
+        # Flip the trailing hex digit. The old prefix trick ("0" +
+        # B_[1:]) was a no-op — compressed points already start with
+        # '0' (02/03) — so single-output swaps sent a byte-identical
+        # request and every spec-correct mint rightly accepted it.
+        b = tampered_outputs[0]["B_"]
+        tampered_outputs[0]["B_"] = b[:-1] + ("1" if b[-1] == "0" else "0")
     code, body = _attempt_swap(mint, proofs, tampered_outputs)
     if expect_reject(code, body):
         return ScenarioResult("p2pk_sigall_output_amounts_swapped_fail", "NUT-11 P2PK SIG_ALL", Result.PASS, "tampered outputs rejected")
