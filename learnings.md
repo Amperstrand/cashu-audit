@@ -95,3 +95,18 @@ The divergence database is the highest-value artifact for the Cashu community. I
 - Mint operators to understand compatibility implications
 - Spec authors to clarify ambiguous requirements
 - New implementations to make informed behavioral choices
+
+## 2026-09-08 — NUT-00 secret-encoding boundary
+
+- NUT-00's secret is a string; verification couples it to a curve point only at
+  spend time. Wallets blinding raw entropy instead of utf8(string) produce
+  valid-looking, permanently-unspendable tokens (recurring class: 2 wallet
+  ports, Java NUT-11 charset bug, our tooling test).
+- cashu-cf accepts BOTH derivations (dual-verification leniency) — masks buggy
+  wallets until tokens hit a strict mint. Filed as divergence. cdk is strict.
+- Canonical vectors incl. a negative trap vector now live in
+  `conformance/reference-vectors/nut00-secret-encoding.json`; the scenario
+  module `nut00_secret_encoding.py` (control / trap / forged-C) is the cheap
+  ongoing probe — run it in every matrix pass.
+- Lesson for the framework: audit both sides of every encoding boundary — the
+  wallet trap AND mint leniency are the same divergence seen from two ends.
