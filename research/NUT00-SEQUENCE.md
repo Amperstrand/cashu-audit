@@ -19,17 +19,17 @@ case); the bug class documented as recurring (two wallet ports, a Java
 NUT-11 charset bug, ours). Auditing our own stack found cashu-cf lenient at
 exactly this boundary.
 
-## Phase 1 — cashu-cf: bug, fix, and documentation (DONE, on branch)
+## Phase 1 — cashu-cf: bug, fix, and documentation (branch `nut00-strict-v2`; main mirrors upstream — house convention: experiments never merge to main)
 
 | Item | Where |
 |---|---|
-| Finding + fix + tests + rollout plan | `Amperstrand/cashu-cf@nut00-strict-encoding-option` — ISSUE-119, commits `8bc90dd` (flag) and `f6db4c1` (keyset-scoped leniency) |
+| Finding + fix + tests + rollout plan | `Amperstrand/cashu-cf@nut00-strict-v2` (squashed ISSUE-119: flag + keyset-scoped leniency) |
 | Behavior | default lenient (all existing tokens spend); `LEGACY_ENCODING_KEYSETS=<ids>` scopes leniency to listed keysets; `STRICT_NUT00_ENCODING=true` kill switch |
 | Tests | 18/18 crypto suite (strict rejects trap, lenient accepts, keyset allowlist, forged-C) |
 | Measured matrix | testnut full (lenient confirmed, forged rejected); signut forged-C only (real backend — full matrix needs one funded invoice); cdk local strict |
 
-**Sequence for cashu-cf (after human review):**
-1. Review + merge `nut00-strict-encoding-option` to main.
+**Sequence for cashu-cf (branch deploys only — main stays upstream-clean):**
+1. Review + deploy from `nut00-strict-v2`.
 2. Deploy: no env set → zero behavior change.
 3. Watch `verifyProofSignatureWithPrivateKey.hexDecodeMatch` logs per mint.
 4. Optional funded run on signut to complete its matrix row.
