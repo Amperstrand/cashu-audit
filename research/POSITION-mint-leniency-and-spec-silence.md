@@ -87,3 +87,36 @@ Host the argument here. When filing upstream: lead with shared facts
 (repro + matrix + vectors), state the leniency position in two sentences,
 link this file for the full reasoning. Never argue spec philosophy in a
 GitHub issue body — link it.
+
+## Refinement (2026-09-08, after review): duty follows issuance, not the spec
+
+Two sharpenings make the argument durable against the obvious rebuttal
+("the spec literally says Bob checks k·H(utf8(x))"):
+
+1. **The spec describes, it does not oblige.** NUT-00's verification line is
+   part of a descriptive protocol walkthrough — no RFC-2119 keyword attaches
+   to it, for wallets OR mints. "The spec targets wallets not mints" is
+   therefore slightly overclaimed; the accurate form is: the spec defines a
+   canonical form and assigns obligation to nobody. Obligations that do not
+   exist cannot be enforced retroactively against issued value.
+2. **The honoring duty comes from issuance, not from the spec.** The mint
+   signed these exact B_ against paid quotes. Both derivations yield
+   deterministic, unforgeable signatures the mint can verify at negligible
+   cost. Refusing one is a choice with a holder cost, made after the value
+   changed hands. Whatever the spec says, the mint's own signature is the
+   claim it must honor.
+
+**Corollary (governance principle):** spec tightening MUST be prospective
+over keysets. A wallet-side MUST changes what new outputs must look like; it
+cannot void claims under keysets already issued while a divergent-but-
+unforbidden interpretation was live. Keyset rotation is therefore the
+enforcement mechanism: old keysets honor the lenient interpretation, new
+keysets verify strictly, and the boundary is objective (the keyset id),
+auditable (fallback-use telemetry), and self-retiring.
+
+**Engineering consequence:** the reference mints need an optional, per-keyset
+lenient mode — default off for new keysets, allowlisted for legacy ones, with
+a log-only sensor so operators can find affected keysets. Implementation
+tracked on our forks: cdk `nut00-per-keyset-leniency` (this work), cashu-cf
+shipped (`nut00-strict-v2` → main), nutshell to follow if adopted in
+discussion.
