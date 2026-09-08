@@ -102,3 +102,26 @@ on ourselves, here's what we learned" instead of "please fix our bug."
 - Local evidence: `receipt/recovery/` (reports, journals, demos, vectors), `receipt/spec-audit-run/` (run bundle, drafts)
 - Drafts ready: NOSTR-DRAFT.md, cashu-me-issue-draft.md, cdk issue (to write at filing time)
 - Oracle mints still up: `docker rm -f cdk-mint-0176 cdk-mint-0180`
+
+## Test campaign results (2026-09-08, testnut production + laptop house suite)
+
+- **Phase 0 (laptop, full house suite on `nut00-strict-v2`)**: 2,248 passed /
+  0 failed / 180 skipped — regression gate green.
+- **Phase 1.2 (testnut, branch default mode)**: 112-scenario matrix diff vs
+  main baseline = zero real changes (4 flips all inside the known-flaky
+  melt-timeout family; NUT-00 and all stable scenarios identical). Default
+  mode is behavior-neutral on the live mint.
+- **Phase 1.3 (testnut, STRICT_NUT00_ENCODING=true)**: canonical still
+  spends; entropy-trap flips ACCEPTED → rejected (code 14005, signature
+  verification). Found gap: cashu-cf strict mode has NO rejection-side
+  sensor (the fallback block is skipped entirely, so hexDecodeMatch can
+  never fire) — improvement item: mirror the cdk branch's log-on-reject.
+- **Phase 1.4 (testnut, LEGACY_ENCODING_KEYSETS=<one keyset>)**: keyset
+  scoping confirmed LIVE — trap under the allowlisted keyset ACCEPTED
+  (legacy claim honored, signatures returned); second keyset is
+  redeem-only (minting refused), so its strict-side is covered by 1.3 +
+  unit tests.
+- testnut restored to main code post-campaign (version 5225cfce).
+- Note: scenario error-body matcher should learn cashu-cf's shape
+  ({'error':'invalid_request','detail':'Proof verification failed...',
+  'code':14005}) — small cashu-audit improvement.
