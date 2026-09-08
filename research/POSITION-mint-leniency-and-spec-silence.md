@@ -120,3 +120,33 @@ a log-only sensor so operators can find affected keysets. Implementation
 tracked on our forks: cdk `nut00-per-keyset-leniency` (this work), cashu-cf
 shipped (`nut00-strict-v2` → main), nutshell to follow if adopted in
 discussion.
+
+## Final formulation (2026-09-08, closing the argument)
+
+**Agreed and settled:**
+- The divergent wallets were spec-compliant — no MUST existed; nothing was
+  violated. "Buggy" is retired terminology.
+- Interpretive ambiguity in a money protocol must resolve in favor of the
+  holder. When the spec is silent and both parties are textually free, the
+  tie-breaker cannot be the choice that silently destroys issued value.
+- cdk (and every strict mint) DID issue to divergent wallets — blindness
+  made it unknowable at signing time. Every strict mint therefore potentially
+  holds unredeemable liabilities it cannot currently even find. Sensor-first
+  is not optional.
+
+**The load-bearing boundary (refinement):**
+The mint's duty binds to *every derivation it actually signed* — not to every
+derivation a compliant wallet could theoretically have produced. All real
+stranded tokens pass the signed test; the reductio ("then accept anything")
+fails. Foundation: **the mint's signature is the claim** — an argument no
+maintainer can rebut, unlike "the spec permits wallets."
+
+**Rhetoric rule for upstream:** never "your strictness is the bug." Always
+"honor your signatures — per-keyset leniency, as nutshell already does for
+pre-0.15.1 claims, plus a sensor to find affected keysets."
+
+**Residual, stated once:** a MUST shrinks but does not zero the future
+divergent population (NUT-11's real MUSTs did not prevent the Java bug;
+LLM clients skim RFC-2119). The four fixes ship as a set: spec MUST
+(prospective), mint leniency (retroactive, keyset-bounded), wallet guard
+(prevention), sensor + error UX (detection and rescue).
