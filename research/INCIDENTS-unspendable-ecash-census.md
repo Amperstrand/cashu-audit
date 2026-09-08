@@ -62,3 +62,41 @@ nobody can currently count them.
   clearest public datapoint for the LLM-client risk thesis.
 - The census gives the Nostr post its "this genus eats real sats" texture
   without overclaiming the encoding species.
+
+## Species classification of the two known encoding-trap occurrences (2026-09-08 addendum)
+
+The cross-vectors header (cashu-core-lite) records the encoding species shipping
+twice in the wild — both in our own orbit, both caught by vectors before user
+harm:
+
+1. **prta #86** (OpenTollGate/physical-router-test-automation): the token
+   RECOVERY tool's original Y-derivation. Context recovered from the issue:
+   `recover_tokens.py` parses stuck tokens and runs NUT-07 checkstate before
+   attempting receive — a wrong Y-derivation there makes the recovery tool
+   itself misreport spend-state (tell users recoverable tokens are dead, or
+   vice versa). Caught in testing; no user funds harmed.
+2. **First Python port** of cashu-core-lite: hex-decode divergence, caught by
+   the same vectors.
+
+Plus our own private incident (real sat loss, unreleased tooling) — the only
+confirmed money-loss case of the encoding species we know of. Public-user
+loss reports for this species: still zero (genus: seven, table above).
+
+## Grandfathering clarification (position addendum)
+
+Keyset-scoped leniency has **no sunset deadline**: allowlisted keysets verify
+leniently for as long as any of their tokens exist. "Retires when keysets
+drain" is a description, not a deadline — no pre-existing claim ever strands
+under this design. Strictness applies only to keysets created after a wallet-
+side MUST exists and wallets conform, which is precisely the "grandfathered
+until spec + conformance" requirement. The one residual: a wallet violating
+the MUST under a new keyset strands its own funds — that population is
+addressed by guard + vectors + sensor + operator recovery, not by abolishing
+strictness (which re-creates the Postel freeze).
+
+Note for the cdk proposal: the nutshell precedent is issuer-relative (it
+honors claims *it* issued under the old algorithm; cdk owes nothing for the
+algorithm species since it never used the old hash). For the encoding
+species, a cdk mint that unknowingly signed entropy-bound outputs DID issue
+those claims — per-keyset leniency where the sensor shows traffic is the
+faithful application of the same precedent.
