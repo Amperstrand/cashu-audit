@@ -80,3 +80,70 @@ Design rules used:
   `encoding_mismatch: true` when the C matches the WRONG derivation. Zero
   protocol change, no leniency — turns every strict mint into a sensor for the
   trap so we can finally measure how much money it eats.
+
+## Addendum 2026-09-09: the error message as the last line of defense
+
+### The principle: money should not expire silently
+
+If ecash is money, the failure modes must be as legible as a bank's:
+
+| Cashu error today | What it could say | What the wallet could do |
+|---|---|---|
+| "Token not verified" (10001) | "Your money was minted with an older format that this mint no longer accepts" | Suggest a compatible mint or wallet upgrade |
+| "Token not verified" (10001) | "Your wallet created this token with a non-standard encoding" | Prompt wallet update |
+| "Unknown Keyset" (12001) | "This keyset has been retired. Contact the mint operator for a swap" | Link to mint contact |
+| "Proofs pending" (11002) | "A previous transaction didn't complete. Your funds are held in a pending state" | Offer retry or recovery |
+| "Cannot melt old and new ecash" (12003) | "You're mixing tokens from different keyset generations. Spend them separately" | Auto-split the spend |
+
+### The taxonomy: distinct error codes for distinct failure modes
+
+The current NUT error registry (10001 = "Proof verification failed") conflates
+at least five fundamentally different situations. Each needs its own code
+and message:
+
+```
+10001  Proof verification failed (genuinely invalid — corrupted or forged)
+10101  Proof uses deprecated hash algorithm (this mint no longer accepts it)
+10102  Proof uses non-standard secret encoding (wallet may need update)
+10103  Proof references unknown/rotated keyset (contact mint for swap)
+10104  Proof signature valid but state is PENDING (interrupted operation)
+```
+
+With distinct codes:
+- **Wallets** can present actionable messages instead of "something went wrong"
+- **Users** can understand what happened to their money
+- **Mint operators** can see which failure class dominates their logs
+- **The community** can measure the real prevalence of each issue
+
+### "Your money is no good here" — the honest framing
+
+The current "Token not verified" sounds like a technical failure the user
+can't understand. "Your money is no good here" is honest and actionable:
+
+- It doesn't blame the user ("invalid token")
+- It doesn't hide the problem (generic error)
+- It implies the money might work elsewhere (different mint, different version)
+- It's a compatibility statement, not a judgment
+
+A wallet seeing "10101: deprecated hash algorithm" could respond:
+> "These tokens were created with an older Cashu format. They may work at
+> other mints that still support it, or you can contact this mint's operator
+> for assistance."
+
+That's a fundamentally different user experience than "Error receiving
+tokens: MintOperationError: Token not verified."
+
+### Connection to the full solution stack
+
+| Layer | When it acts | What it prevents |
+|---|---|---|
+| Spec MUST + vectors | Before implementation | New buggy wallets |
+| Wallet pre-submit guard | Before submission | Bad proofs reaching the mint |
+| Even-bit signaling | Before transaction | Old wallets wasting funds |
+| Observe mode | During transaction | Silent mint-side failures |
+| Warn-and-delay | During transaction | Invisible acceptance |
+| **Error taxonomy** | **After failure** | **Confused users, lost trust** |
+
+The error message is the last line of defense. When everything above it has
+failed, the error is the only signal the user receives. It should be the
+most carefully designed message in the entire protocol, not an afterthought.
