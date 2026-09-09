@@ -73,3 +73,39 @@ Reproduce: `/tmp/ab_probe.py` (also archived in this repo:
 `conformance/ab_probe.py`), arms via docker on ai-legion per the setup
 table. Probe source of truth for the deprecated hash: nutshell's shipped
 0.15.0 wheel.
+
+---
+
+## Addendum 2026-09-09: arm 5 — cdk v0.18.0 with the legacy fix
+
+Branch: `Amperstrand/cdk@nut00-legacy-v0.18.0` (backport of
+nut00-per-keyset-leniency + new legacy pre-0.15.1 hash algorithm path).
+Arm configured with `legacy_algorithm_keysets = [<its keyset>]` only
+(encoding allowlist left empty).
+
+| Arm | canonical | algolegacy | trap |
+|---|---|---|---|
+| **cdk 0.18.0 + fix** | ✅ ACCEPT | ✅ **ACCEPT** (allowlisted) | ❌ REJECT |
+
+**= the nutshell 0.18.2 row exactly.** The softfork is closed: a nutshell
+mint migrating to cdk (this branch) keeps redeeming pre-0.15.1 tokens.
+Sensor telemetry confirmed on both axes (WARN on unallowlisted match, INFO
+on allowlisted acceptance).
+
+## Community-history findings (researched 2026-09-09)
+
+- The 0.15.1 domain-separator migration was **never debated as a compat
+  question** — PR #421 ("Adjust new domain separator", 2024-02-15) has no
+  discussion; the fallback simply appeared. The wallet-side deprecation
+  attempts (#457/#458/#459, three tries in two days) show it was bumpy.
+- cashu-ts 1.0.0 migration guide tells users to **reset counters and
+  self-spend all proofs** — the change silently invalidated deterministic
+  secrets with no redemption path.
+- nutshell **removed** the deprecated fallback in 2026-07 (#1082 "retire
+  legacy curve mapping") — the compat window was open ~2.4 years with no
+  sunset signal, no error-code distinction, no spec change. Current
+  nutshell (0.20.3) rejects algolegacy.
+- Net: the ecosystem silently softforked three times (0.15.1 flip, cdk
+  divergence, 2026 removal) with zero signaling to users or operators.
+  Our position doc's three-channel signaling proposal addresses exactly
+  this history.
