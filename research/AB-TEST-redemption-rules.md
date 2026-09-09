@@ -109,3 +109,51 @@ on allowlisted acceptance).
   divergence, 2026 removal) with zero signaling to users or operators.
   Our position doc's three-channel signaling proposal addresses exactly
   this history.
+
+## Deep-dive: the 2026-07 removal (PR #1082) — facts from the diff and record
+
+**When exactly:** merged 2026-07-15 (commit 61019f2b), authored by
+a1denvalu3 (community contributor, 65 repos — NOT a core maintainer),
+approved by callebtc (creator). Shipped in **0.20.3, released 2026-07-22**
+— seven days from merge to release. The 0.20.3 release notes list it as a
+"chore" between docker fixes and Pydantic migration. **No migration
+warning, no breaking-change flag, no release-notes callout.**
+
+**Was it "on purpose"?** Yes and no. The framing is cleanup: PR title
+"retire legacy curve mapping", body says "remove the obsolete
+curve-mapping compatibility path". The word "obsolete" does the work —
+but obsolete to whom? The fallback had been there for 2.4 years with zero
+deprecation signaling (no error code, no log, no sunset date, no spec
+note). What the diff actually removes:
+
+1. **Mint-side verify fallback** (`verify_deprecated`) — pre-0.15.1 tokens
+   become unredeemable at upgraded nutshell mints. THE softfork.
+2. **Wallet-side blinding option** (`step1_alice_deprecated` + the
+   `wallet_use_deprecated_h2c` setting, default False) — this was already
+   opt-in-only and harmless (a wallet COULD choose to blind with the old
+   hash for old-mint compat; that escape hatch is gone too).
+3. **DLEQ verification fallback** (`carol_verify_dleq_deprecated`) — old
+   tokens with DLEQ can't be peer-verified offline either.
+
+**No issue preceded it.** No discussion in the PR (zero comments, one-line
+approval). No linked issue. No reported-lost-funds issue on the tracker
+(we searched: nothing). The author's intent was code hygiene — "use the
+current mapping consistently" — with no evidence anyone asked "who still
+redeems under the old mapping?"
+
+**Who's actually exposed:** any nutshell mint that has been running since
+before 2024-02 (0.15.1) — 2.5+ years — AND upgrades to 0.20.3+ AND still
+has unspent pre-0.15.1 proofs outstanding. In practice: long-running
+community mints (8333.space is the flagship example — it has run since
+2023). Whether those old tokens are still in circulation is unknowable —
+which is exactly our sensor's job. No mint operator has reported stranded
+funds publicly (GitHub issues, Nostr searches as of 2026-09-09).
+
+**Verdict:** not a deliberate policy decision to strand users — a
+maintenance PR that deleted a compat path nobody remembered was
+load-bearing, shipped without ceremony. The governance gap (no signaling,
+no sunset discipline, no operator outreach) did the damage, not malice.
+This is the strongest possible argument for the three-channel signaling
+proposal and the sensor: when the reference mint can silently delete a
+redemption path as a "chore", operators need instrumentation to know what
+their outstanding liabilities redeem under — before and after upgrades.
