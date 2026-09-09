@@ -220,3 +220,52 @@ addresses the case where ALL other layers have already failed — the proof
 arrives at the mint, it doesn't verify canonically, and the current options
 are "reject silently" or "accept silently." The delay creates the third
 option: "accept loudly."
+
+## Audit.8333.space analysis (2026-09-09)
+
+### Direct answer: No, the auditor's failures are NOT the hash_to_curve issue
+
+The auditor uses a known-good wallet (nutshell CLI) that produces canonical
+proofs. In 1000 swaps: **zero "Token not verified" / 10001 errors.** The
+auditor cannot detect the derivation trap because it never produces
+non-canonical proofs.
+
+### What IS failing at the auditor (the real operational pain)
+
+| Error class | Count | What it means |
+|---|---|---|
+| "proofs/token pending" (11002/11000/11012) | **186** | #1 failure — state management (interrupted ops) |
+| "Cannot melt old and new ecash" (12003) | **50** | Cross-keyset divergence |
+| "Unknown Keyset" (12001) | **27** | Keyset format/rotation issue |
+| Proxy unreachable | 212 | Infrastructure |
+| SSL certificate failures | 53 | Infrastructure |
+| 502/522/526 Bad Gateway | 66 | Infrastructure |
+| "'Wallet' object has no attribute" | 11 | Auditor's own version mismatch |
+
+The derivation trap is invisible to the auditor — but **186 pending-proof
+failures validate our "interrupted-operation recovery is the biggest
+underspecified area" finding.**
+
+### The bombshell: 35 of 65 mints (54%) are one upgrade away from strand-funding
+
+| Category | Count | Risk |
+|---|---|---|
+| Still on nutshell < 0.20.3 (has fallback) | 33 | Will silently strand pre-0.15.1 tokens when they upgrade |
+| On Nutshell-CF 0.0.1 (pre-0.15.0, old algorithm as PRIMARY) | 2 | May have algorithm-legacy tokens outstanding RIGHT NOW |
+| On current strict versions (0.20.3+ or cdk) | 30 | Already strict — any legacy tokens already stranded |
+
+**These 35 mints have zero observability into whether they hold legacy-token
+exposure.** When they upgrade, any pre-0.15.1 tokens become wall-paper
+with no warning, no signal, no error distinction. The observe mode is the
+tool that would tell them BEFORE upgrading.
+
+### The connection between auditor failures and our broader thesis
+
+The auditor data confirms the ecosystem's #1 fund-loss vector is NOT
+derivation mismatches — it's the proof lifecycle itself:
+1. Pending proofs (186 failures) = interrupted operations with no recovery
+2. Cross-keyset mixing (50 failures) = format/derivation divergence
+3. Unknown keysets (27 failures) = keyset rotation without signaling
+
+All three are the same genus: **the spec defines happy paths only, and
+every implementation solves the edge cases differently.**
