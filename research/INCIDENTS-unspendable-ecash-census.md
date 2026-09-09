@@ -100,3 +100,54 @@ algorithm species since it never used the old hash). For the encoding
 species, a cdk mint that unknowingly signed entropy-bound outputs DID issue
 those claims — per-keyset leniency where the sensor shows traffic is the
 faithful application of the same precedent.
+
+## Addendum 2026-09-09: real-world redemption failure reports (expanded search)
+
+### High-profile community reports
+
+| Who | When | What they said | Likely cause |
+|---|---|---|---|
+| **VitorPamplona** (Amethyst maintainer) | Dec 2024 | "I tested 5 cashu wallets. I have lost funds in all of them. Mints have disappeared on me. NIP-60 events have disappeared as well... NO one should EVER lose ANY money from a custodial system. Not a single sat." | Multiple (state, upgrade, migration) |
+| **DireMunchkin** | Jun 2026 | "I tried like 5 different Cashu wallets and lost the funds in 3 of them. Never from the mint rugging — always some weird wallet/mint state snafu where my notes just wouldn't redeem or disappeared." | Opaque redemption failures |
+| **stl1988** | Aug 2026 | "npub.cash no longer has its own wallet and I can't get my sats... All my zaps I got are lost!!!" | npub.cash signature verification outage |
+| **rubenstorm** | Aug 2026 | YakiHonne cashu wallet: "if I send out... I get error and nothing ever gets sent out" | Opaque error, funds not moving |
+| **ManyKeys** | Aug 2026 | wallet.cashu.me shows 0 balance, tried multiple mints, "incomplete migration" | Wallet migration/derivation |
+| **FreedomMan** | Mar 2023 | "could not verify proofs" on lnbits, can't send or pay | Pre-0.15.1 era |
+| **bostonwine** (21k sat bounty) | Apr 2023 | Multi-user reproduction attempts on cashu.me | Pre-0.15.1 era |
+| **AI agent** | Feb 2026 | Lost 1,824 sats — crash between melt and change save | State management |
+| **gudnuf** | Aug 2024 | "It took a while to find all the edge cases where tokens may be lost" | Multiple |
+| **elkim** | Apr 2026 | cashu-ts 3.6→4.1 upgrade: "all was working flawless until update... agent went full forensics, tested proofs against mint which marked it as spent and it got burned" | Version-upgrade proof invalidation |
+
+### Pattern analysis
+
+Every report says some version of "tokens stopped working" or "funds
+disappeared" — **none** can attribute the root cause. The error is always
+opaque ("Token not verified", "could not verify proofs", "something went
+wrong"). Users blame the wallet, the mint, or "state snafus." Nobody says
+"my wallet hashed the entropy instead of the UTF-8 of the secret string"
+because the tooling to diagnose that doesn't exist.
+
+This is the strongest possible argument for observe mode: the community's
+own prominent members are reporting the symptom class, and the diagnostic
+infrastructure to attribute it is 6 lines of code.
+
+### The delay-redemption idea (owner-proposed, 2026-09-09)
+
+A fourth mode between allow and observe:
+
+**`redeem_with_warning`**: accept the proof (honor the claim) but add a
+60-second delay before responding. This:
+- Signals clearly to the user/wallet that something is unusual
+- Gives operators the same visibility as observe mode
+- Doesn't confiscate funds
+- Discourages repeated use of the legacy path (the delay is annoying)
+- Is visible to wallet developers (users complain about slowness → 
+  investigation → fix)
+
+Implementation: ~4 lines (sleep + log). Sits between Allow (instant) and
+Observe (reject + log). The progression becomes:
+
+  Observe (reject + log) → WarnAndDelay (accept + 60s delay + log) → Allow (accept + log)
+
+This is the "honor the claim but make it hurt" approach — you get your
+money, but you (and your wallet developer) know something is wrong.
