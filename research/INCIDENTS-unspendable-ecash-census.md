@@ -151,3 +151,72 @@ Observe (reject + log). The progression becomes:
 
 This is the "honor the claim but make it hurt" approach — you get your
 money, but you (and your wallet developer) know something is wrong.
+
+## Final synthesis 2026-09-09: the ecosystem's fund-loss landscape
+
+### Enforcement history — the inconsistency IS the problem
+
+| Change | Compat at introduction? | Compat duration | How it ended |
+|---|---|---|---|
+| Domain separator (0.15.1) | ✅ fallback shipped same day | 2.4 years | Removed as a "chore" |
+| Secret format base64→hex (cashu-ts 1.0) | ❌ none — instant break | 0 | "Reset counters and self-spend" |
+| Algorithm fallback removal (0.20.3) | — (was the removal itself) | — | Shipped unflagged in release notes |
+| cdk divergence | ❌ never existed | permanent | Ongoing |
+
+**No enforcement discipline exists.** Sometimes there's a 2.4-year compat
+window; sometimes there's none. Sometimes it's flagged as breaking; sometimes
+it's a "chore." The spec never advanced from SHOULD to MUST for any of these.
+
+### The broader fund-loss landscape (beyond hash_to_curve)
+
+The search revealed this isn't just about derivation mismatches — the ENTIRE
+proof lifecycle is fragile across upgrades, migrations, and client switches:
+
+| Failure mode | Real-world reports |
+|---|---|
+| Wallet upgrade invalidates proofs | elkim (cashu-ts 3.6→4.1 burned proofs), Zeus users (balance disappearing after update) |
+| Keyset migration breaks token decoding | g4tt0 PSA: "Tokens containing Keyset v2 Proofs CANNOT be fully decoded" |
+| NIP-60 wallet state races | "Don't use two NIP-60 wallets simultaneously on two devices" |
+| Mint goes offline | stl1988: npub.cash outage, "All my zaps I got are lost!!!" |
+| Wallet migration incomplete | ManyKeys: "shows 0 balance, tried multiple mints, incomplete migration" |
+| Proof state desync | VitorPamplona: "Mints have disappeared on me. NIP-60 events have disappeared" |
+| Derivation mismatch (our species) | DireMunchkin: "weird wallet/mint state snafu where notes wouldn't redeem" |
+
+### Why warn-and-delay is the correct default
+
+The user's insight reframes the problem: **hard-to-diagnose means the
+failure should be LOUD, not silent.** When a mint can't verify a proof:
+
+- **Instant rejection** = silent confiscation. User sees a cryptic error,
+  has no idea why, funds are gone. No diagnostic reaches anyone.
+- **Instant acceptance** (if legacy allowed) = the problem is hidden. User
+  keeps using the buggy wallet, more trap tokens are created.
+- **Delayed acceptance** = the failure is VISIBLE without being fatal. The
+  user notices the delay. The wallet developer gets bug reports about
+  slowness. The mint operator sees the WARN log. Everyone learns.
+
+The delay should scale with severity:
+- 60 seconds for first-time legacy submission (gets attention)
+- Configurable (mint operator decides)
+- Maybe escalating (repeated legacy submissions from same keyset)
+
+This is the same principle as a bank putting a hold on a suspicious
+transaction: the money is safe, but someone looks at it before it clears.
+
+### The complete solution stack
+
+| Layer | What it fixes | Cost |
+|---|---|---|
+| Spec MUST + vectors | Prevents new implementations from making the mistake | Spec PR |
+| Wallet pre-submit guard | Catches the bug client-side before submission | 3 lines in cashu-ts |
+| Observe mode | Tells operators they have exposure | 6 lines in verify() |
+| Warn-and-delay mode | Gives users a visible signal without confiscation | 4 lines |
+| Even-bit signaling | Old wallets abort before sending tokens that will fail | NUT-06 field |
+| Error-UX mapping | Turns "Token not verified" into actionable guidance | Wallet-side |
+| Upgrade A/B testing | Catches behavioral divergence before it ships | Framework (done) |
+
+No single layer is sufficient. The delay mode is the only one that
+addresses the case where ALL other layers have already failed — the proof
+arrives at the mint, it doesn't verify canonically, and the current options
+are "reject silently" or "accept silently." The delay creates the third
+option: "accept loudly."
