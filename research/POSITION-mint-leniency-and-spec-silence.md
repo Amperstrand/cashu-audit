@@ -150,3 +150,35 @@ divergent population (NUT-11's real MUSTs did not prevent the Java bug;
 LLM clients skim RFC-2119). The four fixes ship as a set: spec MUST
 (prospective), mint leniency (retroactive, keyset-bounded), wallet guard
 (prevention), sensor + error UX (detection and rescue).
+
+## Closing corollary (owner-added, 2026-09-08): cross-implementation redemption compatibility
+
+**The migration-softfork argument:** if one implementation honors a
+derivation and another doesn't, switching mint software silently makes
+redemption rules stricter — a form of softfork executed by a routine
+upgrade, with no spec change and no consensus. Worse than a Bitcoin
+softfork, which at least requires majority hashpower and respects the
+never-invalidate-issued-value norm since 2010.
+
+Live instances (from the incident census):
+- nutshell (permanent `verify_deprecated`) → cdk: strands pre-0.15.1
+  algorithm-legacy tokens TODAY.
+- cashu-cf (encoding-lenient) → cdk: strands trap-encoded tokens.
+
+**Therefore:** implementations must be redemption-rule compatible with each
+other; migration must carry the old rules forward for old keysets (our
+per-keyset allowlist is the import mechanism).
+
+**Sequencing (stricter only after SHOULD→MUST, completed):**
+1. Spec: MUST + vectors.
+2. Implementations: redemption-rule compatibility (allowlists on migration).
+3. Mints: enforce on NEW keysets only — keyset-keyed, never calendar-keyed;
+   old keysets never tighten.
+4. Signaling, on all three channels:
+   a. NUT-06 declaration for clients that look;
+   b. keyset metadata / versioned ids for per-keyset discovery;
+   c. **a distinct diagnostic error code on legacy-encoding rejection** —
+      for clients that look at nothing, the failed spend is the ONLY
+      contact; a generic 10001 wastes it. The error IS the migration notice
+      for the unreached population.
+5. Wallets: pre-submit guard (verifyOutputConsistency).
