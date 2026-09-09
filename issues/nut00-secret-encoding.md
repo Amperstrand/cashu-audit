@@ -52,3 +52,21 @@ cashu-audit `research/POSITION-mint-leniency-and-spec-silence.md`.
 4. Tested implementations of (2)+(3) exist on Amperstrand forks:
    cashu-ts `@secret-encoding-guard`, cdk `@nut00-per-keyset-leniency`,
    cashu-cf `@nut00-strict-v2` — free to lift.
+
+## Corollary (added 2026-09-08): cross-implementation redemption compatibility
+
+If one implementation honors a derivation and another doesn't, switching mint
+software silently makes redemption rules stricter — a softfork by routine
+upgrade, no spec change, no consensus. Live instance: nutshell ships a
+permanent `verify_deprecated` fallback (algorithm axis) that cdk does not —
+a nutshell→cdk migration strands pre-0.15.1 tokens today. Implementations
+must be redemption-rule compatible; per-keyset allowlists are the import
+mechanism on migration. Tightening is legitimate only after SHOULD→MUST,
+keyset-keyed (new keysets only), and signaled on three channels: NUT-06
+declaration, keyset metadata, and **a distinct diagnostic error code on
+legacy rejection** — for clients that check nothing, the failed spend is
+the only migration notice they will ever get.
+
+Cross-impl behavior matrix (A/B verified 2026-09-08, see
+`research/AB-TEST-redemption-rules.md`): canonical/algorithm-legacy/entropy
+acceptance per implementation and version.

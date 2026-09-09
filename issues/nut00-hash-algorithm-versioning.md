@@ -14,3 +14,11 @@ NUT-00 should name exactly one normative algorithm, mark the other as legacy wit
 
 
 *Source: cashu-audit confusion inventory 2026-09-08; full evidence in research/.*
+
+## Corollary: migrations are softforks
+
+nutshell honors algorithm-legacy tokens permanently (`verify_deprecated`);
+cdk never did. Migrating a nutshell mint to cdk silently strands every
+pre-0.15.1 token — redemption rules tightened by software choice, not spec
+change. See position doc closing corollary and the A/B matrix in
+`research/AB-TEST-redemption-rules.md`.
