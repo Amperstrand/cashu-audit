@@ -96,13 +96,21 @@ Lightning node.
 MINT_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
 
 docker run -d -p 3338:3338 --name nutshell \
-  -e MINT_LIGHTNING_BACKEND=FakeWallet \
+  -e MINT_BACKEND_BOLT11_SAT=FakeWallet \
+  -e MINT_LISTEN_HOST=0.0.0.0 \
+  -e MINT_LISTEN_PORT=3338 \
+  -e MINT_RATE_LIMIT=FALSE \
   -e MINT_PRIVATE_KEY=$MINT_KEY \
-  -e MINT_HOST=0.0.0.0 \
-  -e MINT_PORT=3338 \
-  -v nutshell-data:/data \
-  cashubtc/nutshell:latest
+  cashubtc/nutshell:latest poetry run mint
 ```
+
+NOTE (2026-09-09): the image has no ENTRYPOINT (`CMD=[python3]`), so the
+command must be `poetry run mint` (its docker-compose.yaml is canonical).
+Env names are `MINT_BACKEND_BOLT11_SAT` / `MINT_LISTEN_HOST` /
+`MINT_LISTEN_PORT` — the older `MINT_LIGHTNING_BACKEND`/`MINT_HOST`/
+`MINT_PORT` are ignored and the mint silently never listens.
+`MINT_RATE_LIMIT=FALSE` disables the default 60 req/min global +
+20 req/min transaction limiter that bursts during probe runs.
 
 Verify it is running:
 
@@ -137,14 +145,39 @@ CDK is the Rust reference implementation. Use `cdk-mintd` with the
 FakeWallet backend for testing without a Lightning node.
 
 ```bash
-docker run -d -p 3339:3338 --name cdk-mintd \
-  -e CDK_MINTD_BACKEND=FakeWallet \
-  -e CDK_MINTD_MINT_INFO_NAME="CDK Test Mint" \
-  -e CDK_MINTD_SEED=0000000000000000000000000000000000000000000000000000000000000001 \
-  -e CDK_MINTD_HOST=0.0.0.0 \
-  -e CDK_MINTD_PORT=3338 \
-  -v cdk-data:/data \
-  ghcr.io/cashubtc/cdk-mintd:latest
+# NOTE (2026-09-09): ghcr.io/cashubtc/cdk-mintd is registry-denied; the
+# published image is on Docker Hub. 0.18.0 no longer accepts pure-env config:
+# write a TOML, run `config init` once into a work-dir database, then daemonize.
+# The work-dir must live under $HOME (colima only mounts the home directory).
+
+cat > ~/cdk-data/config.toml <<'EOF'
+[info]
+url = "http://127.0.0.1:3339/"
+listen_host = "0.0.0.0"
+listen_port = 3338
+mnemonic = "env:AB_CDK_MNEMONIC"
+
+[database]
+engine = "sqlite"
+
+[payment_backend]
+backend = "fakewallet"
+
+[onchain]
+onchain_backend = "fakewallet"
+
+[fake_wallet]
+supported_units = ["sat"]
+EOF
+
+MNEMONIC="<24 BIP39 words>"  # python3 -c "from mnemonic import Mnemonic; print(Mnemonic('english').generate(strength=256))"
+
+docker run --rm -v ~/cdk-data:/data -e AB_CDK_MNEMONIC="$MNEMONIC" \
+  cashubtc/mintd:0.18.0 cdk-mintd -w /data config init --new-mint --file /data/config.toml
+
+docker run -d -p 3339:3338 --name cdk-mintd -v ~/cdk-data:/data \
+  -e AB_CDK_MNEMONIC="$MNEMONIC" \
+  cashubtc/mintd:0.18.0 cdk-mintd -w /data
 ```
 
 Verify it is running:
@@ -257,19 +290,24 @@ output amounts + B_). The conformance suite auto-detects and adapts.
 | Implementation | Behavior |
 |---|---|
 | **CDK** | First occurrence wins (duplicate silently ignored) |
-| **Nutshell** | First occurrence wins |
+| **Nutshell** | First occurrence wins (0.20.3, via #1008 — the stricter branch reading never shipped) |
 | **cashu-cf** | Rejects all duplicate tags |
 
-Spec (NUT-11 L85): "MUST be rejected as unspendable." All three
-implementations technically violate the spec, but cashu-cf is closest.
+Spec (NUT-11, since nuts#358 2026-06-09): "MUST be rejected as unspendable."
+Both references now violate the MUST; cashu-cf is the closest. Measured
+2026-09-09 (`ab_probe_p2pk_htlc.py` cell d2); see `issues/nut11-d2-*`.
 
 ### 6.5 NUT-11: n_sigs exceeding pubkeys
 
 | Implementation | Behavior |
 |---|---|
 | **CDK** | Not validated upfront (refund path still usable) |
-| **Nutshell** | Rejected upfront |
+| **Nutshell** | Not validated upfront (0.20.3 — refund path works; earlier "rejected upfront" no longer true) |
 | **cashu-cf** | Rejected upfront (Nutshell-aligned) |
+
+Spec (NUT-11, nuts#358): "MUST be rejected as unspendable." Both references
+violate; DotNut implements the letter. Measured 2026-09-09 (probe cell d3);
+see `issues/nut11-d3-*`.
 
 ### 6.6 NUT-20: Quote signature format (cashu-cf, FIXED)
 
