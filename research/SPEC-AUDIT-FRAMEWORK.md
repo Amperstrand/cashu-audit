@@ -64,7 +64,7 @@ the spec text that permits both readings, and the operational consequence.
 | Keyset ID formats | V1 short vs V2 hex, v4 token encoding | ✅ (personal hit) |
 | Keyset active semantics | mintable vs redeemable | ✅ (personal hit) |
 | Interrupted-op recovery | saga semantics per implementation | Adjacent (our ISSUE-103) |
-| **P2PK/HTLC spending conditions** | 8 divergences documented in cdk#2252 | **NEXT — highest value** |
+| **P2PK/HTLC spending conditions** | 8 divergences documented in cdk#2252 | ✅ probed 2026-09-09 — 2 survive, 6 converged (2 wrongly); see section below |
 | Deterministic secrets (NUT-13) | derivation path per implementation | Not started |
 | DLEQ verification (NUT-12) | deprecated vs current DLEQ format | Not started |
 | Token V3/V4 encoding | CBOR details, short keyset IDs | Not started |
@@ -95,11 +95,24 @@ on these mechanisms — any divergence is a channel-bricking risk.
 both mints, record accept/reject per cell. The frozen prediction matrix
 writes itself from the cdk#2252 table.
 
+**Status 2026-09-09 — probed.** `conformance/ab_probe_p2pk_htlc.py` ran the
+8 cells + 2 controls against cdk-mintd/0.18.0 and Nutshell/0.20.3 (both
+FakeWallet, both arms 10/10 stable over 2 runs, controls green). Measured:
+cdk matches the issue's cdk column on all cells; nutshell 0.20.3 matches
+only #1 and #6 — d2/d3/d4/d5 converged to leniency, d7/d8 to strictness.
+**Only divergences #1 (unknown kind) and #6 (HTLC refund via SIG_INPUTS
+sigs-only witness) survive between these releases**; the cdk#2252 table is
+stale w.r.t. shipped nutshell. Matrix + journal:
+`conformance/reports/ab-p2pk-htlc-2026-09-09.{json,log}`. Divergence report
+pending (write from measured matrix, not the issue table).
+
 ## Tools committed to this repo
 
 | Tool | What it does | Where |
 |---|---|---|
 | `conformance/ab_probe.py` | 3-derivation A/B probe (canonical/algolegacy/trap) | committed |
+| `conformance/ab_probe_p2pk_htlc.py` | cdk#2252 divergence probe: 2 controls + 8 cells + d6 witness frontier, N-arm | committed |
+| `conformance/version_matrix.py` + `runs/` | automated cross-version runner: docker-tag/git-ref/URL arms, intra-run version diff, inter-run drift registry, CI workflow | committed |
 | `conformance/run_filtered.py` | Full matrix with per-scenario timeout + JSON output | committed |
 | `conformance/scenarios/nut00_secret_encoding.py` | Permanent conformance scenarios (3) | committed |
 | `conformance/reference-vectors/nut00-secret-encoding.json` | Cross-impl vectors incl. negative | committed |
