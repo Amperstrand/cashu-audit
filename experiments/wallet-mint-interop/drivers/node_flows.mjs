@@ -38,7 +38,7 @@ async function main() {
   const privHex = privateKey.export({ type: 'pkcs8', format: 'der' }).toString('hex').slice(-64);
 
   // connect
-  const wallet = new mod.Wallet(MINT, 'interop-driver');
+  const WalletClass = mod.Wallet || mod.CashuWallet; const wallet = new WalletClass(MINT, 'interop-driver');
   await wallet.loadMint();
   log('mint loaded');
 

@@ -1,17 +1,17 @@
-run_name: extensive-009
+run_name: extensive-010
 max_parallel: 6
 
 mints:
-  - {name: cdk-0.17.0, family: cdk, image: "cashubtc/mintd:0.17.0"}
-  - {name: cdk-0.17.6, family: cdk, image: "cashubtc/mintd:0.17.6"}
   - {name: cdk-0.18.0, family: cdk, image: "cashubtc/mintd:0.18.0"}
-  - {name: ns-0.20.0, family: nutshell, image: "cashubtc/nutshell:0.20.0"}
   - {name: ns-0.20.3, family: nutshell, image: "cashubtc/nutshell:0.20.3"}
   - {name: cln-mint-1, family: cdk, image: "cashubtc/mintd:0.18.0", cln: true}
 
 wallets:
-  - {name: cashu-ts-4, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^4"}
-  - {name: cashu-ts-3, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^3"}
+  - {name: cashu-ts-v5, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@5.0.0-beta.22b16755"}
+  - {name: cashu-ts-v4, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^4"}
+  - {name: cashu-ts-v3, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^3"}
+  - {name: cashu-ts-v2, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@2.0.0-rc1"}
+  - {name: cashu-ts-v1, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@1.0.0-legacy-restore-patch"}
   - name: nutshell-wallet-0.20.3
     driver: python
     image: "cashubtc/nutshell:0.20.3"

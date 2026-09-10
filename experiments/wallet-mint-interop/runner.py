@@ -25,6 +25,7 @@ except ImportError:
     import yaml
 
 HERE = Path(__file__).resolve().parent
+from debugger import CellDebugger
 ART = HERE / "artifacts"
 RUN = None  # set in main
 
@@ -148,6 +149,40 @@ def resolve_install(wallet: dict) -> tuple[bool, str]:
     return ok, (r.stdout + r.stderr).strip()[-200:]
 
 
+
+def pay_cln_invoice(invoice: str) -> bool:
+    """Pay a bolt11 invoice through the CLN signet node (tunnel on ai-legion)."""
+    import subprocess
+    r = subprocess.run(
+        ['ssh', '-o', 'BatchMode=yes', 'root@inr2.cashu.exchange',
+         f'docker exec cln-hub-signet lightning-cli --signet pay {invoice}'],
+        capture_output=True, text=True, timeout=60)
+    return r.returncode == 0 and 'preimage' in r.stdout
+
+
+def wait_and_pay_cln(mint_url: str, quote_id: str, timeout: int = 30):
+    """Check a mint quote; if unpaid and the mint is CLN-backed, pay the invoice."""
+    import urllib.request
+    try:
+        req = urllib.request.Request(
+            f'{mint_url}/v1/mint/quote/bolt11/{quote_id}',
+            method='GET')
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode())
+        if data.get('state') == 'PAID':
+            return True
+        bolt11 = data.get('request', '')
+        if bolt11 and bolt11.startswith('ln'):
+            log(f'  paying CLN invoice {bolt11[:30]}...')
+            if pay_cln_invoice(bolt11):
+                time.sleep(2)
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    data = json.loads(resp.read().decode())
+                return data.get('state') == 'PAID'
+        return False
+    except Exception:
+        return False
+
 def run_cell(wallet: dict, mint: Mint, flow: str) -> dict:
     cell_dir = ART / wallet["name"] / mint.name / flow
     cell_dir.mkdir(parents=True, exist_ok=True)
@@ -166,6 +201,7 @@ def run_cell(wallet: dict, mint: Mint, flow: str) -> dict:
         run_cmd = "cd /app && PYTHONPATH=/app python3 /drivers/py_flows.py 2>&1"
     else:
         run_cmd = f"pip install -q --no-cache-dir {wallet['install']} && python /drivers/py_flows.py"
+    if _dbg: _dbg.cell_begin(wallet["name"], mint.name, flow)
     r = sh(["docker", "run", "--rm"] + ["--network", "host"] + [
             "-e", f"MINT_URL={env_mint}", "-e", f"TESTCASE={flow}",
             "-e", "ARTIFACT_DIR=/art", "-e", f"WALLET_NAME={wallet['name']}",
@@ -187,8 +223,12 @@ def run_cell(wallet: dict, mint: Mint, flow: str) -> dict:
     except Exception:
         res.update(verdict={0: "PASS", 1: "FAIL", 127: "SKIP"}.get(code, "DRIVER_ERROR"),
                    reason=f"no result.json; rc={code}; tail={ (r.stdout+r.stderr)[-200:] }")
+    if _dbg: _dbg.cell_end(wallet["name"], mint.name, flow, code, r.stdout, r.stderr)
     log(f"cell {wallet['name']} x {mint.name} x {flow} -> {res['verdict']}")
     return res
+
+
+_dbg = None
 
 
 def main() -> int:
