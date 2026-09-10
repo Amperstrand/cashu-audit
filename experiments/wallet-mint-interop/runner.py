@@ -26,6 +26,7 @@ except ImportError:
 
 HERE = Path(__file__).resolve().parent
 from debugger import CellDebugger
+from cln_autopayer import CLNAutoPayer
 ART = HERE / "artifacts"
 RUN = None  # set in main
 
@@ -91,7 +92,7 @@ class Mint:
                            "-e", "MINT_RATE_LIMIT=FALSE",
                            "-e", f"MINT_PRIVATE_KEY={secrets.token_hex(32)}",
                            self.image, "poetry", "run", "mint"])
-        else:  # cdk 0.18+: config-init into a workdir under $HOME (colima) or anywhere (linux)
+        else:  # cdk 0.18+: config-init into a workdir, CLN signet backend
             wd = Path.home() / f"wxm-{self.name}"
             if wd.exists():
                 sh(["docker", "run", "--rm", "-v", f"{wd}:/data", "alpine",
@@ -99,15 +100,20 @@ class Mint:
             wd.mkdir(parents=True, exist_ok=True)
             from mnemonic import Mnemonic
             mnem = Mnemonic("english").generate(strength=256)
+            # CLN signet backend — real Lightning, invoices paid by auto-payer
             (wd / "config.toml").write_text(
-                '[info]\nurl = "http://%s/"\nlisten_host = "0.0.0.0"\nlisten_port = 3338\nmnemonic = "env:WXM_MNEMONIC"\n\n'
-                '[database]\nengine = "sqlite"\n\n[payment_backend]\nbackend = "fakewallet"\n\n'
-                '[onchain]\nonchain_backend = "fakewallet"\n\n[fake_wallet]\nsupported_units = ["sat"]\n' % self.host_url)
+                '[info]\nurl = "http://%s/"\nlisten_host = "0.0.0.0"\nlisten_port = %d\nmnemonic = "env:WXM_MNEMONIC"\n\n'
+                '[database]\nengine = "sqlite"\n\n[payment_backend]\nbackend = "cln"\n\n'
+                '[cln]\nrpc_path = "/tmp/cln-rpc"\n' % (self.host_url, self.port))
+            if not (wd / "config.toml").exists():
+                raise RuntimeError(f"{self.name}: config.toml not written to {wd}")
+            log(f"{self.name}: config written, port={self.port}")
             init = sh(["docker", "run", "--rm", "-v", f"{wd}:/data", "-e", f"WXM_MNEMONIC={mnem}",
+                       "-v", "/tmp/cln-rpc:/tmp/cln-rpc",
                        self.image, "cdk-mintd", "-w", "/data", "config", "init", "--new-mint",
                        "--file", "/data/config.toml"])
             if "Configuration initialized" not in init.stdout:
-                # cdk <=0.17.x: no config subcommand — legacy env vars instead
+                # cdk <=0.17.x: no config subcommand — legacy env vars, keep FakeWallet
                 r = sh(base + ["-e", "CDK_MINTD_LN_BACKEND=FakeWallet",
                                "-e", "CDK_MINTD_FAKE_WALLET_SUPPORTED_UNITS=sat",
                                "-e", "CDK_MINTD_LISTEN_HOST=0.0.0.0", "-e", "CDK_MINTD_LISTEN_PORT=3338",
@@ -116,10 +122,12 @@ class Mint:
                 if r.returncode != 0:
                     raise RuntimeError(f"{self.name} legacy start failed: {r.stderr[-200:]}")
                 self.identity = wait_ready(self.host_url)
-                log(f"mint {self.name} ready (legacy): {self.identity}")
+                log(f"mint {self.name} ready (legacy FakeWallet): {self.identity}")
                 return
-            r = sh(base + ["-v", f"{wd}:/data", "-e", f"WXM_MNEMONIC={mnem}",
-                           self.image, "cdk-mintd", "-w", "/data"])
+            r = sh(["docker", "run", "-d", "--network", "host", "--name", self.container,
+                    "-v", f"{wd}:/data", "-e", f"WXM_MNEMONIC={mnem}",
+                    "-v", "/tmp/cln-rpc:/tmp/cln-rpc",
+                    self.image, "cdk-mintd", "-w", "/data"])
         if r.returncode != 0:
             raise RuntimeError(f"{self.name} failed to start: {r.stderr[-200:]}")
         self.identity = wait_ready(self.host_url)
@@ -243,6 +251,7 @@ def main() -> int:
     sh(["docker", "network", "create", net])
     mints: list[Mint] = []
     cells: list[dict] = []
+    cln_payer = None
     try:
         for w in cfg["wallets"]:
             ok, reason = resolve_install(w)
@@ -253,11 +262,18 @@ def main() -> int:
             mint = Mint(m, net)
             mint.start()
             mints.append(mint)
+        # Start CLN auto-payer for all running mints
+        cln_payer = CLNAutoPayer([m.host_url for m in mints])
+        cln_payer.start()
+        log(f"CLN auto-payer started for {len(mints)} mints")
         jobs = [(w, m, f) for w in cfg["wallets"] for m in mints for f in cfg["flows"]]
         with ThreadPoolExecutor(max_workers=int(cfg.get("max_parallel", 4))) as ex:
             futs = [ex.submit(run_cell, w, m, f) for (w, m, f) in jobs]
             cells = [f.result() for f in futs]
     finally:
+        if cln_payer:
+            cln_payer.stop()
+            log(f"CLN auto-payer: {cln_payer.report()}")
         for m in mints:
             m.stop()
         sh(["docker", "network", "rm", net])
