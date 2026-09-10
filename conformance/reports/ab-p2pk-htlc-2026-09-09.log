@@ -1,0 +1,69 @@
+
+=== cdk @ http://127.0.0.1:3339 (version cdk-mintd/0.18.0) ===
+  ctrl_p2pk_canonical: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '02629ba
+  ctrl_htlc_canonical: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '023cbbc
+  d1_unknown_kind_no_witness: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '020a3e7
+  d2_duplicate_tags_first_wins: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '03383b2
+  d3_nsigs_exceeds_pubkeys_refund: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '0334c95
+  d4_empty_pubkeys_tag: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '0264882
+  d5_htlc_uppercase_hash: ACCEPT (http 200)
+    {'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '03d5462
+  d6_htlc_refund_sigs_only_witness: REJECT (http 400)
+    {'code': 50000, 'detail': 'Secret is not a HTLC secret'}
+  d7_duplicate_signature: REJECT (http 400)
+    {'code': 20008, 'detail': 'P2PK spend conditions are not met'}
+  d8_witness_on_plain_secret: REJECT (http 400)
+    {'code': 20008, 'detail': 'Witness is not a p2pk witness'}
+
+=== nutshell @ http://127.0.0.1:3338 (version Nutshell/0.20.3) ===
+  ctrl_p2pk_canonical: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '0316e27
+  ctrl_htlc_canonical: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '0289c22
+  d1_unknown_kind_no_witness: REJECT (http 400)
+    {'detail': "'MBS' is not a valid SecretKind", 'code': 0}
+  d2_duplicate_tags_first_wins: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '026ba78
+  d3_nsigs_exceeds_pubkeys_refund: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '025c7fe
+  d4_empty_pubkeys_tag: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '03a116e
+  d5_htlc_uppercase_hash: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '02f1ef9
+  d6_htlc_refund_sigs_only_witness: ACCEPT (http 200)
+    {'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '03b35be
+  d7_duplicate_signature: REJECT (http 400)
+    {'detail': 'signatures must be unique.', 'code': 11000}
+  d8_witness_on_plain_secret: REJECT (http 400)
+    {'detail': 'witness data not allowed without a spending condition.', 'code': 11000}
+
+results -> /tmp/ab-p2pk-htlc-results.json
+
+FROZEN PREDICTION CHECK (mismatch = version drift or probe bug until proven otherwise):
+  cdk/ctrl_p2pk_canonical: predicted ACCEPT, got ACCEPT OK
+  cdk/ctrl_htlc_canonical: predicted ACCEPT, got ACCEPT OK
+  cdk/d1_unknown_kind_no_witness: predicted ACCEPT, got ACCEPT OK
+  cdk/d2_duplicate_tags_first_wins: predicted ACCEPT, got ACCEPT OK
+  cdk/d3_nsigs_exceeds_pubkeys_refund: predicted ACCEPT, got ACCEPT OK
+  cdk/d4_empty_pubkeys_tag: predicted ACCEPT, got ACCEPT OK
+  cdk/d5_htlc_uppercase_hash: predicted ACCEPT, got ACCEPT OK
+  cdk/d6_htlc_refund_sigs_only_witness: predicted REJECT, got REJECT OK
+  cdk/d7_duplicate_signature: predicted REJECT, got REJECT OK
+  cdk/d8_witness_on_plain_secret: predicted REJECT, got REJECT OK
+  nutshell/ctrl_p2pk_canonical: predicted ACCEPT, got ACCEPT OK
+  nutshell/ctrl_htlc_canonical: predicted ACCEPT, got ACCEPT OK
+  nutshell/d1_unknown_kind_no_witness: predicted REJECT, got REJECT OK
+  nutshell/d2_duplicate_tags_first_wins: predicted REJECT, got ACCEPT MISMATCH
+  nutshell/d3_nsigs_exceeds_pubkeys_refund: predicted REJECT, got ACCEPT MISMATCH
+  nutshell/d4_empty_pubkeys_tag: predicted REJECT, got ACCEPT MISMATCH
+  nutshell/d5_htlc_uppercase_hash: predicted REJECT, got ACCEPT MISMATCH
+  nutshell/d6_htlc_refund_sigs_only_witness: predicted ACCEPT, got ACCEPT OK
+  nutshell/d7_duplicate_signature: predicted ACCEPT, got REJECT MISMATCH
+  nutshell/d8_witness_on_plain_secret: predicted ACCEPT, got REJECT MISMATCH
+HYPOTHESIS: PARTIAL/REFUTED — analyze (version first, then probe)

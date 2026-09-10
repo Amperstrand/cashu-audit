@@ -1,0 +1,334 @@
+{
+ "cdk": {
+  "identity": "cdk-mintd/0.18.0",
+  "url": "http://127.0.0.1:3339",
+  "cells": {
+   "ctrl_p2pk_canonical": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '03f0a975c478aaf9cf45cc408ee4da9a469ca2b6810e6209a0ce5942750f85c4db', 'dleq': {'e': '44f"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '02629ba47a62bd3c5752577159243e4adbf711dad6eb805591e4bfbac1263146dc', 'dleq': {'e': 'd4e"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "ctrl_htlc_canonical": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '03049884885acc49e0de699515cb6d74df9630aa397a38efb4dc63332f991ff813', 'dleq': {'e': '4dd"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '023cbbcd10c2ca90d12c145a1e2a25b6d97fa98bf5ed44702bc393f76c664088aa', 'dleq': {'e': '2af"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d1_unknown_kind_no_witness": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '036ccc9a7fa31d89b7283cccd33c36bf193e75eef33c1154f8bf4134aaa0ce2676', 'dleq': {'e': 'e15"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '020a3e7eb23ed0b166865002b3d75ed72b3a11b3ae042656d6e97eb9d5626b1fed', 'dleq': {'e': 'dfd"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d2_duplicate_tags_first_wins": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '02f5a9334e999ddf462f89e8a94c430794cad860bc3b810fea363195eaf14158e2', 'dleq': {'e': '7b1"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '03383b264912d7cea9f12c0986c88ab14f5eea397993de13097976b56043e9714c', 'dleq': {'e': '5a9"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d3_nsigs_exceeds_pubkeys_refund": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '0223ec4a63a9cb98185118b6aaa1d38f63d6f76947dfc481dfe2f3174932cd9d7d', 'dleq': {'e': 'f65"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '0334c95598b3a881a4d4f322da6e9a506a6c5431d1d272d418dd59d75069d0c4b2', 'dleq': {'e': 'e7f"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d4_empty_pubkeys_tag": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '037ffcdfab369f143b853f1445d27618fff6ede00c3130b12a4508a4612a33987e', 'dleq': {'e': '403"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '02648828e5dc46e9f09b158b27f36d4ff2a702386de8ca6421938d8a2c0cda8223', 'dleq': {'e': 'c69"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d5_htlc_uppercase_hash": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '02acde6befad69b2b62caf3a416a49c260ae2619f2f5ba3a6551a35f4146ffb119', 'dleq': {'e': '597"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'amount': 8, 'id': '011cef816168bd958b788d869a8a6d244f5eda32e16f1364be2c9f97f77487c25d', 'C_': '03d54627770ccd2dac317f553824d186225d26b805e6c324d2b45d663b4eb5e133', 'dleq': {'e': 'ee6"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d6_htlc_refund_sigs_only_witness": {
+    "runs": [
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+     },
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+     }
+    ],
+    "verdict": "REJECT",
+    "stable": true
+   },
+   "d7_duplicate_signature": {
+    "runs": [
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+     },
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+     }
+    ],
+    "verdict": "REJECT",
+    "stable": true
+   },
+   "d8_witness_on_plain_secret": {
+    "runs": [
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'code': 20008, 'detail': 'Witness is not a p2pk witness'}"
+     },
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'code': 20008, 'detail': 'Witness is not a p2pk witness'}"
+     }
+    ],
+    "verdict": "REJECT",
+    "stable": true
+   }
+  }
+ },
+ "nutshell": {
+  "identity": "Nutshell/0.20.3",
+  "url": "http://127.0.0.1:3338",
+  "cells": {
+   "ctrl_p2pk_canonical": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '028c6f3ff752a8282d0ccda6b3a320ffcd627d962f68fa50af1b774d194c610296', 'dleq': {'e': 'fd4"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '0316e2781c4d1a7e34cf4a67c183054de5bd316bedcb49517679277bf8e479494f', 'dleq': {'e': 'f5b"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "ctrl_htlc_canonical": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '025c2952901b0ed0356187df258adccf4e4af1ab9e66e4d19c8eafdb6f0869dcba', 'dleq': {'e': '042"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '0289c22728c1322ed2e13f7b0d416c090761c839a6e88677789306f6e2b27cc54b', 'dleq': {'e': '4dd"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d1_unknown_kind_no_witness": {
+    "runs": [
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'detail': \"'MBS' is not a valid SecretKind\", 'code': 0}"
+     },
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'detail': \"'MBS' is not a valid SecretKind\", 'code': 0}"
+     }
+    ],
+    "verdict": "REJECT",
+    "stable": true
+   },
+   "d2_duplicate_tags_first_wins": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '0332c7fbc6152a27afa1db2d43f1b1941564794807369c21ec9b6916a20b3fc530', 'dleq': {'e': '17a"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '026ba78cee498aacd1ddc7429f16df359de1c247705d7a30e8a772a4287bbb387a', 'dleq': {'e': '123"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d3_nsigs_exceeds_pubkeys_refund": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '02059d2a329565ed9a8af70274f3a6788587eec969a6c2ed7fc88fd680b8bd605c', 'dleq': {'e': '4e3"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '025c7fe4e3d0e3a95fd966f70c37d27f80687ff5b847fb3128b2475ae9f6a5c42b', 'dleq': {'e': '1f7"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d4_empty_pubkeys_tag": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '03d80593c35d11d7c424facd101840233f5b39522ae2c31d4364f57c677ccb0725', 'dleq': {'e': '44c"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '03a116e64190b22a0023a104514e73a67ea3529df2127630e79f8a3688303f74b8', 'dleq': {'e': '658"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d5_htlc_uppercase_hash": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '03581d2f4b95de0e3608721a72d913a58946b9a3f22d158e0a3f8a334bec6d9096', 'dleq': {'e': 'f38"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '02f1ef93a6ee21c7552d91a03baea415c72e78d600c17fa1177706192ac0706abd', 'dleq': {'e': '007"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d6_htlc_refund_sigs_only_witness": {
+    "runs": [
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '0390d464721143f31b9e6c9b371fe2b3a07e9e5ac8b7370da7f42eb0668c70b4c5', 'dleq': {'e': 'c9b"
+     },
+     {
+      "verdict": "ACCEPT",
+      "code": 200,
+      "detail": "{'signatures': [{'id': '01f7ac00c7256d783c9d8d728f1cf932c51d11cd28c444f8683d8486cb66e83b4a', 'amount': 2, 'C_': '03b35be04a53575c326dafd121a7be684f2805a7be84150ab46b25b66e56ffa776', 'dleq': {'e': '33b"
+     }
+    ],
+    "verdict": "ACCEPT",
+    "stable": true
+   },
+   "d7_duplicate_signature": {
+    "runs": [
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'detail': 'signatures must be unique.', 'code': 11000}"
+     },
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'detail': 'signatures must be unique.', 'code': 11000}"
+     }
+    ],
+    "verdict": "REJECT",
+    "stable": true
+   },
+   "d8_witness_on_plain_secret": {
+    "runs": [
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'detail': 'witness data not allowed without a spending condition.', 'code': 11000}"
+     },
+     {
+      "verdict": "REJECT",
+      "code": 400,
+      "detail": "{'detail': 'witness data not allowed without a spending condition.', 'code': 11000}"
+     }
+    ],
+    "verdict": "REJECT",
+    "stable": true
+   }
+  }
+ }
+}
