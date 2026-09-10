@@ -74,5 +74,21 @@ def expect_reject(status: int, body) -> bool:
     return status in (400, 403)
 
 
+def expect_reject_as(expected_detail: str):
+    """Assert a rejection AND its diagnostic identity.
+
+    Returns a checker for scenarios where the reason matters: both silent
+    softforks we caught (cdk d6, nutshell d1/d7/d8) sailed through suites
+    that counted any 4xx as a pass — rejections for the wrong reason
+    included. `expected_detail` is matched as a case-insensitive substring
+    of the error body.
+    """
+    def check(status: int, body) -> bool:
+        if not expect_reject(status, body):
+            return False
+        return expected_detail.lower() in str(body).lower()
+    return check
+
+
 def expect_success(status: int, body) -> bool:
     return status == 200

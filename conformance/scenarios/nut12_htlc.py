@@ -34,6 +34,7 @@ from conformance.scenarios import (
     ScenarioResult,
     Result,
     expect_reject,
+    expect_reject_as,
     expect_success,
 )
 
@@ -217,7 +218,10 @@ def _(mint: MintClient) -> ScenarioResult:
 
 @scenario("htlc_wrong_preimage_fails", CAT_IN)
 def _(mint: MintClient) -> ScenarioResult:
-    """Correct signature but wrong preimage — must be rejected."""
+    """Correct signature but wrong preimage — must be rejected AS a preimage
+    failure. Error-identity exemplar: a generic rejection (e.g. the
+    incident's "Token not verified") fails this scenario — both silent
+    softforks we caught passed suites that counted any 4xx as success."""
     key = KeyPair.generate()
     _preimage_hex, hash_hex = generate_htlc_preimage()
     wrong_preimage = generate_secret()
@@ -228,14 +232,14 @@ def _(mint: MintClient) -> ScenarioResult:
     proofs = _swap_for_htlc(builder, mint, secret_fn)
     _set_htlc_siginputs_witness(proofs, wrong_preimage, [key])
     code, body = _try_spend(mint, builder, proofs)
-    if expect_reject(code, body):
+    if expect_reject_as("preimage")(code, body):
         return ScenarioResult(
             "htlc_wrong_preimage_fails", CAT_IN,
-            Result.PASS, "wrong preimage with valid sig rejected",
+            Result.PASS, "wrong preimage with valid sig rejected (reason: preimage)",
         )
     return ScenarioResult(
         "htlc_wrong_preimage_fails", CAT_IN,
-        Result.FAIL, f"got {code}",
+        Result.FAIL, f"got {code}: rejected without preimage diagnosis: {str(body)[:120]}",
     )
 
 
