@@ -1,0 +1,16 @@
+# wallet x mint interop grid — extensive-003
+
+| wallet \ mint | cdk-0.17.0 (cdk-mintd/0.17.0) | cdk-0.17.6 (cdk-mintd/0.17.6) | cdk-0.18.0 (cdk-mintd/0.18.0) | ns-0.20.0 (Nutshell/0.20.0) | ns-0.20.2 (Nutshell/0.20.2) | ns-0.20.3 (Nutshell/0.20.3) |
+|---|---|---|---|---|---|---|
+| cashu-ts-3<br>htlc_receive | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-3<br>htlc_refund | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-3<br>mint_swap | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-3<br>p2pk_send_spend | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-4<br>htlc_receive | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-4<br>htlc_refund | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-4<br>mint_swap | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| cashu-ts-4<br>p2pk_send_spend | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= | ❌ no result.json; rc=1; tail= |
+| nutshell-wallet-0.20.3<br>htlc_receive | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 |
+| nutshell-wallet-0.20.3<br>htlc_refund | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 |
+| nutshell-wallet-0.20.3<br>mint_swap | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 |
+| nutshell-wallet-0.20.3<br>p2pk_send_spend | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 | ❌ no result.json; rc=1; tail=py", line 649 |

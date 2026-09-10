@@ -1,0 +1,20 @@
+run_name: extensive-004
+max_parallel: 6
+
+mints:
+  - {name: cdk-0.17.0, family: cdk, image: "cashubtc/mintd:0.17.0"}
+  - {name: cdk-0.17.6, family: cdk, image: "cashubtc/mintd:0.17.6"}
+  - {name: cdk-0.18.0, family: cdk, image: "cashubtc/mintd:0.18.0"}
+  - {name: ns-0.20.0, family: nutshell, image: "cashubtc/nutshell:0.20.0"}
+  - {name: ns-0.20.2, family: nutshell, image: "cashubtc/nutshell:0.20.2"}
+  - {name: ns-0.20.3, family: nutshell, image: "cashubtc/nutshell:0.20.3"}
+
+wallets:
+  - {name: cashu-ts-4, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^4"}
+  - {name: cashu-ts-3, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^3"}
+  - name: nutshell-wallet-0.20.3
+    driver: python
+    image: "cashubtc/nutshell:0.20.3"
+    install: "none"
+
+flows: [mint_swap, p2pk_send_spend, htlc_receive, htlc_refund]

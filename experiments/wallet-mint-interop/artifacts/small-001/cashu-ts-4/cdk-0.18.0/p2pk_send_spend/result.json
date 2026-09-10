@@ -1,0 +1,9 @@
+{
+ "wallet": "cashu-ts-4",
+ "mint": "cdk-0.18.0",
+ "mint_identity": "cdk-mintd/0.18.0",
+ "flow": "p2pk_send_spend",
+ "verdict": "SKIP",
+ "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+ "wire_shapes": {}
+}

@@ -1,0 +1,9 @@
+{
+ "run": "small-001",
+ "state": "DONE",
+ "counts": {
+  "SKIP": 16,
+  "FAIL": 8
+ },
+ "finished": "2026-09-10T09:39:16.154988"
+}

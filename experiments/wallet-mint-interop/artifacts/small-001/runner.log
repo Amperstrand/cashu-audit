@@ -1,0 +1,33 @@
+[09:03:05] run small-001: 2 mints x 3 wallets x 4 flows
+[09:05:02] wallet cashu-ts-4: package unresolvable -> cells will SKIP (egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN regist)
+[09:06:52] wallet coco: package unresolvable -> cells will SKIP (try.npmjs.org/@cubed-finance%2fcoco failed, reason: getaddrinfo EAI_AGAIN regist)
+[09:08:36] mint cdk-0.18.0 ready: cdk-mintd/0.18.0
+[09:08:55] mint ns-0.20.3 ready: Nutshell/0.20.3
+[09:16:09] run small-001: 2 mints x 3 wallets x 4 flows
+[09:17:57] wallet cashu-ts-4: package unresolvable -> cells will SKIP (egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN regist)
+[09:19:45] wallet coco: package unresolvable -> cells will SKIP (try.npmjs.org/@cubed-finance%2fcoco failed, reason: getaddrinfo EAI_AGAIN regist)
+[09:33:38] run small-001: 2 mints x 3 wallets x 4 flows
+[09:35:26] wallet cashu-ts-4: package unresolvable -> cells will SKIP (egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN regist)
+[09:37:13] wallet coco: package unresolvable -> cells will SKIP (try.npmjs.org/@cubed-finance%2fcoco failed, reason: getaddrinfo EAI_AGAIN regist)
+[09:38:54] run small-001: 2 mints x 3 wallets x 4 flows
+[09:38:56] wallet coco: package unresolvable -> cells will SKIP (/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.)
+[09:39:05] mint cdk-0.18.0 ready: cdk-mintd/0.18.0
+[09:39:09] mint ns-0.20.3 ready: Nutshell/0.20.3
+[09:39:10] cell cashu-ts-4 x cdk-0.18.0 x mint_swap -> SKIP
+[09:39:10] cell cashu-ts-4 x cdk-0.18.0 x p2pk_send_spend -> SKIP
+[09:39:10] cell cashu-ts-4 x cdk-0.18.0 x htlc_receive -> SKIP
+[09:39:10] cell cashu-ts-4 x cdk-0.18.0 x htlc_refund -> SKIP
+[09:39:10] cell cashu-ts-4 x ns-0.20.3 x p2pk_send_spend -> SKIP
+[09:39:10] cell cashu-ts-4 x ns-0.20.3 x mint_swap -> SKIP
+[09:39:10] cell cashu-ts-4 x ns-0.20.3 x htlc_receive -> SKIP
+[09:39:10] cell cashu-ts-4 x ns-0.20.3 x htlc_refund -> SKIP
+[09:39:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x htlc_refund -> FAIL
+[09:39:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x mint_swap -> FAIL
+[09:39:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x htlc_receive -> FAIL
+[09:39:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x p2pk_send_spend -> FAIL
+[09:39:15] cell nutshell-wallet-0.20.3 x ns-0.20.3 x mint_swap -> FAIL
+[09:39:15] cell nutshell-wallet-0.20.3 x ns-0.20.3 x p2pk_send_spend -> FAIL
+[09:39:15] cell nutshell-wallet-0.20.3 x ns-0.20.3 x htlc_receive -> FAIL
+[09:39:15] cell nutshell-wallet-0.20.3 x ns-0.20.3 x htlc_refund -> FAIL
+[09:39:16] DONE {'SKIP': 16, 'FAIL': 8} -> /home/ubuntu/wallet-mint-interop/artifacts/small-001

@@ -68,8 +68,13 @@ or operators pinning 0.20.x indefinitely.
 
 ## Direction (our read)
 
-Bundle with d2 into one nuts amendment (split handling + vectors). If
-implementations must move instead, the refund hatch is the humane target to
-*keep* — rejecting upfront strands blind-signed value; rejecting only the
-primary pathway (current both-ref behavior) is the least-damage reading of
-the MUST, and deserves explicit spec blessing rather than accident.
+Bundle with d2 into one nuts amendment — refined (2026-09-09 delay-mode
+pass): keep the MUST for new keysets, permit **delay-honor under
+pre-enforcement keysets** (strict-or-delay by keyset; the mandatory delay
+surfaces affected wallets without confiscating, and its drain curve tells
+the operator when a keyset can retire). If implementations must move
+instead, the refund hatch is the humane target to *keep* — rejecting
+upfront strands blind-signed value; rejecting only the primary pathway
+(current both-ref behavior) is the least-damage reading of the MUST, and
+deserves explicit spec blessing rather than accident. Full mechanism:
+`private/THINKING-delay-mode.md` (not upstream).

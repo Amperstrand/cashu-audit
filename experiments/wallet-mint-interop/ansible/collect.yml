@@ -1,0 +1,24 @@
+---
+# Collect when done: fetches artifacts + runner tail. Safe to re-run.
+- name: collect interop artifacts
+  hosts: legion
+  vars:
+    run_name: small-001
+  tasks:
+    - name: status
+      ansible.builtin.stat: path={{ experiment_dir }}/artifacts/{{ run_name }}/DONE
+      register: done
+    - name: not-done report (collect is a no-op until DONE; see status.yml)
+      ansible.builtin.shell: tail -n 5 {{ experiment_dir }}/artifacts/{{ run_name }}/runner.log
+      register: tail
+      when: not done.stat.exists
+    - fail: msg="run not finished; retry collect later"
+      when: not done.stat.exists
+    - name: rsync artifacts back
+      ansible.builtin.shell: >
+        rsync -az ai-legion:wallet-mint-interop/artifacts/ {{ playbook_dir }}/../artifacts/
+      delegate_to: localhost
+    - name: grid summary
+      ansible.builtin.command: cat {{ experiment_dir }}/artifacts/{{ run_name }}/status.json
+      register: st
+    - debug: var=st.stdout

@@ -1,0 +1,9 @@
+{
+ "run": "extensive-001",
+ "state": "DONE",
+ "counts": {
+  "FAIL": 72,
+  "SKIP": 24
+ },
+ "finished": "2026-09-10T10:11:25.317655"
+}

@@ -1,0 +1,11 @@
+Skipping virtualenv creation, as specified in config file.
+Traceback (most recent call last):
+  File "/drivers/py_flows.py", line 112, in <module>
+    asyncio.run(main())
+  File "/usr/local/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/local/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/drivers/py_flows.py", line 23, in main
+    from cashu.wallet.wallet import Wallet
+ModuleNotFoundError: No module named 'cashu'

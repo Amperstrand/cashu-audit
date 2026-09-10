@@ -1,0 +1,80 @@
+[11:00:39] run extensive-003: 6 mints x 3 wallets x 4 flows
+[11:00:44] mint cdk-0.17.0 ready (legacy): cdk-mintd/0.17.0
+[11:00:49] mint cdk-0.17.6 ready (legacy): cdk-mintd/0.17.6
+[11:00:54] mint cdk-0.18.0 ready: cdk-mintd/0.18.0
+[11:00:58] mint ns-0.20.0 ready: Nutshell/0.20.0
+[11:01:02] mint ns-0.20.2 ready: Nutshell/0.20.2
+[11:01:06] mint ns-0.20.3 ready: Nutshell/0.20.3
+[11:01:07] cell cashu-ts-4 x cdk-0.17.0 x htlc_receive -> FAIL
+[11:01:07] cell cashu-ts-4 x cdk-0.17.0 x p2pk_send_spend -> FAIL
+[11:01:07] cell cashu-ts-4 x cdk-0.17.6 x mint_swap -> FAIL
+[11:01:07] cell cashu-ts-4 x cdk-0.17.0 x mint_swap -> FAIL
+[11:01:07] cell cashu-ts-4 x cdk-0.17.0 x htlc_refund -> FAIL
+[11:01:07] cell cashu-ts-4 x cdk-0.17.6 x p2pk_send_spend -> FAIL
+[11:01:08] cell cashu-ts-4 x cdk-0.17.6 x htlc_receive -> FAIL
+[11:01:08] cell cashu-ts-4 x cdk-0.17.6 x htlc_refund -> FAIL
+[11:01:08] cell cashu-ts-4 x cdk-0.18.0 x p2pk_send_spend -> FAIL
+[11:01:08] cell cashu-ts-4 x cdk-0.18.0 x mint_swap -> FAIL
+[11:01:08] cell cashu-ts-4 x cdk-0.18.0 x htlc_receive -> FAIL
+[11:01:08] cell cashu-ts-4 x cdk-0.18.0 x htlc_refund -> FAIL
+[11:01:08] cell cashu-ts-4 x ns-0.20.0 x mint_swap -> FAIL
+[11:01:08] cell cashu-ts-4 x ns-0.20.0 x p2pk_send_spend -> FAIL
+[11:01:08] cell cashu-ts-4 x ns-0.20.0 x htlc_receive -> FAIL
+[11:01:08] cell cashu-ts-4 x ns-0.20.2 x mint_swap -> FAIL
+[11:01:08] cell cashu-ts-4 x ns-0.20.2 x p2pk_send_spend -> FAIL
+[11:01:08] cell cashu-ts-4 x ns-0.20.0 x htlc_refund -> FAIL
+[11:01:09] cell cashu-ts-4 x ns-0.20.2 x htlc_receive -> FAIL
+[11:01:09] cell cashu-ts-4 x ns-0.20.2 x htlc_refund -> FAIL
+[11:01:09] cell cashu-ts-4 x ns-0.20.3 x mint_swap -> FAIL
+[11:01:09] cell cashu-ts-4 x ns-0.20.3 x p2pk_send_spend -> FAIL
+[11:01:09] cell cashu-ts-4 x ns-0.20.3 x htlc_receive -> FAIL
+[11:01:09] cell cashu-ts-4 x ns-0.20.3 x htlc_refund -> FAIL
+[11:01:09] cell cashu-ts-3 x cdk-0.17.0 x mint_swap -> FAIL
+[11:01:09] cell cashu-ts-3 x cdk-0.17.0 x p2pk_send_spend -> FAIL
+[11:01:09] cell cashu-ts-3 x cdk-0.17.0 x htlc_receive -> FAIL
+[11:01:09] cell cashu-ts-3 x cdk-0.17.0 x htlc_refund -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.17.6 x mint_swap -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.17.6 x p2pk_send_spend -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.17.6 x htlc_receive -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.17.6 x htlc_refund -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.18.0 x mint_swap -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.18.0 x p2pk_send_spend -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.18.0 x htlc_receive -> FAIL
+[11:01:10] cell cashu-ts-3 x cdk-0.18.0 x htlc_refund -> FAIL
+[11:01:10] cell cashu-ts-3 x ns-0.20.0 x mint_swap -> FAIL
+[11:01:10] cell cashu-ts-3 x ns-0.20.0 x p2pk_send_spend -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.0 x htlc_receive -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.0 x htlc_refund -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.2 x mint_swap -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.2 x p2pk_send_spend -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.2 x htlc_receive -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.2 x htlc_refund -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.3 x mint_swap -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.3 x p2pk_send_spend -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.3 x htlc_receive -> FAIL
+[11:01:11] cell cashu-ts-3 x ns-0.20.3 x htlc_refund -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.0 x mint_swap -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.0 x p2pk_send_spend -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.0 x htlc_receive -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.0 x htlc_refund -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.6 x mint_swap -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.6 x p2pk_send_spend -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.6 x htlc_receive -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.17.6 x htlc_refund -> FAIL
+[11:01:12] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x mint_swap -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x p2pk_send_spend -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x htlc_receive -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x cdk-0.18.0 x htlc_refund -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x ns-0.20.0 x mint_swap -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x ns-0.20.0 x p2pk_send_spend -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x ns-0.20.0 x htlc_receive -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x ns-0.20.0 x htlc_refund -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x ns-0.20.2 x mint_swap -> FAIL
+[11:01:13] cell nutshell-wallet-0.20.3 x ns-0.20.2 x p2pk_send_spend -> FAIL
+[11:01:14] cell nutshell-wallet-0.20.3 x ns-0.20.2 x htlc_receive -> FAIL
+[11:01:14] cell nutshell-wallet-0.20.3 x ns-0.20.2 x htlc_refund -> FAIL
+[11:01:14] cell nutshell-wallet-0.20.3 x ns-0.20.3 x mint_swap -> FAIL
+[11:01:14] cell nutshell-wallet-0.20.3 x ns-0.20.3 x p2pk_send_spend -> FAIL
+[11:01:14] cell nutshell-wallet-0.20.3 x ns-0.20.3 x htlc_refund -> FAIL
+[11:01:14] cell nutshell-wallet-0.20.3 x ns-0.20.3 x htlc_receive -> FAIL
+[11:01:16] DONE {'FAIL': 72} -> /home/ubuntu/wallet-mint-interop/artifacts/extensive-003

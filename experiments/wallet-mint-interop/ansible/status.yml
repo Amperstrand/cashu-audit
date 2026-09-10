@@ -1,0 +1,14 @@
+---
+- name: interop run status
+  hosts: legion
+  tasks:
+    - name: runner process
+      ansible.builtin.shell: |
+        pid=$(cat {{ experiment_dir }}/runner.pid 2>/dev/null || echo 0)
+        if ps -p "$pid" >/dev/null 2>&1; then echo "ALIVE pid=$pid"; else echo "DEAD pid=$pid"; fi
+        tail -n 12 {{ experiment_dir }}/artifacts/*/runner.log 2>/dev/null | tail -12
+        tail -n 3 {{ experiment_dir }}/runner.out 2>/dev/null
+        cat {{ experiment_dir }}/artifacts/*/status.json 2>/dev/null
+      register: everything
+      failed_when: false
+    - debug: var=everything.stdout_lines

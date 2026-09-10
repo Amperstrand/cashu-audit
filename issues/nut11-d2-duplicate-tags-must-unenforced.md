@@ -73,9 +73,13 @@ this; the `ab-matrix:nutshell-main` git arm previews it pre-release.
 
 ## Direction (our read)
 
-The spec text and the community direction diverged at merge time. Best fix:
-amend NUT-11 to the split a1denvalu3 described (mints treat malformed as
-anyone-can-spend; wallets MUST reject malformed secrets at construction),
-plus negative vectors for both halves — the exact fix-pattern of our
-nuts-pr-draft for NUT-00. Alternative: implementations adopt rejection
-(three-way churn, strands any already-issued malformed secrets).
+The spec text and the community direction diverged at merge time — and
+nutshell-main choosing enforcement (above) settles the direction against
+pure mint-leniency. Refined amendment (2026-09-09, delay-mode pass):
+keep the MUST, add **"…or honor with a mandatory delay under keysets
+issued before the implementation's enforcement date"** — strict for new
+keysets, delay-honor for legacy (the delay surfaces affected wallets
+without confiscating; the drain curve is the retirement signal), plus
+negative vectors for both halves and wallet-side rejection at
+construction (the a1denvalu3 half). Full mechanism:
+`private/THINKING-delay-mode.md` (not upstream).

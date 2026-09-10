@@ -1,0 +1,32 @@
+---
+# Idempotent fire-and-forget: safe to re-run any time. Stops any prior run,
+# cleans experiment containers/networks (all wxm-*), syncs code, launches
+# detached. Never manipulates host state outside these namespaces.
+- name: deploy + detach wallet-mint interop run
+  hosts: legion
+  tasks:
+    - name: stop previous runner + clean experiment namespace
+      ansible.builtin.shell: |
+        pkill -f 'python3 runner.py' 2>/dev/null || true
+        sleep 1
+        docker ps -aq --filter name=wxm- | xargs -r docker rm -f
+        docker network ls | awk '/wxm-/{print $1}' | xargs -r docker network rm
+      failed_when: false
+      changed_when: true
+    - name: rsync experiment bundle
+      ansible.builtin.shell: >
+        rsync -az --delete --exclude artifacts --exclude .git
+        --exclude __pycache__ {{ playbook_dir }}/../ ai-legion:wallet-mint-interop/
+      delegate_to: localhost
+    - name: ensure runner deps (PEP668 host)
+      ansible.builtin.shell: pip3 install --break-system-packages -q pyyaml mnemonic requests || true
+      changed_when: false
+    - name: launch detached
+      ansible.builtin.shell: |
+        cd {{ experiment_dir }}
+        nohup python3 runner.py > runner.out 2>&1 &
+        echo $! > runner.pid
+    - name: runner pid
+      ansible.builtin.command: cat {{ experiment_dir }}/runner.pid
+      register: pid
+    - debug: msg="runner pid {{ pid.stdout }} — poll with status.yml, collect with collect.yml"

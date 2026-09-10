@@ -1,0 +1,654 @@
+{
+ "run": "extensive-003",
+ "ts": "2026-09-10T11:01:16.651655",
+ "cells": [
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.0",
+   "mint_identity": "cdk-mintd/0.17.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.17.6",
+   "mint_identity": "cdk-mintd/0.17.6",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.0",
+   "mint_identity": "Nutshell/0.20.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.2",
+   "mint_identity": "Nutshell/0.20.2",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=py\", line 649, in run_until_complete\n    return future.result()\n  File \"/drivers/py_flows.py\", line 23, in main\n    from cashu.wallet.wallet import Wallet\nModuleNotFoundError: No module named 'cashu'\n",
+   "wire_shapes": {}
+  }
+ ]
+}

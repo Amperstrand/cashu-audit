@@ -1,0 +1,9 @@
+{
+ "wallet": "coco",
+ "mint": "ns-0.20.0",
+ "mint_identity": "Nutshell/0.20.0",
+ "flow": "mint_swap",
+ "verdict": "SKIP",
+ "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+ "wire_shapes": {}
+}

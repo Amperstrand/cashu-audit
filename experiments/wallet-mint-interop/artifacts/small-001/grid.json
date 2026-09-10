@@ -1,0 +1,222 @@
+{
+ "run": "small-001",
+ "ts": "2026-09-10T09:39:16.154339",
+ "cells": [
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "mint_swap",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_receive",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_refund",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "mint_swap",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "p2pk_send_spend",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_receive",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "cashu-ts-4",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_refund",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: egistry.npmjs.org/@cashu%2fcashu-ts failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "mint_swap",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_receive",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_refund",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "mint_swap",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "p2pk_send_spend",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_receive",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "coco",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_refund",
+   "verdict": "SKIP",
+   "reason": "package unresolvable: /npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\nnpm err",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "cdk-0.18.0",
+   "mint_identity": "cdk-mintd/0.18.0",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "mint_swap",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "p2pk_send_spend",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_receive",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  },
+  {
+   "wallet": "nutshell-wallet-0.20.3",
+   "mint": "ns-0.20.3",
+   "mint_identity": "Nutshell/0.20.3",
+   "flow": "htlc_refund",
+   "verdict": "FAIL",
+   "reason": "no result.json; rc=1; tail=3.1, 0.24.1)\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\nERROR: No matching distribution found for breez-sdk-spark<0.16.0,>=0.15.0\n",
+   "wire_shapes": {}
+  }
+ ]
+}
