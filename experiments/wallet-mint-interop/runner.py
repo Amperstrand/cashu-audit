@@ -232,11 +232,12 @@ _dbg = None
 
 
 def main() -> int:
-    global RUN, ART
+    global RUN, ART, _dbg
     cfg = yaml.safe_load((HERE / "matrix.yml").read_text())
     RUN = cfg.get("run_name", datetime.now().strftime("run-%Y%m%d-%H%M%S"))
     ART = HERE / "artifacts" / RUN
     ART.mkdir(parents=True, exist_ok=True)
+    _dbg = CellDebugger(RUN)
     log(f"run {RUN}: {len(cfg['mints'])} mints x {len(cfg['wallets'])} wallets x {len(cfg['flows'])} flows")
     net = f"wxm-{RUN}"
     sh(["docker", "network", "create", net])
