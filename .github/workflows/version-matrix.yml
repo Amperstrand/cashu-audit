@@ -1,0 +1,67 @@
+name: version-matrix
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      arms:
+        description: "Extra docker arms (NAME=family:image, space-separated)"
+        required: false
+        default: ""
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      # Floating arms give inter-run drift detection; pin pairs to window-
+      # pin regressions. Edit freely; keep the dash-less family prefix.
+      ARMS: >-
+        --docker-arm cdk-latest=cdk:cashubtc/mintd:latest
+        --docker-arm nutshell-latest=nutshell:cashubtc/nutshell:latest
+        --docker-arm cdk-0.18.0=cdk:cashubtc/mintd:0.18.0
+        --docker-arm nutshell-0.20.3=nutshell:cashubtc/nutshell:0.20.3
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install requests coincurve mnemonic
+
+      - name: Run version matrix
+        working-directory: conformance
+        run: |
+          python3 version_matrix.py $ARMS ${{ github.event.inputs.arms }} \
+            | tee run-output.txt
+
+      - name: Fail job on flips (optional guard)
+        run: |
+          if grep -q "FLIP" run-output.txt; then
+            echo "::warning::Behavior flips detected — see summary"
+          fi
+
+      - name: Commit registry
+        run: |
+          git config user.name "version-matrix bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add conformance/runs/
+          git diff --cached --quiet || git commit -m "runs: version-matrix $(date -u +%F)"
+          git push
+
+      - name: Job summary
+        run: |
+          {
+            echo "## Version matrix run"
+            echo '```'
+            cat conformance/runs/version-matrix-$(date -u +%Y%m%d | tail -c 10)*.md 2>/dev/null | head -60
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+# Local scheduling equivalent (launchd, macOS) — save as
+# ~/Library/LaunchAgents/com.amperstrand.version-matrix.plist and `load` it,
+# or just cron:
+#   0 6 * * 1 cd <repo>/conformance && python3 version_matrix.py >> runs/cron.log 2>&1
