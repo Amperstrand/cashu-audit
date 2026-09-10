@@ -1,4 +1,4 @@
-run_name: extensive-004
+run_name: extensive-009
 max_parallel: 6
 
 mints:
@@ -6,8 +6,8 @@ mints:
   - {name: cdk-0.17.6, family: cdk, image: "cashubtc/mintd:0.17.6"}
   - {name: cdk-0.18.0, family: cdk, image: "cashubtc/mintd:0.18.0"}
   - {name: ns-0.20.0, family: nutshell, image: "cashubtc/nutshell:0.20.0"}
-  - {name: ns-0.20.2, family: nutshell, image: "cashubtc/nutshell:0.20.2"}
   - {name: ns-0.20.3, family: nutshell, image: "cashubtc/nutshell:0.20.3"}
+  - {name: cln-mint-1, family: cdk, image: "cashubtc/mintd:0.18.0", cln: true}
 
 wallets:
   - {name: cashu-ts-4, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^4"}
