@@ -93,3 +93,15 @@ greatspectate coverage --config specquotes.toml --coverage /tmp/cdk-cov --format
 4. **Continuation line trap**: any `#` comment immediately after a spec
    quote is appended to the quote text. Separate developer commentary
    from spec quotes with code, not comments.
+
+## Postscript (2026-09-12): gaps converted to test vectors
+
+The gap list above was converted to live enforcement probes — see
+`MUST-GAP-VECTORS-RESULTS.md`. Verdict per gap: invalid-sigflag (V2)
+violated by nutshell 0.18.2/0.19.0; SIG_ALL consistency (V3) enforced by
+all; SIG_ALL message format (11.md:141) non-conformant in nutshell
+0.16.5–0.20.2 and broken-multi-input in 0.20.3; compressed pubkeys (V5)
+violated by all nutshell; duplicate keys (V6) regressed in nutshell
+0.20.2/0.20.3. Coverage gaps and enforcement gaps overlap but are not
+identical: annotated code can still regress (V6), and enforced code can
+be non-conformant (SIG_ALL message).
