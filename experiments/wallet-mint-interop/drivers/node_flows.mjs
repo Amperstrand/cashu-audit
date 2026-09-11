@@ -39,6 +39,18 @@ async function main() {
 
   // connect
   const WalletClass = mod.Wallet || mod.CashuWallet; const wallet = new WalletClass(MINT, 'interop-driver');
+  // Intercept the Mint's internal _request for ALL HTTP calls (fetch wrapper misses some)
+  if (wallet._mint && wallet._mint._request) {
+    const origReq = wallet._mint._request;
+    wallet._mint._request = async (opts) => {
+      if (opts.requestBody) {
+        const bodyStr = typeof opts.requestBody === 'string' ? opts.requestBody : JSON.stringify(opts.requestBody);
+        appendFileSync(ART + '/wire.ndjson', JSON.stringify({t: Date.now(), url: opts.endpoint, method: opts.method, body: bodyStr}) + '\n');
+      }
+      return origReq(opts);
+    };
+  }
+
   await wallet.loadMint();
   log('mint loaded');
 

@@ -83,3 +83,27 @@ Feeds `issues/error-code-registry.md` (#6).
 2. Wallet-parse vs mint-verify differential probe (d2 vector).
 3. Read PoC close/recovery emission shapes (`cashu_spilman_channels`).
 4. Extend our suite's expected-rejects to assert error identity.
+
+## P2PK wire capture status (2026-09-11, post _request interception)
+
+**What works:** The `_request` interception on `wallet._mint` captures mint quote
+requests (POST /v1/mint/quote/bolt11). Verified in htlc_refund cells.
+
+**What doesn't work:** P2PK send operations (`ops.send()`) produce no wire
+captures. The `_request` interception on `wallet._mint` doesn't catch them.
+
+**Root cause:** The `WalletOps.send()` method likely uses a different internal
+Mint instance or HTTP client than `wallet._mint._request`. The cashu-ts v4
+source shows `requestWithAuth()` calling `this._request`, but the WalletOps
+class may have its own `_request` reference that isn't affected by our
+interception of `wallet._mint._request`.
+
+**Alternative approaches for future investigation:**
+1. Proxy on globalThis.fetch (catches captured references)
+2. tcpdump on the mint container (catches ALL network traffic)
+3. Intercept the Mint class constructor to wrap ALL instances
+4. Direct POST /v1/swap testing via raw HTTP (bypasses wallet library)
+
+**Impact:** The d6 witness emission data (which shapes cashu-ts actually puts
+on the wire for HTLC refunds) is still not captured. This is the missing
+evidence for the upstream d6 filing.
