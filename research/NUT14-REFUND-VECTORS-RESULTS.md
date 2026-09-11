@@ -93,3 +93,24 @@ require mints to accept a P2PK-shaped witness for HTLC refunds.
 ssh ai-legion 'docker run --rm --network host -v /tmp/mgv-drv:/drv:ro \
   cashubtc/nutshell:0.20.3 python3 /drv/mgv.py http://127.0.0.1:3500{0..8}'
 ```
+
+## Postscript (same day): version boundaries completed
+
+Ephemeral runs against nutshell 0.16.0/0.17.0/0.18.0 (images on
+ai-legion; `MINT_PRIVATE_KEY` must be 64-hex for old versions, and
+0.14.x/0.15.x speak the pre-v1 REST API — `/keys`, not `/v1/keys` — so
+the v1 driver does not cover them; boundary story is complete from
+0.16.0 onward):
+
+| Feature | ≤0.16.0 | 0.16.5 | 0.17.0 | 0.18.0 | 0.18.2 | 0.19.0 | 0.20.0 | 0.20.2 | 0.20.3 |
+|---|---|---|---|---|---|---|---|---|---|
+| sigflag validation (V2) | enforce | enforce | **LOST** | **LOST** | **LOST** | **LOST** | restored | enforce | enforce |
+| HTLC refund branch (H3) | **missing** | present | **missing** | **missing** | **missing** | present | present | present | present |
+| SIG_ALL msg format (V3B) | old | old | old | old | old | old | old | old | **new** |
+| duplicate keys (V6) | enforce | enforce | enforce | enforce | enforce | enforce | enforce | **REGRESSED** | **REGRESSED** |
+| uncompressed pubkey (V5) | accept | accept | accept | accept | accept | accept | accept | accept | accept |
+
+The sawtooth shapes (enforced → lost → restored) show these MUSTs are
+not regression-tested upstream: each is a window where conformance
+silently drifted. V5 is never enforced across the entire 0.16–0.20
+range. Raw runs: `artifacts/mgv-run8.txt`.
