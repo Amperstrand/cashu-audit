@@ -260,8 +260,11 @@ def main() -> int:
                 log(f"wallet {w['name']}: package unresolvable -> cells will SKIP ({reason[:80]})")
         for m in cfg["mints"]:
             mint = Mint(m, net)
-            mint.start()
-            mints.append(mint)
+            try:
+                mint.start()
+                mints.append(mint)
+            except Exception as e:
+                log(f"mint {m['name']} SKIPPED (failed to start): {e}")
         # Start CLN auto-payer for all running mints
         cln_payer = CLNAutoPayer([m.host_url for m in mints])
         cln_payer.start()
