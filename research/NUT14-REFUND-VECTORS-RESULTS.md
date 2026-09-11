@@ -102,13 +102,26 @@ ai-legion; `MINT_PRIVATE_KEY` must be 64-hex for old versions, and
 the v1 driver does not cover them; boundary story is complete from
 0.16.0 onward):
 
-| Feature | ≤0.16.0 | 0.16.5 | 0.17.0 | 0.18.0 | 0.18.2 | 0.19.0 | 0.20.0 | 0.20.2 | 0.20.3 |
+Full nutshell release line covered (0.16.0, 0.16.5, 0.17.0, 0.18.0,
+0.18.1, 0.18.2, 0.19.0, 0.19.1, 0.19.2, 0.20.0, 0.20.1, 0.20.2,
+0.20.3) plus cdk 0.17.0/0.17.6/0.18.0 — 16 mint versions × 17 vectors.
+
+| Feature (nutshell) | 0.16.0 | 0.16.5 | 0.17.0–0.18.1 | 0.18.2 | 0.19.0–0.19.2 | 0.20.0 | 0.20.1 | 0.20.2 | 0.20.3 |
 |---|---|---|---|---|---|---|---|---|---|
-| sigflag validation (V2) | enforce | enforce | **LOST** | **LOST** | **LOST** | **LOST** | restored | enforce | enforce |
-| HTLC refund branch (H3) | **missing** | present | **missing** | **missing** | **missing** | present | present | present | present |
+| sigflag validation (V2) | enforce | enforce | **LOST** | **LOST** | **LOST** | restored | enforce | enforce | enforce |
+| HTLC refund branch (H3/H6) | **missing** | present | **missing** | **missing** | present | present | present | present | present |
 | SIG_ALL msg format (V3B) | old | old | old | old | old | old | old | old | **new** |
 | duplicate keys (V6) | enforce | enforce | enforce | enforce | enforce | enforce | enforce | **REGRESSED** | **REGRESSED** |
 | uncompressed pubkey (V5) | accept | accept | accept | accept | accept | accept | accept | accept | accept |
+
+Precise boundaries: V6 regression enters at **0.20.2**; sigflag-loss
+window is **0.17.0–0.19.2**; HTLC-refund absence window is
+**0.17.0–0.18.2** (with an anomalous presence in 0.16.5 only of the
+pre-0.17 line); SIG_ALL format flips old→new at **0.20.3**. cdk
+`mintd:latest` (2026-09-02 rebuild) is still 0.18.0, and the required
+`preimage: String` HTLCWitness struct is still present in upstream
+main (per the 2026-09-09 spectate sync) — the refund-witness bug is
+unfixed upstream.
 
 The sawtooth shapes (enforced → lost → restored) show these MUSTs are
 not regression-tested upstream: each is a window where conformance
