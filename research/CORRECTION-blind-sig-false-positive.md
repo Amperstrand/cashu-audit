@@ -106,3 +106,53 @@ not from the test driver itself.
 3. Remove "cross-implementation blind-sig" from the fund-loss vectors
 4. Update the TollGate analysis to reflect that gonuts and nutshell wallets
    are MORE compatible than we measured
+
+## Follow-up: the ACTUAL compatibility issue (2026-09-11, historical-002-corrected)
+
+Re-running the matrix with the fixed driver reveals the REAL reason nutshell
+wallet fails on non-same-version mints — it's NOT the blind-sig protocol:
+
+### Issue 1: Keyset schema mismatch (nutshell → older nutshell)
+
+The nutshell 0.20.3 wallet expects keysets to have an `active` field:
+```
+ERROR: 1 validation error for KeysResponse
+keysets.0.active — Field required [type=missing]
+```
+
+Older nutshell mints (0.16-0.20.0) don't include the `active` field in their
+keyset responses. The 0.20.3 wallet's Pydantic model REQUIRES it. Result:
+the wallet sees ZERO keysets and can't even create a quote.
+
+**This is a schema breaking change within nutshell's own version history.**
+
+### Issue 2: CLN payment gap (nutshell → cdk with CLN backend)
+
+```
+Exception: Mint Error: Quote not paid (Code: 20001)
+```
+
+The cdk mints in this run use CLN signet backend. The quote is created
+successfully, but the Lightning invoice isn't paid (our auto-payer doesn't
+work). With FakeWallet-backed cdk mints (extensive-010), this PASSES.
+
+**This is an infrastructure gap, not a wallet compatibility issue.**
+
+### Corrected compatibility matrix for nutshell wallet 0.20.3
+
+| Mint type | Works? | Root cause if not |
+|---|---|---|
+| ns-0.20.3 (same version) | ✅ | — |
+| ns-0.16-0.20.0 (older nutshell) | ❌ | Keyset schema: `active` field required |
+| cdk (FakeWallet) | ✅ | — (proven in extensive-010) |
+| cdk (CLN signet) | ❌ | Auto-payer doesn't pay invoices |
+| testnut (cashu-cf) | ✅ | — (FakeWallet) |
+
+### Summary of corrections
+
+1. **Original claim**: "blind-sig protocol incompatibility" — WRONG (driver bug)
+2. **First correction**: "nutshell works on all mints" — PARTIALLY RIGHT
+   (works on all FakeWallet-backed mints)
+3. **Actual finding**: two separate issues:
+   a. Keyset schema change within nutshell (breaking change)
+   b. CLN payment gap in our infrastructure (not a wallet issue)
