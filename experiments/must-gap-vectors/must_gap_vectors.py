@@ -347,8 +347,87 @@ def run_vectors(base: str) -> dict:
             sign(skA, "".join(p["secret"] for p in pr) + "".join(x["B_"] for x in o)),  # old 0.18.2 format
         ]), expect="ACCEPT", gap="single-input SIG_ALL")
 
+    # ---------- NUT-14 / refund-path family ----------
+    skR = PrivateKey()
+    pkR = skR.public_key.format().hex()
+    preimage = secrets.token_bytes(32).hex()
+    hash_lc = sha256(bytes.fromhex(preimage)).hex()      # lowercase digest
+    hash_uc = hash_lc.upper()
+    t_past, t_future = 1700000000, int(time.time()) + 3600
+    def htlc(data: str, tags: list) -> str:
+        payload = {"nonce": secrets.token_hex(16), "data": data}
+        if tags:
+            payload["tags"] = [[k, v] for k, v in tags]
+        return json.dumps(["HTLC", payload], separators=(",", ":"))
+    wit_pre = lambda: json.dumps({"preimage": preimage})
+    wit_sig = lambda sk, m: witness([sign(sk, m)])
+
+    # H1 CTRL: valid preimage -> ACCEPT
+    s = htlc(hash_lc, "")
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["H1"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = wit_pre()
+        res["H1"] = dict(try_swap(base, pr, 2), expect="ACCEPT", gap="14.md hash-lock control")
+
+    # H2: UPPERCASE hash + same valid preimage -> digest-compare mints accept, string-compare reject
+    s = htlc(hash_uc, "")
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["H2"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = wit_pre()
+        res["H2"] = dict(try_swap(base, pr, 2), expect="MAP", gap="14.md:48 hash case sensitivity")
+
+    # H3: refund path, locktime expired + refund sig -> ACCEPT (d6 isolation)
+    s = htlc(hash_lc, [("locktime", str(t_past)), ("refund", pkR)])
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["H3"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = wit_sig(skR, pr[0]["secret"])
+        res["H3"] = dict(try_swap(base, pr, 2), expect="ACCEPT", gap="14.md:69 refund path (d6)")
+
+    # H4: refund path, locktime NOT expired -> REJECT
+    s = htlc(hash_lc, [("locktime", str(t_future)), ("refund", pkR)])
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["H4"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = wit_sig(skR, pr[0]["secret"])
+        res["H4"] = dict(try_swap(base, pr, 2), expect="REJECT", gap="14.md locktime unexpired")
+
+    # H5: no witness at all -> REJECT
+    s = htlc(hash_lc, "")
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["H5"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        res["H5"] = dict(try_swap(base, pr, 2), expect="REJECT", gap="14.md no witness")
+
+    # P1: P2PK refund path, locktime expired -> ACCEPT
+    s = f'["P2PK",{{"nonce":"{secrets.token_hex(16)}","data":"{pkA}","tags":[["locktime","{t_past}"],["refund","{pkR}"]]}}]'
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["P1"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = wit_sig(skR, pr[0]["secret"])
+        res["P1"] = dict(try_swap(base, pr, 2), expect="ACCEPT", gap="11.md P2PK refund path")
+
+    # P2: P2PK refund path, locktime future -> REJECT
+    s = f'["P2PK",{{"nonce":"{secrets.token_hex(16)}","data":"{pkA}","tags":[["locktime","{t_future}"],["refund","{pkR}"]]}}]'
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["P2"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = wit_sig(skR, pr[0]["secret"])
+        res["P2"] = dict(try_swap(base, pr, 2), expect="REJECT", gap="11.md P2PK refund unexpired")
+
+    # H6: refund sig with EMPTY preimage field (cdk HTLCWitness.preimage is required String)
+    s = htlc(hash_lc, [("locktime", str(t_past)), ("refund", pkR)])
+    pr, err = mint_proofs(base, ks, {2: [s]})
+    if err or not pr: res["H6"] = {"status": -1, "body": f"probe: {err}", "verdict": "SKIP"}
+    else:
+        pr[0]["witness"] = json.dumps({"preimage": "", "signatures": [sign(skR, pr[0]["secret"]).hex()]})
+        res["H6"] = dict(try_swap(base, pr, 2), expect="DIAGNOSTIC", gap="HTLC refund witness shape workaround")
+
     # verdicts
-    for name in ("SANITY", "CTRL", "V2", "V3", "V3B", "V3C", "V3D", "V5", "V6"):
+    for name in ("SANITY", "CTRL", "V2", "V3", "V3B", "V3C", "V3D", "V5", "V6",
+                 "H1", "H2", "H3", "H4", "H5", "H6", "P1", "P2"):
         v = res.get(name)
         if not v or v.get("verdict") == "SKIP":
             continue
@@ -369,7 +448,8 @@ def main() -> int:
     for r in out:
         name = r.get("mint_version", r.get("error", "?"))
         cells = " ".join(
-            f"{k}={r[k].get('verdict', '?')[:4]}" for k in ("SANITY", "CTRL", "V2", "V3", "V3B", "V3C", "V3D", "V5", "V6")
+            f"{k}={r[k].get('verdict', '?')[:4]}" for k in ("SANITY", "CTRL", "V2", "V3", "V3B", "V3C", "V3D", "V5", "V6",
+             "H1", "H2", "H3", "H4", "H5", "H6", "P1", "P2")
             if k in r)
         print(f"{r['base']} ({name}): {cells}")
     return 0
