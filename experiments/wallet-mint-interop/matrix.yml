@@ -1,64 +1,21 @@
-# HISTORICAL COMPATIBILITY MATRIX — the full Cashu timeline
-# Tests every meaningful version boundary we've identified from the census.
-# Selected versions represent: initial stable, breaking changes, current.
-run_name: historical-001
-max_parallel: 3  # lower: many mints, CLN payments take time
-
-# Key historical boundaries from our census:
-# - nutshell 0.15.1: hash algorithm change (domain separator added)
-# - nutshell 0.16.0: stable era begins
-# - nutshell 0.18.0: SIG_ALL format changes
-# - nutshell 0.20.0: #1008 overhaul (7 behavioral flips)
-# - cashu-ts 1.0.0: base64→hex secret format transition
-# - cashu-ts 2.0.0: API restructure
-# - cashu-ts 3.0.0: Wallet class standardized
-# - cashu-ts 4.0.0: WalletOps high-level API
-# - cdk 0.17.0: d6 regression (HTLC refund witness)
-# - cdk 0.18.0: config-init requirement
+run_name: production-001
+max_parallel: 3
 
 mints:
-  # nutshell — every major boundary
-  - {name: ns-0.14.1, family: nutshell, image: "cashubtc/nutshell:0.14.1"}
-  - {name: ns-0.15.0, family: nutshell, image: "cashubtc/nutshell:0.15.0"}
-  - {name: ns-0.15.1, family: nutshell, image: "cashubtc/nutshell:0.15.1"}  # hash algo change
-  - {name: ns-0.16.0, family: nutshell, image: "cashubtc/nutshell:0.16.0"}
-  - {name: ns-0.17.0, family: nutshell, image: "cashubtc/nutshell:0.17.0"}
-  - {name: ns-0.18.0, family: nutshell, image: "cashubtc/nutshell:0.18.0"}  # SIG_ALL changes
-  - {name: ns-0.19.0, family: nutshell, image: "cashubtc/nutshell:0.19.0"}
-  - {name: ns-0.20.0, family: nutshell, image: "cashubtc/nutshell:0.20.0"}  # #1008 overhaul
+  # Production cashu-cf mints (the actual TollGate backends)
+  - {name: testnut, family: url, url: "https://testnut.cashu.exchange"}
+  - {name: nofee-testnut, family: url, url: "https://nofees.testnut.cashu.exchange"}
+  # Reference mints for cross-implementation comparison
   - {name: ns-0.20.3, family: nutshell, image: "cashubtc/nutshell:0.20.3"}
-  # cdk — available versions
-  - {name: cdk-0.17.0, family: cdk, image: "cashubtc/mintd:0.17.0"}  # d6 regression
-  - {name: cdk-0.17.6, family: cdk, image: "cashubtc/mintd:0.17.6"}
-  - {name: cdk-0.18.0, family: cdk, image: "cashubtc/mintd:0.18.0"}  # config split
+  - {name: cdk-0.18.0, family: cdk, image: "cashubtc/mintd:0.18.0"}
 
 wallets:
-  # cashu-ts — every major version boundary
-  - {name: ts-0.9.0, driver: node, image: "node:18-slim", install: "@cashu/cashu-ts@0.9.0"}  # pre-v1
-  - {name: ts-1.0.0, driver: node, image: "node:18-slim", install: "@cashu/cashu-ts@1.0.0"}  # base64→hex
-  - {name: ts-1.2.1, driver: node, image: "node:18-slim", install: "@cashu/cashu-ts@1.2.1"}  # late v1
-  - {name: ts-2.0.0, driver: node, image: "node:18-slim", install: "@cashu/cashu-ts@2.0.0"}  # API restructure
-  - {name: ts-2.9.0, driver: node, image: "node:18-slim", install: "@cashu/cashu-ts@2.9.0"}  # late v2
-  - {name: ts-3.0.0, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@3.0.0"}  # Wallet standardized
-  - {name: ts-3.6.0, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@3.6.0"}  # mid v3
-  - {name: ts-4.0.0, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@4.0.0"}  # WalletOps
-  - {name: ts-4.10.0, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@4.10.0"}  # latest v4
-  # nutshell wallet — key versions
-  - name: nw-0.16.5
-    driver: python
-    image: "cashubtc/nutshell:0.16.5"
-    install: "none"
-  - name: nw-0.18.2
-    driver: python
-    image: "cashubtc/nutshell:0.18.2"
-    install: "none"
-  - name: nw-0.20.3
+  - {name: cashu-ts-v4, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^4"}
+  - {name: cashu-ts-v3.5, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@3.5.0"}
+  - {name: cashu-ts-v2.9, driver: node, image: "node:18-slim", install: "@cashu/cashu-ts@2.9.0"}
+  - name: nutshell-wallet-0.20.3
     driver: python
     image: "cashubtc/nutshell:0.20.3"
     install: "none"
 
-flows:
-  - mint_swap           # basic: can the wallet mint from this mint?
-  - p2pk_send_spend     # P2PK spending conditions
-  - htlc_receive        # HTLC receiver path (preimage)
-  - htlc_refund         # HTLC refund path (the d6 finding)
+flows: [mint_swap, p2pk_send_spend, htlc_receive, htlc_refund]

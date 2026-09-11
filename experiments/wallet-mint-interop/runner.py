@@ -66,9 +66,11 @@ def free_port() -> int:
 
 def wait_ready(url: str, timeout: int = 300) -> str:
     dl = time.time() + timeout
+    req_headers = {"User-Agent": "cashu-interop-tester/1.0"}
     while time.time() < dl:
         try:
-            with urllib.request.urlopen(f"{url}/v1/info", timeout=3) as r:
+            req = urllib.request.Request(f"{url}/v1/info", headers=req_headers)
+            with urllib.request.urlopen(req, timeout=10) as r:
                 return json.load(r).get("version", "?")
         except Exception:
             time.sleep(4)
@@ -77,13 +79,22 @@ def wait_ready(url: str, timeout: int = 300) -> str:
 
 class Mint:
     def __init__(self, spec: dict, net: str):
-        self.name, self.family, self.image = spec["name"], spec["family"], spec["image"]
+        self.name = spec["name"]
+        self.family = spec["family"]
+        self.image = spec.get("image")
+        self.url = spec.get("url")
         self.net, self.port, self.container, self.workdir = net, free_port(), f"wxm-{self.name}", None
-        self.url = f"http://{self.name}:3338"          # in-network address for drivers
-        self.host_url = f"http://127.0.0.1:{self.port}"  # host-side for readiness
+        if not self.url:
+            self.url = f"http://{self.name}:3338"
+        self.host_url = self.url if spec.get("url") else f"http://127.0.0.1:{self.port}"
         self.identity = None
 
     def start(self):
+        if self.family == "url":
+            # Pre-existing mint, just verify it's reachable
+            self.identity = wait_ready(self.url, timeout=30)
+            log(f"mint {self.name} ready (url): {self.identity}")
+            return
         base = ["docker", "run", "-d", "--network", self.net, "--name", self.container,
                 "-p", f"{self.port}:3338"]
         if self.family == "nutshell":
@@ -134,6 +145,8 @@ class Mint:
         log(f"mint {self.name} ready: {self.identity}")
 
     def stop(self):
+        if self.family == "url":
+            return
         sh(["docker", "rm", "-f", self.container])
         wd = Path.home() / f"wxm-{self.name}"
         if wd.exists():

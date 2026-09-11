@@ -52,30 +52,26 @@ class CellDebugger:
 
     def cell_end(self, wallet: str, mint: str, flow: str,
                  exit_code: int, stdout: str, stderr: str):
-        if not self.cell_dir:
-            return
-        # Capture full stdout/stderr
-        (self.cell_dir / "stdout.txt").write_text(stdout)
-        (self.cell_dir / "stderr.txt").write_text(stderr)
-
-        # Capture mint logs at this point
-        for c in self.mint_containers:
-            logs = sh(["docker", "logs", "--since", "60s", c]).stdout[-3000:]
-            if logs:
-                (self.cell_dir / f"mint_{c}.log").write_text(logs)
-
-        # Docker stats snapshot
-        stats = self._docker_stats()
-        (self.cell_dir / "docker_stats.json").write_text(json.dumps(stats, indent=1))
-
-        # Cell summary
-        summary = {
-            "wallet": wallet, "mint": mint, "flow": flow,
-            "exit_code": exit_code,
-            "duration_s": round(time.time() - self.cell_start, 2) if self.cell_start else 0,
-            "ts": datetime.now().isoformat(),
-        }
-        (self.cell_dir / "cell_summary.json").write_text(json.dumps(summary, indent=1))
+        try:
+            if not self.cell_dir:
+                self.cell_begin(wallet, mint, flow)
+            (self.cell_dir / "stdout.txt").write_text(stdout)
+            (self.cell_dir / "stderr.txt").write_text(stderr)
+            for c in self.mint_containers:
+                logs = sh(["docker", "logs", "--since", "60s", c]).stdout[-3000:]
+                if logs:
+                    (self.cell_dir / f"mint_{c}.log").write_text(logs)
+            stats = self._docker_stats()
+            (self.cell_dir / "docker_stats.json").write_text(json.dumps(stats, indent=1))
+            summary = {
+                "wallet": wallet, "mint": mint, "flow": flow,
+                "exit_code": exit_code,
+                "duration_s": round(time.time() - self.cell_start, 2) if self.cell_start else 0,
+                "ts": datetime.now().isoformat(),
+            }
+            (self.cell_dir / "cell_summary.json").write_text(json.dumps(summary, indent=1))
+        except Exception:
+            pass  # debug capture must never crash the experiment
 
     def _docker_stats(self):
         r = sh(["docker", "stats", "--no-stream"])
