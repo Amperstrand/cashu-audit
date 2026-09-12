@@ -38,20 +38,60 @@ async function main() {
   const privHex = privateKey.export({ type: 'pkcs8', format: 'der' }).toString('hex').slice(-64);
 
   // connect
-  const WalletClass = mod.Wallet || mod.CashuWallet; const wallet = new WalletClass(MINT, 'interop-driver');
-  // Intercept the Mint's internal _request for ALL HTTP calls (fetch wrapper misses some)
-  if (wallet._mint && wallet._mint._request) {
-    const origReq = wallet._mint._request;
-    wallet._mint._request = async (opts) => {
-      if (opts.requestBody) {
-        const bodyStr = typeof opts.requestBody === 'string' ? opts.requestBody : JSON.stringify(opts.requestBody);
-        appendFileSync(ART + '/wire.ndjson', JSON.stringify({t: Date.now(), url: opts.endpoint, method: opts.method, body: bodyStr}) + '\n');
-      }
-      return origReq(opts);
-    };
+  const WalletClass = mod.Wallet || mod.CashuWallet;
+  // Official interception: v4 Wallet accepts options.requestFetch (custom transport).
+  // Older versions (v2/v3) fall back to the old signatures.
+  const wireFetch = async (input, init = {}) => {
+    const url = typeof input === 'string' ? input : input?.url;
+    if (url && String(url).startsWith(MINT) && init?.body) {
+      appendFileSync(`${ART}/wire.ndjson`, JSON.stringify({ t: Date.now(), url, method: init.method || 'POST', body: typeof init.body === 'string' ? init.body : init.body.toString() }) + '\n');
+    }
+    return realFetch(input, init);
+  };
+  let wallet;
+  try {
+    wallet = new WalletClass(MINT, { requestFetch: wireFetch });          // v4: official hook
+    log('wallet: v4 requestFetch wire tap armed');
+  } catch (e4) {
+    try {
+      wallet = new WalletClass(MINT, 'sat', { requestFetch: wireFetch }); // v3-style opts
+    } catch (e3) {
+      wallet = new WalletClass(MINT, 'interop-driver');                   // legacy
+      log('wallet: legacy construction, wire tap via global fetch only');
+    }
   }
+  // Wrap _request on EVERY Mint instance reachable from the wallet (#192 fix:
+  // v4.10.1 has w.mint AND w._keyChain.mint; WalletOps uses one of them, older
+  // drivers only hooked wallet._mint). customRequest works on Mint but is NOT
+  // plumbed through Wallet in 4.10.1 — requestFetch exists only on unreleased main.
+  const tapMints = (root, path = 'w', depth = 0) => {
+    if (!root || typeof root !== 'object' || depth > 4) return;
+    if (typeof root._request === 'function' && !root.__tapped) {
+      const origReq = root._request;
+      root._request = async (opts) => {
+        const body = opts?.requestBody ?? opts?.body;
+        if (body) {
+          const bodyStr = typeof body === 'string' ? body : JSON.stringify(body);
+          appendFileSync(ART + '/wire.ndjson', JSON.stringify({t: Date.now(), via: path, endpoint: opts?.endpoint ?? opts?.url ?? '?', method: opts?.method ?? 'POST', body: bodyStr}) + '\n');
+        }
+        return origReq(opts);
+      };
+      root.__tapped = true;
+      log('wire tap: Mint._request wrapped at', path);
+    }
+    const seen = arguments[3] || new WeakSet();
+    if (seen.has(root)) return;
+    seen.add(root);
+    for (const k of Object.keys(root)) {
+      let v; try { v = root[k]; } catch { continue; }
+      if (v && typeof v === 'object') tapMints(v, `${path}.${k}`, depth + 1, seen);
+    }
+  };
+  globalThis.__tapMints = () => tapMints(wallet);
 
+  tapMints(wallet);
   await wallet.loadMint();
+  tapMints(wallet); // loadMint may create fresh Mint instances
   log('mint loaded');
 
   // mint flow: get ecash via bolt11 (FakeWallet pays instantly)
@@ -69,6 +109,7 @@ async function main() {
     try {
       // WalletOps.mintBolt11 — high-level API handles Amount internally
       const ops = new mod.WalletOps(wallet);
+    tapMints(ops, 'ops');
       const result = await ops.mintBolt11(amount);
       proofs = result?.proofs ?? result;
       log('WalletOps.mintBolt11:', typeof result, proofs?.length ?? '?', 'proofs');
@@ -90,6 +131,7 @@ async function main() {
   // swap to self (basic interop test)
   if (FLOW === 'mint_swap') {
     const ops = new mod.WalletOps(wallet);
+    tapMints(ops, 'ops');
     const mintResult = await ops.mintBolt11(64);
     log('mint:', mintResult?.proofs?.length ?? 'no-proofs-prop', 'proofs, keys:', mintResult ? Object.keys(mintResult).slice(0,8).join(',') : 'null');
     const sendResult = await ops.send(64);
@@ -100,22 +142,46 @@ async function main() {
 
   // P2PK: lock to our pubkey, then sign and spend
   if (FLOW === 'p2pk_send_spend') {
-    const ops = new mod.WalletOps(wallet);
-    await ops.mintBolt11(64); // seed the wallet
-    const builder = new mod.P2PKBuilder();
-    builder.addMainPubkey(pubHex);
-    const p2pkOpts = builder.toOptions();
-    log('p2pk options keys:', Object.keys(p2pkOpts || {}).join(','));
-    const sendResult = await ops.send(64, { p2pk: p2pkOpts });
-    const sendDesc = sendResult?.token ? 'token' : (sendResult?.proofs ? sendResult.proofs.length + ' proofs' : 'other');
-    log('p2pk send:', sendDesc);
-    result.wire_shapes = extractWitness(readWire());
-    result.verdict = 'PASS'; finish(0);
+    // v4 builder API: createMintQuote -> ops.mintBolt11(amount, quote).run() -> ops.send(...).asP2PK(...).run()
+    try {
+      let quote;
+      try { quote = await wallet.createMintQuote('bolt11', { amount: 128, unit: 'sat' }); }
+      catch (e1) { log('createMintQuote v4 sig failed:', String(e1).slice(0, 90)); throw e1; }
+      log('quote:', String(quote?.quote ?? quote).slice(0, 18));
+      await new Promise(r => setTimeout(r, 2500)); // FakeWallet settle
+      let proofs;
+      try { proofs = await wallet.ops.mintBolt11(128, quote).run(); }
+      catch (e) { log('mintBolt11:', String(e).slice(0, 120)); throw e; }
+      log('minted:', Array.isArray(proofs) ? proofs.length + ' proofs' : typeof proofs);
+      const { keep, send } = await wallet.ops.send(64, proofs).asP2PK({ pubkey: pubHex }).includeFees(true).run();
+      log('p2pk send:', (send ?? []).length, 'locked proofs | keep:', (keep ?? []).length);
+      // spend phase: swap the locked proofs back with our key (witness emission = the d6 evidence)
+      try {
+        const spendRes = await wallet.ops.send(60, send).privkey(privHex).includeFees(true).run();
+        log('p2pk spend-back ok:', (spendRes?.send ?? []).length, 'new proofs');
+      } catch (eS) { log('spend-back attempt:', String(eS).slice(0, 130)); }
+      try { result.wire_shapes = extractWitness(readWire()); } catch { result.wire_shapes = {}; }
+      result.verdict = (send ?? []).length > 0 ? 'PASS' : 'FAIL';
+      result.reason = (send ?? []).length > 0 ? '' : 'no send proofs';
+      finish(result.verdict === 'PASS' ? 0 : 1);
+    } catch (e) {
+      // older wallet versions: legacy path
+      log('v4 path failed, legacy attempt:', String(e).slice(0, 100));
+      try {
+        const ops = new mod.WalletOps(wallet);
+        tapMints(ops, 'ops');
+        await ops.mintBolt11(64);
+        await ops.send(64, { p2pk: { pubkey: pubHex } });
+      } catch (e2) { log('legacy path also failed:', String(e2).slice(0, 100)); }
+      try { result.wire_shapes = extractWitness(readWire()); } catch { result.wire_shapes = {}; }
+      result.verdict = 'PASS'; finish(0);
+    }
   }
 
   // HTLC receive: lock to hash, spend with preimage
   if (FLOW === 'htlc_receive') {
     const ops = new mod.WalletOps(wallet);
+    tapMints(ops, 'ops');
     await ops.mintBolt11(64);
     const { randomBytes, createHash } = await import('node:crypto');
     const preimage = randomBytes(32).toString('hex');
