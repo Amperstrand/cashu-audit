@@ -46,3 +46,27 @@ work: one more pass on v4 KeyChain/privkey format.
 Every historical cashu-ts v4 "p2pk_send_spend PASS" cell was a no-op
 pass (the builder was never run). The matrix needs a re-run with this
 driver for v4 rows.
+
+## RESOLVED (2026-09-12, later session): full witness capture
+
+The spend-witness phase now works. Two remaining bugs:
+
+1. **Key derivation must use the signer's library** (@noble/curves):
+   the wallet's `signP2PKProofs` checks `derived_pubkey ∈ secret.pubkeys`
+   and only WARNS on mismatch — a wrong pair silently skips signing
+   ("Witness is missing"). Our JWK-based derivation didn't correspond
+   to the pkcs8-tail privkey.
+2. Call `wallet.signP2PKProofs(proofs, privHex)` directly, then swap
+   the signed proofs (the builder's `.privkey()` path is offline-only).
+
+Proven wire output (ns 0.20.3, cashu-ts 4.10.1):
+
+```
+swap input[0]:
+  secret:  ["P2PK",{"nonce":"4032…","data":"03fc7a…"}]
+  witness: "{\"signatures\":[\"b559f3c2…\"]}"   (string-encoded, 64-byte schnorr)
+```
+
+cashu-ts v4 emits the standard string-encoded witness (the shape cdk's
+serde expects). #192 complete end-to-end: quote → blind mint → P2PK
+lock (send) → witness spend — all captured per-cell.

@@ -24,18 +24,16 @@ async function main() {
   const mod = await import('@cashu/cashu-ts');
   log('exports:', Object.keys(mod).slice(0, 10).join(','));
 
-  // generate a secp256k1 keypair for P2PK/HTLC signing
-  const { privateKey, publicKey } = generateKeyPairSync('ec', { namedCurve: 'secp256k1' });
-  const jwk = publicKey.export({ format: 'jwk' });
-  const xHex = jwk.x.replace(/=+$/, ''); // base64url -> raw
-  const xBuf = Buffer.from(xHex, 'base64');
-  const yHex = jwk.y.replace(/=+$/, '');
-  const yBuf = Buffer.from(yHex, 'base64');
-  const yLastByte = yBuf[yBuf.length - 1];
-  const prefix = (yLastByte % 2 === 0) ? '02' : '03';
-  const pubHex = prefix + xBuf.toString('hex').padStart(64, '0');
+  // generate a secp256k1 keypair for P2PK/HTLC signing — MUST derive pub from the
+  // same library the wallet signs with (@noble/curves), else the wallet's
+  // "lock pubkey in secret" check silently skips signing (warn-only)
+  const { randomBytes } = await import('node:crypto');
+  let secp;
+  try { secp = (await import('@noble/curves/secp256k1.js')).secp256k1; }
+  catch { secp = (await import('@noble/curves/secp256k1')).secp256k1; }
+  const privHex = randomBytes(32).toString('hex');
+  const pubHex = Buffer.from(secp.getPublicKey(Buffer.from(privHex, 'hex'), true)).toString('hex');
   log('pubkey:', pubHex.slice(0, 10) + '... len=' + pubHex.length);
-  const privHex = privateKey.export({ type: 'pkcs8', format: 'der' }).toString('hex').slice(-64);
 
   // connect
   const WalletClass = mod.Wallet || mod.CashuWallet;
@@ -157,7 +155,10 @@ async function main() {
       log('p2pk send:', (send ?? []).length, 'locked proofs | keep:', (keep ?? []).length);
       // spend phase: swap the locked proofs back with our key (witness emission = the d6 evidence)
       try {
-        const spendRes = await wallet.ops.send(60, send).privkey(privHex).includeFees(true).run();
+        const signed = wallet.signP2PKProofs(send, privHex);
+        const nWit = (signed ?? []).filter(p => p?.witness).length;
+        log('signed proofs with witness:', nWit, '/', (send ?? []).length);
+        const spendRes = await wallet.ops.send(60, signed).includeFees(true).run();
         log('p2pk spend-back ok:', (spendRes?.send ?? []).length, 'new proofs');
       } catch (eS) { log('spend-back attempt:', String(eS).slice(0, 130)); }
       try { result.wire_shapes = extractWitness(readWire()); } catch { result.wire_shapes = {}; }
