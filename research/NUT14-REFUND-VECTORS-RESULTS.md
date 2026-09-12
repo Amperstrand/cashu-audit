@@ -153,3 +153,18 @@ driver never attempting a spend at all.
 
 Also observed on the wire: the wallet's swap outputs carry
 `"C_": null` (tolerated by both implementations).
+
+## cdk upstream HEAD check (2026-09-12, built from cashubtc/cdk main today)
+
+Full vector suite + NUT-20 probes against a locally built
+`cdk-mintd` HEAD (reports version 0.18.0-dev):
+
+- **H3 (natural refund witness): still REJECT** — the
+  `HTLCWitness.preimage: String` required-field bug is **unfixed in
+  upstream main** as of this build.
+- H6 (empty-preimage workaround): still ACCEPT.
+- All other vectors identical to the 0.18.0 release (multi-input
+  SIG_ALL swap OK, V2/V5/V6 enforced, NUT-20 accepts both schemes).
+
+The F6 finding is upstream-reportable against HEAD with a reproducible
+vector and a working interop workaround (H6).
