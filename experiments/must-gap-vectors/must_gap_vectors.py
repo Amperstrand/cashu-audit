@@ -88,10 +88,11 @@ def crypto_selftest() -> None:
 
 
 # ---------- HTTP ----------
-def http(method: str, url: str, body: dict | None = None, timeout: int = 15):
+def http(method: str, url: str, body: dict | None = None, timeout: int = 150):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, method=method,
-                                 headers={"Content-Type": "application/json"})
+                                 headers={"Content-Type": "application/json",
+                                          "User-Agent": "curl/8.7.1"})  # CF blocks python UA
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.status, resp.read().decode()
@@ -151,17 +152,25 @@ def fresh_output(amount: int) -> tuple[dict, str]:
     return {"amount": amount, "B_": B_.hex(), "id": keyset_id_ref[0]}, s
 
 
-def try_swap(base: str, inputs: list[dict], total: int) -> dict:
-    out, _ = fresh_output(total)
-    st, body = http("POST", f"{base}/v1/swap", {"inputs": inputs, "outputs": [out]})
-    if st == 400 and "not balanced" in body and "fees (" in body:
-        import re as _re
-        m = _re.search(r"fees \((\d+)\)", body)
+def _fee_retry(base: str, inputs: list[dict], total: int, retry_fn) -> tuple[int, str]:
+    """On a fee-related 400, parse the fee (impl-specific wording) and retry once via retry_fn(fee)."""
+    import re as _re
+    st, body = retry_fn(None)
+    if st == 400:
+        fee = None
+        m = _re.search(r"required \((\d+)\)", body) or _re.search(r"fees \((\d+)\)", body)
         if m:
             fee = int(m.group(1))
-            if total - fee > 0:
-                out, _ = fresh_output(total - fee)
-                st, body = http("POST", f"{base}/v1/swap", {"inputs": inputs, "outputs": [out]})
+        if fee is not None and "fees" in body and total - fee > 0:
+            st, body = retry_fn(fee)
+    return st, body
+
+
+def try_swap(base: str, inputs: list[dict], total: int) -> dict:
+    def attempt(fee):
+        out, _ = fresh_output(total if fee is None else total - fee)
+        return http("POST", f"{base}/v1/swap", {"inputs": inputs, "outputs": [out]})
+    st, body = _fee_retry(base, inputs, total, attempt)
     return {"status": st, "body": body[:280]}
 
 
@@ -172,15 +181,19 @@ def try_swap_sigall(base: str, proofs: list[dict], total: int, sks, build_sigs) 
     sigs = build_sigs(proofs, [out])
     for p in proofs:
         p["witness"] = witness(sigs)
-    st, body = http("POST", f"{base}/v1/swap", {"inputs": proofs, "outputs": [out]})
-    if st == 400 and "not balanced" in body and "fees (" in body:
-        m = _re.search(r"fees \((\d+)\)", body)
-        if m and total - int(m.group(1)) > 0:
-            out, _ = fresh_output(total - int(m.group(1)))
-            sigs = build_sigs(proofs, [out])
-            for p in proofs:
-                p["witness"] = witness(sigs)
-            st, body = http("POST", f"{base}/v1/swap", {"inputs": proofs, "outputs": [out]})
+    def _post(fee):
+        o, _ = fresh_output(total if fee is None else total - fee)
+        s = build_sigs(proofs, [o])
+        for p in proofs:
+            p["witness"] = witness(s)
+        return http("POST", f"{base}/v1/swap", {"inputs": proofs, "outputs": [o]}), o
+    st, body = _post(None)[0]
+    if st == 400:
+        m = _re.search(r"required \((\d+)\)", body) or _re.search(r"fees \((\d+)\)", body)
+        if m and "fees" in body:
+            fee = int(m.group(1))
+            if total - fee > 0:
+                st, body = _post(fee)[0]
     return {"status": st, "body": body[:280]}
 
 
