@@ -37,3 +37,18 @@ All conformant with the spec message order. Notable details:
 docker run --rm --network host -v /tmp/mgv-drv:/drv:ro \
   cashubtc/nutshell:0.20.3 python3 /drv/sigall_melt_vectors.py <mint_url>
 ```
+
+## Version sweep (nutshell release line)
+
+| Mint | M2 single-input | M3 multi-input |
+|---|---|---|
+| 0.16.5 | REJECT "no valid signature provided" | REJECT |
+| 0.18.2 | REJECT "threshold 0 < 1" | REJECT |
+| 0.19.0 | REJECT "threshold 0 < 1" | REJECT |
+| 0.20.2 | REJECT "threshold 0 < 1" | REJECT |
+| **0.20.3** | **200** | **200** |
+| cdk 0.17.0/0.18.0 | 200 | 200 |
+
+The SIG_ALL melt message family flipped old→new at the same boundary as
+the swap message (0.20.2 → 0.20.3). Every nutshell below 0.20.3 rejects
+the spec-conformant melt signature; cdk accepts it across 0.17–0.18.
