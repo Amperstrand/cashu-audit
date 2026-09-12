@@ -278,10 +278,20 @@ def main() -> int:
                 mints.append(mint)
             except Exception as e:
                 log(f"mint {m['name']} SKIPPED (failed to start): {e}")
-        # Start CLN auto-payer for all running mints
-        cln_payer = CLNAutoPayer([m.host_url for m in mints])
+        # Start CLN auto-payer for all running mints (v2: sqlite polling —
+        # cdk has no quote-list endpoint; we read the mint DBs directly)
+        from pathlib import Path as _P
+        db_paths = {}
+        for m in mints:
+            for pat in (_P.home() / f"mint-battery-{m.name}", _P.home() / f"mint-battery/{m.name}",
+                        _P.home() / f"wxm-{m.name}"):
+                sq = pat / "cdk-mintd.sqlite"
+                if sq.exists():
+                    db_paths[m.host_url] = str(sq)
+                    break
+        cln_payer = CLNAutoPayer([m.host_url for m in mints], db_paths=db_paths)
         cln_payer.start()
-        log(f"CLN auto-payer started for {len(mints)} mints")
+        log(f"CLN auto-payer started for {len(mints)} mints ({len(db_paths)} with DB polling)")
         jobs = [(w, m, f) for w in cfg["wallets"] for m in mints for f in cfg["flows"]]
         with ThreadPoolExecutor(max_workers=int(cfg.get("max_parallel", 4))) as ex:
             futs = [ex.submit(run_cell, w, m, f) for (w, m, f) in jobs]
