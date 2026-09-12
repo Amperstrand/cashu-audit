@@ -168,35 +168,76 @@ async function main() {
     } catch (e) {
       // older wallet versions: legacy path
       log('v4 path failed, legacy attempt:', String(e).slice(0, 100));
+      // v3-era API: createMintQuote(amount) -> mintProofs -> send(amount, {p2pk})
       try {
-        const ops = new mod.WalletOps(wallet);
-        tapMints(ops, 'ops');
-        await ops.mintBolt11(64);
-        await ops.send(64, { p2pk: { pubkey: pubHex } });
-      } catch (e2) { log('legacy path also failed:', String(e2).slice(0, 100)); }
+        const q3 = await wallet.createMintQuote(128);
+        log('v3 quote:', String(q3?.quote ?? q3).slice(0, 16));
+        await new Promise(r => setTimeout(r, 2500));
+        const proofs3 = await wallet.mintProofs(128, q3?.quote ?? q3);
+        log('v3 minted:', Array.isArray(proofs3) ? proofs3.length : typeof proofs3);
+        const sent3 = await wallet.send(64, proofs3, { p2pk: { pubkey: pubHex } });
+        log('v3 sent:', sent3?.send?.length ?? sent3?.length ?? '?');
+      } catch (e3) {
+        log('v3 flow failed:', String(e3).slice(0, 100));
+        try {
+          const q3 = await wallet.createMintQuote(128);
+          await new Promise(r => setTimeout(r, 2500));
+          const proofs3 = await wallet.mintProofs(128, q3?.quote ?? q3);
+          const sent3 = await wallet.send(64, { p2pk: { pubkey: pubHex } });
+          log('v3b sent:', sent3?.send?.length ?? sent3?.length ?? '?');
+        } catch (e4) { log('v3b flow failed:', String(e4).slice(0, 100)); }
+      }
       try { result.wire_shapes = extractWitness(readWire()); } catch { result.wire_shapes = {}; }
-      result.verdict = 'PASS'; finish(0);
+      // evidence-based verdict: PASS only if a swap actually hit the wire
+      const wireOk = (() => { try { return readWire().some(l => l.includes('/v1/swap')); } catch { return false; } })();
+      result.verdict = wireOk ? 'PASS' : 'FAIL';
+      result.reason = wireOk ? '' : 'no swap on the wire (flow did not execute)';
+      finish(wireOk ? 0 : 1);
     }
   }
 
   // HTLC receive: lock to hash, spend with preimage
   if (FLOW === 'htlc_receive') {
-    const ops = new mod.WalletOps(wallet);
-    tapMints(ops, 'ops');
-    await ops.mintBolt11(64);
     const { randomBytes, createHash } = await import('node:crypto');
     const preimage = randomBytes(32).toString('hex');
     const hash = createHash('sha256').update(Buffer.from(preimage, 'hex')).digest('hex');
-
-    const builder = new mod.P2PKBuilder();
-    builder.addHashlock(hash);
-    const htlcOpts = builder.toOptions();
-    log('htlc options keys:', Object.keys(htlcOpts || {}).join(','));
-    const sendResult = await ops.send(64, { p2pk: htlcOpts });
-    const sendDesc = sendResult?.token ? 'token' : (sendResult?.proofs ? sendResult.proofs.length + ' proofs' : 'other');
-    log('htlc send:', sendDesc);
-    result.wire_shapes = extractWitness(readWire());
-    result.verdict = 'PASS'; finish(0);
+    try {
+      // v4: quote -> mint -> send with hashlock -> spend-back with preimage
+      let quote;
+      try { quote = await wallet.createMintQuote('bolt11', { amount: 128, unit: 'sat' }); }
+      catch { quote = await wallet.createMintQuote(128); }
+      await new Promise(r => setTimeout(r, 2500));
+      let proofs;
+      try { proofs = await wallet.ops.mintBolt11(128, quote).run(); }
+      catch { proofs = await wallet.mintProofs(128, quote?.quote ?? quote); }
+      const htlcOpts = new mod.P2PKBuilder().addHashlock(hash).toOptions();
+      const { keep, send } = await wallet.ops.send(64, proofs).asP2PK(htlcOpts).includeFees(true).run();
+      log('htlc locked:', (send ?? []).length, 'proofs');
+      // spend back with the preimage: attach the witness manually (the wire shape we verified)
+      for (const p of (send ?? [])) p.witness = JSON.stringify({ preimage });
+      const spent = await wallet.ops.receive(send).run();
+      log('htlc spend-back:', Array.isArray(spent) ? spent.length + ' proofs' : 'ok');
+      // v4 success path: evidence = locked proofs + successful preimage spend
+      const n = (send ?? []).length + (Array.isArray(spent) ? spent.length : 1);
+      try { result.wire_shapes = extractWitness(readWire()); } catch { result.wire_shapes = {}; }
+      result.verdict = n > 0 ? 'PASS' : 'FAIL';
+      result.reason = n > 0 ? '' : 'no proofs locked/spent';
+      finish(n > 0 ? 0 : 1);
+    } catch (eH) {
+      log('htlc v4 path failed:', String(eH).slice(0, 110));
+      try {
+        const q3 = await wallet.createMintQuote(128);
+        await new Promise(r => setTimeout(r, 2500));
+        const proofs3 = await wallet.mintProofs(128, q3?.quote ?? q3);
+        const sent3 = await wallet.send(64, proofs3, { htlc: { hash } });
+        log('htlc v3 sent:', sent3?.send?.length ?? sent3?.length ?? '?');
+      } catch (e3) { log('htlc v3 path failed:', String(e3).slice(0, 110)); }
+    }
+    try { result.wire_shapes = extractWitness(readWire()); } catch { result.wire_shapes = {}; }
+    const wireOkH = (() => { try { return readWire().some(l => l.includes('/v1/swap')); } catch { return false; } })();
+    result.verdict = wireOkH ? 'PASS' : 'FAIL';
+    result.reason = wireOkH ? '' : 'no swap on the wire';
+    finish(wireOkH ? 0 : 1);
   }
 
   // HTLC refund: lock with expired locktime + refund key, spend via refund
@@ -236,8 +277,12 @@ async function main() {
 }
 
 function readWire() {
-  try { return readFileSync(`${ART}/wire.ndjson`, 'utf8').trim().split('\n').map(l => JSON.parse(l)); }
-  catch { return []; }
+  try {
+    return readFileSync(`${ART}/wire.ndjson`, 'utf8').trim().split('\n')
+      .map(l => { try { return JSON.parse(l); } catch { return null; } })
+      .filter(Boolean)
+      .map(d => ({ ...d, url: d.url ?? d.endpoint ?? '' }));  // unify fetch-layer + request-layer shapes
+  } catch { return []; }
 }
 function extractWitness(wire) {
   const shapes = {};

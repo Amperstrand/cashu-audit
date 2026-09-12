@@ -1,0 +1,226 @@
+[
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "cdk-0.17.6",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "cdk-0.17.6",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "cdk-0.17.6",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "cdk-0.17.6",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "cdk-0.18.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "cdk-0.18.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.17.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.17.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.17.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.17.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.18.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.18.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.18.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.18.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.19.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.19.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.19.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.19.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.19.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.19.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.0",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.0",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.3",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.3",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.3",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.3",
+  "flow": "htlc_receive",
+  "kind": "HTLC",
+  "shape": "preimage=hex64"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.3",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ },
+ {
+  "wallet": "cashu-ts-v4",
+  "mint": "ns-0.20.3",
+  "flow": "p2pk_send_spend",
+  "kind": "P2PK",
+  "shape": "signatures[1]"
+ }
+]
