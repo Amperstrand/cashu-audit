@@ -9,8 +9,17 @@ PRs/issues FIRST (AGENTS.md rule 1).*
 
 | Venue | What it tracks | What it already says | What we hold that is NEW |
 |---|---|---|---|
-| **cashubtc/cdk#2252** (open, callebtc, 0 comments) | NUT-10/11/14 divergences cdk↔nutshell, for per-item equalization | Item 6 = HTLC refund signatures-only witness: cdk rejects (`verify_htlc` → `IncorrectWitnessKind`), nutshell accepts (optional preimage), SIG_ALL mode accepts on cdk. Item 5 = HTLC hash case sensitivity. | (a) both wallet families' live emissions are wire-captured (nutshell: `null`; cashu-ts: omitted) — deployed wallets cannot spend HTLC refunds on any cdk release; (b) regression window 0.16.0→0.17.0 (silent); (c) why suites can't see it (in-tree `add_preimage("")` workaround; checker built on cdk); (d) design trap: optional `preimage` breaks P2PK (untagged enum ordering); (e) delay-to-signal proposal for this divergence class. |
+| **cashubtc/cdk#2252** (open, callebtc, 0 comments) | NUT-10/11/14 divergences cdk↔nutshell, for per-item equalization | Item 6 = HTLC refund signatures-only witness: cdk rejects (`verify_htlc` → `IncorrectWitnessKind`), nutshell accepts (optional preimage), SIG_ALL mode accepts on cdk. Item 5 = HTLC hash case: "cdk accepts mixed/upper; nutshell requires lowercase." **Both items UNDECIDED.** | (a) both wallet families' live emissions are wire-captured (nutshell: `null`; cashu-ts: omitted) — deployed wallets cannot spend HTLC refunds on any cdk release; (b) regression window 0.16.0→0.17.0 (silent); (c) why suites can't see it (in-tree `add_preimage("")` workaround; checker built on cdk); (d) design trap: optional `preimage` breaks P2PK (untagged enum ordering); (e) delay-to-signal proposal. Item 5 NEW: (a) spec self-split — prose (14.md:86,88) lowercase vs normative formula (14.md:93) digest-compare via case-insensitive hex_to_bytes; (b) measured: nutshell mints 0.16.5–0.20.3 ACCEPT uppercase data + valid preimage (digest compare, same as cdk) — mint-layer divergence may be nil. **Draft v3 staged (items 5+6).** |
 | cashubtc/nutshell#1009 + PR #1008 | NUT-10 problems mostly SIG_ALL (nutshell side); refactor wave following CDK architecture | 20/58 checker failures enumerated; #1008 open error-handling question ("reject and log? what error?") | Our answer to their open question = the soft-failure pattern (staged nostr post, unlinked). F5 crash data on 0.20.3 if ever relevant. |
+
+## Other open issues (assessed 2026-09-13, not venues for us)
+
+| Venue | Why not |
+|---|---|
+| cashubtc/nutshell#1100 | Ours (Amperstrand, 2026-07-28): SIG_ALL + locktime drops primary pathway. Self-update only with new data. |
+| cashubtc/nutshell#1126 | robwoodgate: are #1008's changed P2PK error codes intentional? nutshell-scoped; our cdk error-misdirection point adjacent, not additive. |
+| cashubtc/nuts#431 | locktime == now boundary undefined — we hold no boundary-exact data (vectors used ±1000s). |
+| cashubtc/nuts#319 | SIG_ALL multi-party — relevant only if a message-format item opens. |
 
 ## Resolved / historical precedent
 
