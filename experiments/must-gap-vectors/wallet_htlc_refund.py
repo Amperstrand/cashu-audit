@@ -48,13 +48,13 @@ async def main():
 
     # 1. mint
     try:
-        quote = await w.request_mint(8)
+        quote = await w.request_mint(32)
         log("quote ok:", quote.quote[:16])
     except BaseException as e:
         log("request_mint FAILED:", repr(e)[:200]); raise
     await asyncio.sleep(2)
     try:
-        proofs = await w.mint(8, quote.quote)
+        proofs = await w.mint(32, quote.quote)
         log("minted:", sum(p.amount for p in proofs), "sats")
     except SystemExit as e:
         log("mint raised SystemExit:", e); raise
@@ -78,7 +78,8 @@ async def main():
     log("lock created:", str(locked)[:120])
 
     # apply the lock: swap into proofs with the HTLC secret
-    locked_proofs = await w.swap_to_send(proofs, 4, secret_lock=locked, set_reserved=False, include_fees=True)
+    keep, send = await w.swap_to_send(proofs, 4, secret_lock=locked, set_reserved=False, include_fees=True)
+    locked_proofs = send
     log("locked proofs:", len(locked_proofs))
 
     # 3. wait for locktime expiry

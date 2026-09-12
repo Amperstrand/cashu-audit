@@ -38,9 +38,30 @@ Wallet-side boundary (wallet images minting 2 sats on cdk 0.17.0):
 |---|---|---|---|---|---|---|
 | mint on cdk 0.17.0 | PASS | PASS | PASS | PASS | PASS | **FAIL 20008** |
 
+## Full sweep (wallet 0.20.3 × 9 battery mints, 2026-09-12)
+
+| Mint | Mint result for nutshell wallet 0.20.3 |
+|---|---|
+| cdk 0.17.0 | **FAIL** 20008 (NUT-20 legacy-only) |
+| cdk 0.17.6 | **FAIL** 20008 (NUT-20 legacy-only) |
+| cdk 0.18.0 | PASS |
+| nutshell 0.16.5 | **FAIL** KeysetNotFoundError (no `active` in keyset schema) |
+| nutshell 0.18.2 | **FAIL** KeysetNotFoundError (same) |
+| nutshell 0.19.0 | **FAIL** 20008 (mint lacks new-scheme verification) |
+| nutshell 0.20.0 | **FAIL** 20008 (same) |
+| nutshell 0.20.2 | **FAIL** 20008 (same) |
+| nutshell 0.20.3 | PASS |
+
+**The current nutshell wallet can mint on 2 of 9 tested mints.** The
+NUT-20 blast radius is larger than the cdk 0.17.x finding: every
+nutshell mint before 0.20.3 also rejects the new-scheme signature
+(mint-side verification landed with 0.20.3). The 0.16.5/0.18.2 failures
+are the previously-documented keyset-schema change.
+
 ## Impact
 
-**The current nutshell wallet cannot mint on any cdk 0.17.x mint.**
+**The current nutshell wallet cannot mint on any cdk 0.17.x mint, nor
+on any nutshell mint below 0.20.3.**
 Users experience: "Mint Error: Signature missing or invalid" — opaque,
 no hint that it's a scheme mismatch. Not fund-loss (no tokens yet), but
 a total mint-flow block between the two most-deployed implementation
