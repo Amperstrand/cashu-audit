@@ -44,3 +44,11 @@ PRs/issues FIRST (AGENTS.md rule 1).*
 See AGENTS.md "Upstream contribution protocol". Short version: add a
 new fact or stay silent; no self-narration; no offers; draft → owner
 approval → post.
+
+## Watches standing (ai-legion crontab)
+
+- `43 8 * * * ~/bin/watch-upstream-threads.sh` — daily comment-count on
+  cdk#2252 (known: 1, ours) and nutshell#1100 (known: 0); a `CHANGE`
+  line in `~/watch-upstream.log` means someone replied — read the
+  thread before any further upstream action.
+- `17 3 * * * ~/bin/must-gap-nightly.sh` — 17-vector drift detection.
