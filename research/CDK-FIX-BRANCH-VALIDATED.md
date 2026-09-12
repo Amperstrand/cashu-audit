@@ -16,3 +16,13 @@ Branch: **Amperstrand/cdk `htlc-refund-witness`** (owner-review stage).
 
 Evidence pack + issue draft: `private/EVIDENCE-cdk-filing1.md`,
 `private/DRAFT-ISSUE-cdk-htlc-refund-witness.md` (staged, not filed).
+
+## Repro test verified on both trees (final staging)
+
+Self-contained unit repro (`test_verify_htlc_refund_signature_only_witness_repro`,
+on the branch) — paste-able into main:
+
+- stock main @ 8077e501: `Err(IncorrectSecretKind)` ← the wire error, reproduced
+- branch: `test result: ok. 1 passed`
+
+Final filing draft with collapsibles: `private/FINAL-DRAFT-cdk-issue.md`.
