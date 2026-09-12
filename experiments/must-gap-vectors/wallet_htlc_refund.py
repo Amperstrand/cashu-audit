@@ -52,7 +52,18 @@ async def main():
         log("quote ok:", quote.quote[:16])
     except BaseException as e:
         log("request_mint FAILED:", repr(e)[:200]); raise
-    await asyncio.sleep(2)
+    # poll until PAID (cdk FakeWallet settles lazily on GET)
+    import urllib.request as _u
+    for _ in range(20):
+        try:
+            with _u.urlopen(_u.Request(os.environ["MINT_URL"] + "/v1/mint/quote/bolt11/" + quote.quote), timeout=5) as _r:
+                import json as _j
+                if _j.load(_r).get("state") == "PAID":
+                    log("quote PAID")
+                    break
+        except Exception:
+            pass
+        await asyncio.sleep(1)
     try:
         proofs = await w.mint(32, quote.quote)
         log("minted:", sum(p.amount for p in proofs), "sats")
@@ -78,7 +89,10 @@ async def main():
     log("lock created:", str(locked)[:120])
 
     # apply the lock: swap into proofs with the HTLC secret
-    keep, send = await w.swap_to_send(proofs, 4, secret_lock=locked, set_reserved=False, include_fees=True)
+    try:
+        keep, send = await w.swap_to_send(proofs, 4, secret_lock=locked, set_reserved=False, include_fees=True)
+    except TypeError:
+        keep, send = await w.swap_to_send(proofs, 4, secret_lock=locked, set_reserved=False)
     locked_proofs = send
     log("locked proofs:", len(locked_proofs))
 
@@ -94,8 +108,8 @@ async def main():
 
     # 5. spend
     try:
-        spent = await w.swap(signed, sum(p.amount for p in signed), include_fees=True)
-        log("REFUND SPENT OK:", len(spent), "new proofs")
+        keep, spent = await w.split(proofs=signed, amount=0)
+        log("REFUND SPENT OK: keep", len(keep), "proofs (", sum(p.amount for p in keep), "sats ) send", len(spent))
         result["verdict"] = "PASS"; finish(0)
     except Exception as e:
         result["reason"] = f"swap: {e!r}"[:250]

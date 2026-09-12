@@ -127,3 +127,29 @@ The sawtooth shapes (enforced → lost → restored) show these MUSTs are
 not regression-tested upstream: each is a window where conformance
 silently drifted. V5 is never enforced across the entire 0.16–0.20
 range. Raw runs: `artifacts/mgv-run8.txt`.
+
+## Wallet-level confirmation (same day, wire captured)
+
+`experiments/must-gap-vectors/wallet_htlc_refund.py` runs the full
+wallet flow (mint → lock → expire → sign → spend) with an httpx wire
+tap, against fee-free ephemeral mints:
+
+- **nutshell wallet 0.20.3 × nutshell mint 0.20.3: PASS** (refund
+  spent, keep 4 sats). Confirms the raw H3 result end-to-end.
+- **nutshell wallet 0.20.2 × cdk mint 0.17.6: FAIL** — wire witness is
+  `{"preimage":null,"signatures":["<sig>"]}` → cdk responds
+  `{"code":50000,"detail":"Secret is not a HTLC secret"}`.
+
+The `preimage: null` detail matters: it is not a missing field — the
+wallet explicitly serializes null. cdk's `HTLCWitness.preimage:
+String` cannot accept null OR missing, so both the natural wallet
+shape (null) and the signature-only shape (missing) fail; only the
+empty-string workaround (H6) parses. **HTLC refund tokens are
+unspendable with any nutshell wallet on any cdk mint tested
+(0.17.0–0.18.0).** The historical d6 (htlc_refund 0/108) is now fully
+explained: this mint-side rejection for wallet-driven cells, missing
+refund branch on nutshell 0.17.0–0.18.2 mints for the rest, and the
+driver never attempting a spend at all.
+
+Also observed on the wire: the wallet's swap outputs carry
+`"C_": null` (tolerated by both implementations).
