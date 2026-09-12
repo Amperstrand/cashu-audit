@@ -68,3 +68,18 @@ updated in private/ per keep-internal policy.*
 3. CLN auto-payer quote-list mismatch (#195)
 4. Docker bridge root cause (#194)
 5. Optional: 0.14/0.15 pre-v1 API driver variant (low value)
+
+## Second half (same session): open threads closed
+
+| Thread | Outcome |
+|---|---|
+| #195 CLN auto-payer | **FIXED + proven**: cdk has no quote-list endpoint (405); v2 payer polls mint sqlite directly; quote UNPAID→PAID via real CLN signet payment |
+| #193 auditor 500 | **FIXED + closed**: NULL names vs strict MintRead (ResponseValidationError); auditor was also displaced from :8000 by nemo-lab → now :8100 + */5 keepalive cron |
+| #192 P2PK wire capture | **Core solved**: v4 wire tap via _request graph-scan; discovered historical v4 p2pk PASSes were silent no-ops (builder API never invoked); witness-capture spend phase remains |
+| Standing regression | nightly 17-vector cron 03:17, drift-diffed |
+| cdk upstream HEAD | built + tested: F6 (HTLC refund witness) still live upstream |
+
+## Issue-tracker state
+
+- #191 corrected, #193 closed, #195 closed, #192 core-solved (comment)
+- New findings issues: F1-F11 filed; session wrap-up issue filed
