@@ -80,6 +80,41 @@ def handle(req):
         Y = hash_to_curve(msg.encode("utf-8"))
         return {"id": rid, "result": {"Y": pub_to_hex(Y)}}
 
+    if method == "amount_split":
+        from cashu.core.split import amount_split
+        amount = p["amount"]
+        result = amount_split(amount)
+        return {"id": rid, "result": {"amounts": result}}
+
+    if method == "verify":
+        from cashu.core.crypto.b_dhke import verify
+        a = PrivateKey(bytes.fromhex(p["a_hex"]))
+        C = PublicKey(bytes.fromhex(p["C_hex"]))
+        secret_msg = p["secret_msg"]
+        valid = verify(a, C, secret_msg)
+        return {"id": rid, "result": {"valid": valid}}
+
+    if method == "parse_secret":
+        from cashu.core.secret import Secret
+        secret_str = p["secret"]
+        try:
+            s = Secret.deserialize(secret_str)
+            kind = s.kind.value if s.kind else None
+            tags = s.tags.root if s.tags else []
+            return {"id": rid, "result": {
+                "kind": kind,
+                "tags": tags,
+                "data": s.data if hasattr(s, 'data') else None,
+            }}
+        except Exception as e:
+            return {"id": rid, "result": {"parse_error": str(e)}}
+
+    if method == "hash_e":
+        from cashu.core.crypto.b_dhke import hash_e
+        pubkeys = [PublicKey(bytes.fromhex(h)) for h in p["pubkeys_hex"]]
+        e = hash_e(*pubkeys)
+        return {"id": rid, "result": {"e": e.hex()}}
+
     return {"id": rid, "error": f"unknown method: {method}"}
 
 
