@@ -115,6 +115,40 @@ def handle(req):
         e = hash_e(*pubkeys)
         return {"id": rid, "result": {"e": e.hex()}}
 
+    if method == "dleq_components":
+        from cashu.core.crypto.b_dhke import hash_to_curve, hash_e
+        from cashu.core.crypto.b_dhke import derive_dleq_nonce
+        secret_msg = p["secret_msg"]
+        r_hex = p["r_hex"]
+        a_hex = p["a_hex"]
+
+        r = PrivateKey(bytes.fromhex(r_hex))
+        a = PrivateKey(bytes.fromhex(a_hex))
+
+        Y = hash_to_curve(secret_msg.encode("utf-8"))
+        B_ = Y + r.public_key
+        C_ = B_ * a
+        A = a.public_key
+
+        # DLEQ nonce (deterministic per NUT-12)
+        p_nonce = derive_dleq_nonce(a, A, B_, C_)
+
+        R1 = p_nonce.public_key
+        R2 = B_ * p_nonce
+        e = hash_e(R1, R2, A, C_)
+        s = p_nonce.add(bytes.fromhex(a.multiply(bytes(e)).to_hex()))
+
+        return {"id": rid, "result": {
+            "B_": pub_to_hex(B_),
+            "C_": pub_to_hex(C_),
+            "A": pub_to_hex(A),
+            "R1": pub_to_hex(R1),
+            "R2": pub_to_hex(R2),
+            "e": e.hex(),
+            "s": s.to_hex() if hasattr(s, 'to_hex') else priv_to_hex(s),
+            "nonce": priv_to_hex(p_nonce),
+        }}
+
     return {"id": rid, "error": f"unknown method: {method}"}
 
 
