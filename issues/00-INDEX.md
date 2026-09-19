@@ -61,3 +61,4 @@ Every divergence draft now has one GH issue tagged `divergence` (one per diverge
 - #1, #2, #6 — pre-existing cross-repo findings, tagged `divergence`
 
 Upstream filing remains owner-gated (venue rule unchanged); these are internal tracking issues.
+- #27 — `issues/keyset-final-expiry-enforcement.md` (divergence: cdk enforces final_expiry w/ code 12003, nutshell never expires; lab-proven 2026-09-19)
