@@ -1,0 +1,246 @@
+[    5039ms] [LOG] Git commit: 4abd268-dirty @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5040ms] [LOG] Running 5 migrations... @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5086ms] [LOG] Running migration 1: Migrate stablenuts.cash to umint.cash @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5087ms] [LOG] No stablenuts.cash mint found to update @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5087ms] [LOG] Migration 1 completed successfully @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5087ms] [LOG] Running migration 2: Add wss://relay.primal.net relay; enable mint backup; clear recs @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] Added relay to defaultNostrRelays: wss://relay.primal.net  @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] nostrMintBackupEnabled already true @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] Cleared localStorage key: cashu.ndk.mintRecommendations @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] Migration 2 completed successfully @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] Running migration 3: Migrate invoiceHistory bolt11 field to request @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] No invoiceHistory localStorage key to migrate @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] Migration 3 completed successfully @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5088ms] [LOG] Running migration 4: Migrate invoiceHistory to Dexie paymentHistory @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5092ms] [LOG] Migrated invoiceHistory to Dexie paymentHistory @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5093ms] [LOG] Migration 4 completed successfully @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5093ms] [LOG] Running migration 5: Migrate historyTokens to Dexie ecashHistory @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5096ms] [LOG] Migrated historyTokens to Dexie ecashHistory @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5096ms] [LOG] Migration 5 completed successfully @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5101ms] [LOG] Mint URL  @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5101ms] [LOG] Wallet URL https://cashume.cashu.exchange/ @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5101ms] [LOG] location.hash:  @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[    5122ms] [LOG] Migrating to Dexie @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[    5122ms] [LOG] No cashu.proofs in localStorage to migrate @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[    5125ms] [LOG] Local storage size: 1933 bytes @ https://cashume.cashu.exchange/assets/storage.f04e324e.js:0
+[    5155ms] TypeError: Cannot read properties of undefined (reading 'slice')
+    at Proxy.walletSeedGenerateKeyPair (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:68378)
+    at Proxy.<anonymous> (https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:2246)
+    at Proxy.subscribeToNip17DirectMessages (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:71748)
+    at Proxy.<anonymous> (https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:2246)
+    at n.<computed> (https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:3787)
+    at Proxy.created (https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:81:369831)
+[    5155ms] Error: Invalid mnemonic
+    at normalize (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2162:42211)
+    at mnemonicToSeedSync (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2162:43283)
+    at Proxy.seed (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4212:59017)
+    at https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:1445
+    at Co.fn (https://cashume.cashu.exchange/assets/index.7b647ba0.js:9:9230)
+    at Co.run (https://cashume.cashu.exchange/assets/index.7b647ba0.js:9:1517)
+    at get value (https://cashume.cashu.exchange/assets/index.7b647ba0.js:9:9475)
+    at Mi.get (https://cashume.cashu.exchange/assets/index.7b647ba0.js:9:4624)
+    at Proxy.walletSeedGenerateKeyPair (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:68373)
+    at Proxy.<anonymous> (https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:2246)
+[   15364ms] [LOG] href: https://cashume.cashu.exchange/welcome @ https://cashume.cashu.exchange/assets/welcome.b87019fb.js:0
+[   22160ms] [LOG] href: https://cashume.cashu.exchange/welcome @ https://cashume.cashu.exchange/assets/welcome.b87019fb.js:0
+[   44842ms] [LOG] href: https://cashume.cashu.exchange/welcome @ https://cashume.cashu.exchange/assets/welcome.b87019fb.js:0
+[   45175ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[   45317ms] [LOG] Fetching HTTP info for mint https://mint.gitvid.net @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45802ms] [LOG] Fetching HTTP info for mint https://mint.cashu.chat @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45815ms] [LOG] HTTP info for mint https://mint.gitvid.net Cashu mint @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45873ms] [LOG] Fetching HTTP info for mint https://mint.lnserver.com @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45894ms] [LOG] Fetching HTTP info for mint https://forge.flashapp.me @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45909ms] [LOG] Fetching HTTP info for mint https://21mint.me @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45946ms] [LOG] Fetching HTTP info for mint https://mint.coinos.io @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   45965ms] [LOG] Fetching HTTP info for mint https://mint.nostrzap.me @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46083ms] [LOG] HTTP info for mint https://forge.flashapp.me Flash Forge @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46086ms] [LOG] Fetching HTTP info for mint https://mint.21linz.at @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46111ms] [LOG] Fetching HTTP info for mint https://lnb.bolverker.com/cashu/api/v1/GZjPXyQXsgnZEgKZsLRQyy @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46202ms] [ERROR] Access to fetch at 'https://mint.lnserver.com/v1/info' from origin 'https://cashume.cashu.exchange' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://cashume.cashu.exchange/welcome:0
+[   46202ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://mint.lnserver.com/v1/info:0
+[   46203ms] [LOG] Error fetching HTTP info for mint https://mint.lnserver.com @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46620ms] [LOG] HTTP info for mint https://mint.coinos.io Coinos @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46637ms] [LOG] HTTP info for mint https://mint.cashu.chat cashu.chat @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46669ms] [LOG] HTTP info for mint https://mint.21linz.at 21linz Cashu Mint @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46682ms] [ERROR] Access to fetch at 'https://21mint.me/v1/info' from origin 'https://cashume.cashu.exchange' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://cashume.cashu.exchange/welcome:0
+[   46682ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://21mint.me/v1/info:0
+[   46682ms] [LOG] Error fetching HTTP info for mint https://21mint.me @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   46901ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://lnb.bolverker.com/cashu/api/v1/GZjPXyQXsgnZEgKZsLRQyy/v1/info:0
+[   46902ms] [LOG] Error fetching HTTP info for mint https://lnb.bolverker.com/cashu/api/v1/GZjPXyQXsgnZEgKZsLRQyy @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   47148ms] [LOG] HTTP info for mint https://mint.nostrzap.me mint.nostrzap.me @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   60546ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[   61662ms] [LOG] Fetching HTTP info for mint https://cdk-4312959.cashu.exchange @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   62003ms] [LOG] HTTP info for mint https://cdk-4312959.cashu.exchange undefined @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[   75404ms] [LOG] ### activateMint: Mint activated:  https://cdk-4312959.cashu.exchange @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[   75404ms] [LOG] watcher: activeMintUrl: https://cdk-4312959.cashu.exchange, activeUnit: sat @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[   77221ms] [LOG] Mint backup published to Nostr: de512e367507feeebc4c2ec138224d7272556a49ec0327e019c63c31cf52f32c @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[   80936ms] [LOG] href: https://cashume.cashu.exchange/welcome @ https://cashume.cashu.exchange/assets/welcome.b87019fb.js:0
+[   81101ms] [LOG] Git commit: 4abd268-dirty @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[   81101ms] [LOG] No migrations to run @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[   81216ms] [LOG] Mint URL https://cdk-4312959.cashu.exchange @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[   81217ms] [LOG] Wallet URL https://cashume.cashu.exchange/ @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[   81217ms] [LOG] location.hash:  @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[   81218ms] [LOG] Local storage size: 18906 bytes @ https://cashume.cashu.exchange/assets/storage.f04e324e.js:0
+[   81271ms] [LOG] Setting pubkey to 6de49aa7fa74705820f3e361dd8762299bd853d189d8cdcaf9cc5dfc8722fb51 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144
+[   81272ms] [LOG] ### Subscribing to NIP-17 direct messages to 6de49aa7fa74705820f3e361dd8762299bd853d189d8cdcaf9cc5dfc8722fb51 since 1790376439 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144
+[   98724ms] [LOG] ##### showInvoiceCreateDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  115697ms] [LOG] Adding quote 01a0e50d-a907-77b1-b570-eba1df4915e7 to long-polling checker. @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[  141652ms] [LOG] ### mintBolt11(): mintQuote {quote: 01a0e50d-a907-77b1-b570-eba1df4915e7, request: lntbs210n1p4tn8gcsp5hg6k3v2aua82p0jen9np662xf9wgw7…t86hzkyj9k4cetp8raftqm3k63hd3ntxre6mnzch7qqf8hfcz, amount: di, unit: sat, state: PAID} @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[  141863ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://cdk-4312959.cashu.exchange/v1/mint/bolt11:0
+[  164620ms] [LOG] ##### showSendTokensDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  182289ms] [LOG] onTokenPaid kicking off websocket @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  183455ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  188542ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  193377ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  198373ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  203349ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  208398ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  218440ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  238360ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  263406ms] Failed to execute 'readText' on 'Clipboard': Read permission denied.
+[  278537ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  293299ms] [LOG] ### receive tokens cashuBo2FteCJodHRwczovL2Nkay00MzEyOTU5LmNhc2h1LmV4Y2hhbmdlYXVjc2F0YXSBomFpSAGfX7ngPyYGYXCCpGFhBGFzeEBjMDBmMmRkOTZlNWNlOTAxNDY2ODZlZjk3MTIzMjc3OTA5Y2MyMmFkYjFiYzlkZWY2MWQ4ZGFiYTY0MDE3OThhYWNYIQI6rtHMeAyJB1rriP7sXhPb1DNmyyORVF0Qm8Sdo20oW2Fko2FlWCDobmmn5E1T_kVkASAIXA32sBbInwYE9ipcPZzqxPqmrGFzWCBZn_16Cc1sr3Fctmp7uH7WOYNYdaxb16roKPMUWomn2GFyWCDZ1ObHtvzhHsHWzdxBANuEn-hFxrZqN5VBWNUc31P8B6RhYQFhc3hAMzQ3MzgyNDdjNTc3MGMxOWEyNTBlZDUyMTU4NTA4OTZlN2MwMWM0OTJkYmRlNjczOTljMmU5MTViYjZkNzc3NmFjWCEDZCSxP1xkj-Zo1enXtrnM_YpcHF2IamVL09pwBH9C7RJhZKNhZVgg2w_04HAh2wsc4-tofSYZ5dem0vGQR2ahBSSkN6GUpsphc1ggA8ywQcFcNumRAnK-B1f_32-i1XNxoE9I-svh12ciftlhclggZeD69MZsacJzGVd7oO0haHqXYieEgl_O4ZUCl6D3L7E @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[  293982ms] [LOG] Websocket: proof state updated: PENDING @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  293982ms] [LOG] Websocket: proof state updated: SPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  357676ms] [LOG] ### fee_paid 0 @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  467248ms] [LOG] Fetching HTTP info for mint https://cdk-d3dec24.cashu.exchange @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[  467600ms] [LOG] HTTP info for mint https://cdk-d3dec24.cashu.exchange undefined @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[  476020ms] [LOG] ### activateMint: Mint activated:  https://cdk-d3dec24.cashu.exchange @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  476022ms] [LOG] watcher: activeMintUrl: https://cdk-d3dec24.cashu.exchange, activeUnit: sat @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  478171ms] [LOG] Mint backup published to Nostr: 45b8d8c0d96c8615d30977e422d9c73eba2a4f8483cf795984866e7487bbbfd4 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  513490ms] [LOG] ##### showInvoiceCreateDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  541230ms] [LOG] Adding quote 01a0e514-267a-7fb3-9b34-6c7b761c74e7 to long-polling checker. @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[  567754ms] [LOG] ### mintBolt11(): mintQuote {quote: 01a0e514-267a-7fb3-9b34-6c7b761c74e7, request: lntbs210n1p4tn8kzsp58p8uu59498n8sllgsekveqvrk6cte2…g6yr22nhsf6v4uwpz3xsq7ctg569wzw62n0v2krggqqk2sjmh, amount: di, unit: sat, method: bolt11} @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[  598487ms] [LOG] ##### showSendTokensDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  613809ms] [LOG] onTokenPaid kicking off websocket @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  615129ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  619506ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  624537ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  629590ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  634431ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  639351ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  649542ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  669590ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  699648ms] Failed to execute 'readText' on 'Clipboard': Read permission denied.
+[  709592ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  717527ms] [LOG] ### receive tokens cashuBo2FteCJodHRwczovL2Nkay1kM2RlYzI0LmNhc2h1LmV4Y2hhbmdlYXVjc2F0YXSBomFpSAGJ2KqVzAF6YXCCpGFhBGFzeEBmM2E1OWYyNjg4NTI2YTRhZmZlZDBmMjlhYzczYzIyNzI3MjZhNTUzM2EyYjQ3MDc5MDU0ZTAwYzdiM2I5ZThjYWNYIQOKC7BUNiMexvB-VXSoeEi-c3q7jxcWsfk3iD0uQkowhWFko2FlWCCIK950v4qaoCa1q_148ZIH1oApwjMxMdxgsWWqRamX5WFzWCCynf111-dY4DXZi4QvYCS6eiWzIFJS3jfQJ6WveC68DGFyWCA3drSLa4vdY3B-PygaxyPFPuhotsVY9b0n6gWOfLf3W6RhYQFhc3hAY2JkOWQxY2VhNzlhOTRkMzA1YmYwNmNmMGVhNjg2MzVmNzMxZDUzY2M5MzM0YjEzNzZmZjUyOGEzMDMwNGFiMGFjWCEDQocDAVPMpJW5YliFLdAz_lB1_X6qr_wo-wobQRhPfMBhZKNhZVggb10MwyHnkSaK8hH5ZzsDRkSKNLg99jzEEVBxJg3XJtBhc1gg_NcAIIfbmnILD3LvcovLiYQmFY50lmF_2VQlBedNoylhclggs9klExOIa9-KwSGNUFAM8nqU64U_teciWt76IIrB9-s @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[  717853ms] [LOG] Websocket: proof state updated: PENDING @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  717854ms] [LOG] Websocket: proof state updated: SPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  788523ms] [LOG] ### fee_paid 0 @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  881258ms] [LOG] Fetching HTTP info for mint https://cdk-a056e0f.cashu.exchange @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[  881503ms] [LOG] HTTP info for mint https://cdk-a056e0f.cashu.exchange undefined @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[  887879ms] [LOG] ### activateMint: Mint activated:  https://cdk-a056e0f.cashu.exchange @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  887883ms] [LOG] watcher: activeMintUrl: https://cdk-a056e0f.cashu.exchange, activeUnit: sat @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  889468ms] [ERROR] WebSocket connection to 'wss://relay.damus.io/' failed: Error during WebSocket handshake: Unexpected response code: 503 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[  891971ms] [LOG] Mint backup published to Nostr: 6b0368f036feb02c7918a41f1d90738638ce8127dfa836c8ee3e22cf70f13773 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[  945673ms] [LOG] ##### showInvoiceCreateDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[  949614ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[  959956ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[  975517ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[  992320ms] [LOG] Adding quote 01a0e51b-0757-73d8-80c2-a55f3c275cdf to long-polling checker. @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[  996837ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1025590ms] [LOG] ### mintBolt11(): mintQuote {quote: 01a0e51b-0757-73d8-80c2-a55f3c275cdf, request: lntbs210n1p4tngy9sp55vmnadm0lmapmsp3mzr9xa85an33ck…792atwrsetkx75f29mh0aj3ja7qunyvgm9z8thtc6qpejgaf9, amount: di, unit: sat, method: bolt11} @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[ 1065985ms] [LOG] ##### showSendTokensDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1073523ms] [LOG] onTokenPaid kicking off websocket @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1074539ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1079560ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1084362ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1089413ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1089586ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1094550ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1099554ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1104945ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1109404ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1125422ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1126447ms] Failed to execute 'readText' on 'Clipboard': Read permission denied.
+[ 1129384ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1134576ms] [LOG] ### receive tokens cashuBo2FteCJodHRwczovL2Nkay1hMDU2ZTBmLmNhc2h1LmV4Y2hhbmdlYXVjc2F0YXSBomFpSAEFJU9VNyisYXCCpGFhBGFzeEBlYmFiNWNkYzRlZTgzMWE5NTVlNTRiM2Y5NzcyZjFmYTA1NTBkOGRiZjVmNmQwNmY1ZmI5MWZkYjc3YTBkNDY5YWNYIQP94gb1MGnNur5_xyWd6u81bSzRq19YOaPW0l7XX8JW3WFko2FlWCBdeboW6vwg36PHLLonvKSNSQe98dBBMPdUmJrOvd1LwmFzWCDeaxaBm_feXbM-blQep5b2qLKX3XKM4RQcnmJaknTQsGFyWCAFEzfBuZMSh1XvxGVdEThArRiPDI1Qnlotat_ZVrqk-qRhYQFhc3hAMjIxMDRlZDU5YWRjZmU2YTA0MWY2MjQyZjE5NmZhMzY3ODI4YTkxMmQ2MjdiOThjM2E0ZjIzNzM0ZGM4Njg0NWFjWCECt4jt5BvOEAcYnQsKhU1cR3MkZsNa85zMDRMG0Am87wFhZKNhZVggx9B33fgORW62yJxyXjie9LBxMAaxk393OCL0lxgJpKBhc1ggnvVstjpX2D7fQ9hUuQDs2oEgBedMkltEiEoiOI9CfqBhclggYavU25Z3A0beoUkuS-ymTCTpeMTXc5KnD3sgVK-vcrc @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[ 1134845ms] [LOG] Websocket: proof state updated: PENDING @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1134845ms] [LOG] Websocket: proof state updated: SPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1193651ms] [ERROR] Error: Unknown letter: "b". Allowed: qpzry9x8gf2tvdw0s3jn54khce6mua7l
+    at https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144:82903
+    at Array.map (<anonymous>)
+    at decode (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144:82769)
+    at Object.decode (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144:82134)
+    at Object.wn [as decode] (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144:90864)
+    at Object.decode$1 [as decode] (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2144:95533)
+    at Proxy.handleBolt11InvoiceBolt11 (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2157:27823)
+    at Proxy.handleBolt11InvoiceBolt11 (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4212:74727)
+    at Proxy.<anonymous> (https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:2246)
+    at Proxy.decodeRequest (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4212:77204) @ https://cashume.cashu.exchange/assets/index.7b647ba0.js:12
+[ 1253880ms] [LOG] ### fee_paid 0 @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1416186ms] [LOG] Fetching HTTP info for mint https://ns-1853902.cashu.exchange @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[ 1416465ms] [LOG] HTTP info for mint https://ns-1853902.cashu.exchange Cashu mint @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[ 1427613ms] [LOG] ### activateMint: Mint activated:  https://ns-1853902.cashu.exchange @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1427617ms] [LOG] watcher: activeMintUrl: https://ns-1853902.cashu.exchange, activeUnit: sat @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1469418ms] [LOG] ##### showInvoiceCreateDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1478515ms] [LOG] Adding quote 01a0e522-763b-752c-8652-9d1916a0ff48 to long-polling checker. @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[ 1489139ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1491643ms] [LOG] Mint backup published to Nostr: 6cb74f2e74849c4df0bf7be69253c7097dcc347bc298f48dcc8e69b3d2113131 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1499440ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1514772ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1514821ms] [LOG] ### mintBolt11(): mintQuote {quote: 01a0e522-763b-752c-8652-9d1916a0ff48, request: lntbs210n1p4tngntsp5mmmjw6069uahezv9yn3n0j37dc4m76…uwy6mz70sxf8gl6sksamqaa5nzhxkdx8rfuxpnpg6gqvu49jv, amount: di, unit: sat, method: bolt11} @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[ 1538232ms] [LOG] ##### showSendTokensDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1545656ms] [LOG] onTokenPaid kicking off websocket @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1546126ms] [LOG] Websocket: proof state updated: UNSPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1546894ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1551499ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1556545ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1561511ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1566430ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1571674ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1581502ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1595225ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1601361ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1611195ms] Failed to execute 'readText' on 'Clipboard': Read permission denied.
+[ 1620617ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1620715ms] [LOG] ### receive tokens cashuBo2FteCFodHRwczovL25zLTE4NTM5MDIuY2FzaHUuZXhjaGFuZ2VhdWNzYXRhdIGiYWlIAQy7kCoyou5hcIKkYWEEYXN4QDBjZTQ4NzBiYzY2ODQ4ZGUyYTZjNjc3ODVkMDI3NTMzOTNhOThkMjBkMDg5OGI3NzFiZDZhMmNjZTgzM2M0N2VhY1ghAwYYfk49THLbBi3LDb8RTnFiB0uARU6f1eSuSQukuk-wYWSjYWVYILFb_rSrcIcY-BySF5-bQ0g3ingV_EziTCNcxyFVqBW2YXNYIMAq7WuwjASrQ9Gd_HVoXMoZSM4FVDMrN40YSqXbtfTTYXJYIHJpQgy1SlaPGBDUOpwrwmvVc5tWpkPYb7PJy7zf3pikpGFhAWFzeEAxNWVmYTA2Yjc4ZjRiMzQ5NGUyZjgwZWQ3ZDE0OThkMGE1MmUzOTc1ZTBjYjU4YTQ3ZDZiZjIxMGQ5YmQ1NjQ3YWNYIQP_Vet9VVYpV41jyEwbtb4E55R0o7B3XthuV0mvNAYslmFko2FlWCC8WNDnjhvhdgDU0QZUrkIRODB6mw3c8G3x0uNx8Dv4jmFzWCCGBL7cG09iOFt4-7KxoPN6SmmF0CRiA2ulrn1r-mkDpWFyWCCNIQgsF9ykcxaZ3End8VxhI6gdTH3IbQ5sByp01YUUQA @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[ 1621033ms] [LOG] Websocket: proof state updated: PENDING @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1621033ms] [LOG] Websocket: proof state updated: SPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1650958ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1684776ms] [LOG] ### fee_paid 0 @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1686386ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1752273ms] [LOG] Fetching HTTP info for mint https://ns-a974914.cashu.exchange @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[ 1752718ms] [LOG] HTTP info for mint https://ns-a974914.cashu.exchange Cashu mint @ https://cashume.cashu.exchange/assets/mintRecommendations.711a0410.js:0
+[ 1761685ms] [LOG] ### activateMint: Mint activated:  https://ns-a974914.cashu.exchange @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1761688ms] [LOG] watcher: activeMintUrl: https://ns-a974914.cashu.exchange, activeUnit: sat @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1763364ms] [ERROR] WebSocket connection to 'wss://relay.damus.io/' failed: Error during WebSocket handshake: Unexpected response code: 503 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1765867ms] [LOG] Mint backup published to Nostr: 438e1f3f4fdb4d1f49814c82f8f28ba4dbce707e17a72a12f53edc7b2fb37118 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1774016ms] [ERROR] WebSocket connection to 'wss://relay.damus.io/' failed: Error during WebSocket handshake: Unexpected response code: 503 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1786738ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1787125ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1787451ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1790556ms] [LOG] ##### showInvoiceCreateDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1799644ms] [LOG] Adding quote 01a0e527-5cd6-74ca-a699-bd16b9a72419 to long-polling checker. @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[ 1835741ms] [LOG] ### mintBolt11(): mintQuote {quote: 01a0e527-5cd6-74ca-a699-bd16b9a72419, request: lntbs210n1p4tngadsp5q4apd20m5n9gm6y59738lyl7r6jh0w…dj5kwp862sppe2cuu2e2m0kmptsqgv6z7ja0sjdhfgqfuz96v, amount: di, unit: sat, method: bolt11} @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
+[ 1857469ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1857783ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1858025ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1872762ms] [ERROR] WebSocket connection to 'wss://nos.lol/' failed: Error during WebSocket handshake: Unexpected response code: 502 @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2069
+[ 1879052ms] [LOG] ##### showSendTokensDialog @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 1887384ms] [LOG] onTokenPaid kicking off websocket @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1887733ms] [LOG] Websocket: proof state updated: UNSPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1888450ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1893543ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1898416ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1903585ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1908453ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1913468ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1923402ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1944007ms] [LOG] ### token not paid yet @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1946648ms] Failed to execute 'readText' on 'Clipboard': Read permission denied.
+[ 1970717ms] [LOG] ### receive tokens cashuBo2FteCFodHRwczovL25zLWE5NzQ5MTQuY2FzaHUuZXhjaGFuZ2VhdWNzYXRhdIGiYWlIAUcfgmQJIzFhcIKkYWEEYXN4QGJmNGQ0MjdhYWNiNzExYTk0ODljYmQ3OTIzMzI2Zjk5MjliOWE2NDI4YjgwMDkwYjA5MmM4YWE2ZjJjMTFjMzZhY1ghAv3xLWTzu2rROyBH4RRZHnZ_caNCcEEwdF2pc7_986ZSYWSjYWVYIJQSZNrAnmujU5DZOqF_CH6agp-Ps48F1BtUILuv6qw4YXNYIFQMkEjVrVkKffvNEKViUqMOlGxnqHsbQCPWO_FrM9IIYXJYIJIb51-m4dbEPBsCaMvRnGswW5wNwi0uCn47lnSlQrlgpGFhAWFzeEBiNmVlNmQwMzUxZTVmOWMxYWNiMzk3NzBiN2RhMTAzYTIxOWY0NjU2ZWM0ZGRmZjJkNzg3YmRiOWNiYzQ1MjAxYWNYIQNnHGVli9mCtAggNqT2GjK9fd6gm9ZjBy8ERcVqURP8MWFko2FlWCBC0jXmU0ElcZ9UBa34nneuzue62XXqdLp3ZH7wtML_UGFzWCA11QWCEXAuont7-zT2O2HGTwNZ2_9ERKVhYxgXtTEi92FyWCDeH03sU0Qvk_nYaoauIrQJmYPFozYY04DPlIsHoZpqHg @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:21
+[ 1971047ms] [LOG] Websocket: proof state updated: PENDING @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 1971047ms] [LOG] Websocket: proof state updated: SPENT @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4211
+[ 2032402ms] [LOG] ### fee_paid 0 @ https://cashume.cashu.exchange/assets/WalletPage.2790b3e9.js:80
+[ 2032490ms] [LOG] Could not check quote 01a0e52a-c9ca-7d39-8a69-fab29bef7c4f Error: missing melt change recovery data
+    at Proxy.finalizePaidMeltInvoice (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2157:18143)
+    at Proxy.<anonymous> (https://cashume.cashu.exchange/assets/index.7b647ba0.js:21:2246)
+    at Proxy.checkOutgoingInvoiceGeneric (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2157:17555)
+    at async Proxy.checkOutgoingInvoiceBolt11 (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4212:70230)
+    at async Proxy.checkOutgoingInvoice (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:4212:70763)
+    at async Proxy.runMintJob (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:98284)
+    at async Proxy.processMintLane (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:95636)
+    at async Promise.allSettled (index 0)
+    at async Proxy.dispatchMintLanes (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:95411)
+    at async Proxy.processTransactions (https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2145:94904) @ https://cashume.cashu.exchange/assets/ui.d7356a7d.js:2156
