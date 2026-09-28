@@ -95,13 +95,18 @@ def http(method: str, url: str, body: dict | None = None, timeout: int = 150):
     req = urllib.request.Request(url, data=data, method=method,
                                  headers={"Content-Type": "application/json",
                                           "User-Agent": "curl/8.7.1"})  # CF blocks python UA
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return resp.status, resp.read().decode()
-    except urllib.error.HTTPError as e:
-        return e.code, e.read().decode()
-    except Exception as e:
-        return -1, repr(e)[:300]
+    # 429 is throttle, never a verdict: back off and retry the same call.
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.status, resp.read().decode()
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 5:
+                time.sleep(30)
+                continue
+            return e.code, e.read().decode()
+        except Exception as e:
+            return -1, repr(e)[:300]
 
 
 # ---------- cashu protocol (raw) ----------
