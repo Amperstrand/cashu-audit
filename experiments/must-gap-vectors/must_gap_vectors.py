@@ -28,7 +28,9 @@ Exit 0 always if vectors RAN (verdicts are data, not driver success).
 """
 import hashlib
 import json
+import os
 import secrets
+import subprocess
 import sys
 import time
 import urllib.error
@@ -106,14 +108,31 @@ def http(method: str, url: str, body: dict | None = None, timeout: int = 150):
 def mint_proofs(base: str, keyset: dict, secrets_by_amount: dict[int, list[str]]) -> tuple[list[dict], str]:
     """Mint proofs with FULLY CONTROLLED secret strings. Returns (proofs, err)."""
     total = sum(a * len(s) for a, s in secrets_by_amount.items())
-    st, body = http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": total, "unit": "sat"})
+    for attempt in range(6):
+        st, body = http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": total, "unit": "sat"})
+        if st != 429:
+            break
+        time.sleep(30)
     if st != 200:
         return [], f"quote create {st}: {body[:120]}"
     quote = json.loads(body)["quote"]
-    for _ in range(25):
+    paid_attempt = False
+    for _ in range(40):
         st, body = http("GET", f"{base}/v1/mint/quote/bolt11/{quote}")
+        if st == 429:
+            time.sleep(30)
+            continue
         if st == 200 and json.loads(body).get("state") == "PAID":
             break
+        if not paid_attempt and os.environ.get("MUST_GAP_AUTO_PAY") == "1":
+            inv = json.loads(body).get("request", "")
+            if inv.startswith("lntb"):
+                subprocess.run(
+                    ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+                     "inr2.cashu.exchange",
+                     "docker exec cln-swap-signet lightning-cli --network=signet pay " + inv],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=60)
+                paid_attempt = True
         time.sleep(1)
     else:
         return [], f"quote never PAID: {body[:120]}"
