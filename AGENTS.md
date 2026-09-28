@@ -42,5 +42,13 @@ posts, or publishes upstream on its own.
    offers** ("happy to share", "happy to PR"). State facts. Share only
    if asked.
 5. **Draft → owner approval → post.** Always. No exceptions.
-6. Anything sourced from Cashu dev calls is under the Chatham House
+6. **Agents never open external pull requests.** Not even with owner
+   approval in-session — an approval to "prepare" or "stage" a
+   contribution is NOT approval to open the PR. Staging means: local
+   branch, our fork, or `private/` draft. Clicking "open PR" (or
+   `gh pr create`) against any repo we do not own is an owner-only
+   action. Same for opening issues on external repos: stage the text,
+   let the owner file it. (2026-09-27: MintRadar PR #98 was opened in
+   violation of this — the rule exists so it is never repeated.)
+7. Anything sourced from Cashu dev calls is under the Chatham House
    rule: use the information, never attribute the speaker.
