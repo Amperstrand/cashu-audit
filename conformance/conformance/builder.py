@@ -8,6 +8,7 @@ End-to-end flow:
 from __future__ import annotations
 
 import json
+import re
 import time
 from dataclasses import dataclass, field
 from typing import Literal
@@ -102,6 +103,18 @@ def build_htlc_secret(
     return json.dumps(secret_obj, separators=(",", ":"))
 
 
+def sigall_mode_for_version(version: str) -> str:
+    v = (version or "").lower()
+    if "nutshell" not in v or "cf" in v:
+        return "standard"
+    m = re.search(r"(\d+)\.(\d+)\.(\d+)", v)
+    if not m:
+        return "legacy"
+    if tuple(int(x) for x in m.groups()) < (0, 20, 3):
+        return "legacy"
+    return "standard"
+
+
 class ProofBuilder:
     def __init__(self, mint: MintClient):
         self.mint = mint
@@ -110,9 +123,9 @@ class ProofBuilder:
         if get_sigall_mode(mint.base_url) == "standard":
             try:
                 info = mint.get_mint_info()
-                version = info.get("version", "").lower()
-                if "nutshell" in version and "cf" not in version:
-                    set_sigall_mode(mint.base_url, "legacy")
+                mode = sigall_mode_for_version(info.get("version", ""))
+                if mode != "standard":
+                    set_sigall_mode(mint.base_url, mode)
             except Exception:
                 pass
 
@@ -350,12 +363,9 @@ def try_sigall_spend(
 
         last_code, last_body = mint.try_swap([p.to_dict() for p in proofs], api_outputs)
 
-        body_str = str(last_body)
         if last_code == 200:
             set_sigall_mode(url, mode)
             return last_code, last_body
-        if "0 < " in body_str and sign_keys and mode == "standard" and cached == "standard":
-            set_sigall_mode(url, "legacy")
             continue
         return last_code, last_body
 
