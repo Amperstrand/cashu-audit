@@ -1,0 +1,237 @@
+
+============================================================
+Testing mint: http://127.0.0.1:4187
+============================================================
+  [1/112] invoice_description_truncated_quote_id ... ⏭️ no BOLT11 decoder available or decode failed
+  [2/112] secret_encoding_control_spendable ... ✅ utf8(hex-string) convention mints and swaps cleanly
+  [3/112] secret_encoding_entropy_trap_rejected ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [4/112] secret_encoding_forged_c_rejected ... ✅ forged C rejected (400: {'detail': 'proofs could not be verified', 'code': 10001
+  [5/112] keysets_returns_active_keyset ... ✅ 1 active sat keyset(s)
+  [6/112] keys_returns_pubkey_for_amount ... ✅ 64 amount→pubkey mappings
+  [7/112] keyset_has_correct_unit ... ✅ unit=sat, id=010cbb902a32a2eeaa55a7792a6b2fa5ccc13d14bec18daba85cdac53367beb64b
+  [8/112] keyset_fee_ppk_present ... ✅ input_fee_ppk=100
+  [9/112] multiple_keysets_unit_filter ... ✅ 1 active sat keyset(s) found
+  [10/112] keyset_keys_are_valid_pubkeys ... ✅ 64 pubkeys all valid compressed secp256k1
+  [11/112] mint_quote_has_accounting_fields ... ✅ amount_paid=0, amount_issued=0, updated_at=1790817048
+  [12/112] mint_quote_uuid_v7 ... ✅ quote=01a0f503-ae40-726a-948a-dd60b15c4fd4
+  [13/112] mint_quote_accounting_after_payment ... ✅ amount_paid=8 == amount=8
+  [14/112] mint_quote_accounting_after_mint ... ✅ amount_issued=8 == amount=8
+  [15/112] mint_quote_updated_at_monotonic ... ⏭️ quote never reached PAID state
+  [16/112] fee_zero_ppk_swap_succeeds ... ⏭️ mint fee_ppk=100, requires fee_ppk=0
+  [17/112] fee_calculated_correctly ... ✅ fee_ppk=100, 1 inputs, fee=1, output=7
+  [18/112] fee_insufficient_outputs_fails ... ✅ rejected swap requesting 8 (max=7, fee=1)
+  [19/112] fee_exact_balance_succeeds ... ✅ exact balance: input=8, fee=1, output=7
+  [20/112] fee_melt_quote_includes_fee_reserve ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [21/112] fee_per_proof_not_per_amount ... ✅ 1 proof of 64 sats: fee=1 (per-proof, not per-amount)
+  [22/112] melt_p2pk_unsigned_fails ... ✅ unsigned melt rejected
+  [23/112] melt_p2pk_signed_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [24/112] melt_p2pk_sigall_unsigned_fails ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [25/112] melt_p2pk_sigall_transaction_signature_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [26/112] melt_htlc_preimage_only_no_pubkeys_succeeds ... ✅ HTLC preimage melt paid
+  [27/112] melt_htlc_preimage_only_fails ... ✅ wrong preimage rejected
+  [28/112] melt_htlc_signature_only_fails ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [29/112] melt_htlc_preimage_and_signature_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [30/112] melt_htlc_sigall_preimage_and_transaction_signature_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [31/112] melt_p2pk_post_locktime_anyone_can_spend ... ✅ anyone-can-spend melt paid
+  [32/112] melt_p2pk_before_locktime_wrong_key_fails ... ✅ wrong key rejected
+  [33/112] melt_p2pk_before_locktime_correct_key_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [34/112] p2pk_sigall_requires_transaction_signature ... ✅ rejected
+  [35/112] p2pk_sigall_sig_inputs_fail ... ✅ rejected
+  [36/112] p2pk_sigall_multisig_2of3 ... ✅ 2-of-3 accepted
+  [37/112] p2pk_sigall_wrong_signer_fails ... ✅ rejected
+  [38/112] p2pk_sigall_duplicate_signatures_fail ... ✅ duplicate rejected
+  [39/112] p2pk_sigall_locktime_before_expiry_primary_only ... ✅ primary works, refund blocked
+  [40/112] p2pk_sigall_locktime_after_expiry_primary_still_works ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [41/112] p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend ... ❌ got 400: {'detail': 'no witness in proof.', 'code': 11000}
+  [42/112] p2pk_sigall_multisig_locktime_primary_still_works ... ✅ multisig primary works after locktime
+  [43/112] p2pk_sigall_mixed_proofs_different_data_fail ... ✅ mixed data rejected
+  [44/112] p2pk_sigall_mixed_proofs_different_kind_fail ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [45/112] p2pk_sigall_mixed_proofs_different_tags_fail ... ✅ mixed tags rejected
+  [46/112] p2pk_sigall_multisig_before_locktime ... ✅ 2-of-3 before locktime accepted
+  [47/112] p2pk_sigall_more_signatures_than_required ... ✅ extra sigs accepted
+  [48/112] p2pk_sigall_refund_multisig_2of2 ... ✅ 2-of-2 refund accepted
+  [49/112] p2pk_sigall_output_amounts_swapped_fail ... ✅ tampered outputs rejected
+  [50/112] p2pk_swap_unsigned_fails ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [51/112] p2pk_swap_signed_succeeds ... ✅ succeeded
+  [52/112] p2pk_wrong_signer_fails ... ✅ rejected
+  [53/112] p2pk_locktime_after_expiry_primary_still_works ... ✅ primary works after expiry
+  [54/112] p2pk_locktime_after_expiry_refund_succeeds ... ✅ refund works after expiry
+  [55/112] p2pk_multisig_2of3 ... ✅ 2-of-3 accepted
+  [56/112] p2pk_partial_signatures_fail ... ✅ partial rejected
+  [57/112] p2pk_duplicate_signatures_fail ... ✅ duplicate rejected
+  [58/112] p2pk_locktime_before_expiry_refund_blocked ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [59/112] p2pk_locktime_after_expiry_no_refund_anyone_can_spend ... ✅ anyone-can-spend
+  [60/112] dleq_proofs_present_in_mint_response ... ✅ 1/1 signatures have dleq
+  [61/112] dleq_proof_valid ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [62/112] dleq_proof_absent_graceful ... ⏭️ mint provides DLEQ — absent-case not applicable
+  [63/112] dleq_proof_in_signature_response ... ✅ 3 swap-response DLEQ proofs verified
+  [64/112] dleq_invalid_proof_rejected ... ✅ tampered e and s both correctly rejected
+  [65/112] hash_e_test_vector_verification ... ✅ hash_e + 2 DLEQ test vectors verified
+  [66/112] htlc_preimage_only_no_pubkeys_succeeds ... ✅ preimage accepted
+  [67/112] htlc_preimage_only_fails ... ✅ wrong preimage rejected
+  [68/112] htlc_signature_only_fails ... ✅ signature without preimage rejected
+  [69/112] htlc_swap_preimage_and_signature_succeeds ... ✅ preimage + signature accepted
+  [70/112] htlc_wrong_preimage_fails ... ✅ wrong preimage with valid sig rejected (reason: preimage)
+  [71/112] htlc_locktime_after_expiry_refund_succeeds ... ✅ refund works after expiry
+  [72/112] htlc_multisig_2of3 ... ✅ 2-of-3 multisig + preimage accepted
+  [73/112] htlc_receiver_path_after_locktime ... ✅ receiver path works after locktime
+  [74/112] htlc_sigall_preimage_only_no_pubkeys_succeeds ... ❌ got 400: {'detail': 'Witness is missing for htlc preimage', 'code': 0}
+  [75/112] htlc_sigall_preimage_only_fails ... ✅ wrong preimage rejected (SIG_ALL)
+  [76/112] htlc_sigall_signature_only_fails ... ✅ signature without preimage rejected (SIG_ALL)
+  [77/112] htlc_sigall_requires_preimage_and_transaction_signature ... ❌ got 400: {'detail': 'Witness is missing for htlc preimage', 'code': 0}
+  [78/112] htlc_sigall_wrong_preimage_fails ... ✅ wrong preimage with valid sig rejected (SIG_ALL)
+  [79/112] htlc_sigall_locktime_after_expiry_refund_succeeds ... ❌ got 400: {'detail': 'Witness is missing for htlc preimage', 'code': 0}
+  [80/112] htlc_sigall_multisig_2of3 ... ❌ got 400: {'detail': 'Witness is missing for htlc preimage', 'code': 0}
+  [81/112] htlc_sigall_receiver_path_after_locktime ... ❌ got 400: {'detail': 'Witness is missing for htlc preimage', 'code': 0}
+  [82/112] nut13_keyset_id_integer ... ✅ test vector verified; 1 mint keyset(s) computed: 010cbb90…→743184910
+  [83/112] nut13_secret_derivation ... ✅ secrets for counter 0 and 1 derived correctly from test mnemonic
+  [84/112] nut13_restore_works ... ⏭️ quote never reached PAID — cannot test restore
+  [85/112] nut18_payment_request_decode ... ✅ decoded successfully: id=7f4a2b39, unit=sat, 1 mint(s)
+  [86/112] nut18_payment_request_amount ... ✅ amount=10 sat decoded correctly
+  [87/112] nut20_locked_quote_requires_signature ... ✅ mint without sig rejected (400)
+  [88/112] nut20_locked_quote_valid_signature_succeeds ... ⏭️ quote never reached PAID
+  [89/112] nut20_locked_quote_wrong_signature_fails ... ✅ wrong sig rejected (400)
+  [90/112] nut20_quote_echoes_pubkey ... ✅ pubkey echoed: 03353a7e694c992d2b62...
+  [91/112] nut26_encode_token_v4 ... ✅ minimal and description test vectors encoded correctly
+  [92/112] nut26_decode_token_v4 ... ✅ minimal + description vectors decoded: id=7f4a2b39, amount=100, desc=Test paymen
+  [93/112] batch_check_returns_quotes ... ✅ states=['UNPAID', 'PAID']
+  [94/112] batch_check_rejects_too_many ... ⏭️ Exception: AttributeError: 'int' object has no attribute 'lower'
+  [95/112] batch_mint_rejects_too_many_outputs ... ⏭️ Exception: AttributeError: 'list' object has no attribute 'lower'
+  [96/112] swap_valid_proofs_succeeds ... ✅ 3 signatures returned
+  [97/112] swap_already_spent_fails ... ✅ double-spend rejected (400)
+  [98/112] swap_wrong_keyset_fails ... ✅ wrong keyset rejected
+  [99/112] mint_quote_creates_invoice ... ✅ invoice starts with lntbs1
+  [100/112] mint_quote_zero_amount_fails ... ❌ got 422: {'detail': [{'type': 'greater_than', 'loc': ['body', 'amount'], 'msg': 
+  [101/112] mint_tokens_after_quote ... ✅ 1 signatures minted
+  [102/112] melt_quote_creates_quote ... ✅ amount=4, fee=0
+  [103/112] melt_valid_proofs_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [104/112] checkstate_unspent_returns_unspent ... ✅ 1/1 UNSPENT
+  [105/112] checkstate_spent_returns_spent ... ✅ 1/1 SPENT
+  [106/112] restore_returns_signatures ... ❌ no signatures in response: {'outputs': [], 'signatures': []}
+  [107/112] token_v3_parses ... ✅ V3 token parsed: 1 proofs
+  [108/112] token_v4_parses ... ✅ V4 token parsed: 1 proofs with DLEQ
+  [109/112] mint_info_nut19_supported ... ❌ nut19 not found in nuts list
+  [110/112] mint_info_returns_required_fields ... ✅ name=Cashu mint, version=Nutshell/0.20.3
+  [111/112] concurrent_double_melt_rejected ... ✅ exactly one melt paid; loser rejected with HTTP 400
+  [112/112] sequential_double_melt_rejected ... ✅ first melt paid; second rejected with HTTP 400
+
+============================================================
+Testing mint: http://127.0.0.1:4188
+============================================================
+  [1/112] invoice_description_truncated_quote_id ... ⏭️ no BOLT11 decoder available or decode failed
+  [2/112] secret_encoding_control_spendable ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [3/112] secret_encoding_entropy_trap_rejected ... ✅ entropy-blinded proof rejected as expected (400: {'detail': 'proofs could not be
+  [4/112] secret_encoding_forged_c_rejected ... ✅ forged C rejected (400: {'detail': 'proofs could not be verified', 'code': 10001
+  [5/112] keysets_returns_active_keyset ... ✅ 1 active sat keyset(s)
+  [6/112] keys_returns_pubkey_for_amount ... ✅ 64 amount→pubkey mappings
+  [7/112] keyset_has_correct_unit ... ✅ unit=sat, id=01471f8264092331d510e1880a90ec70241eab7e043c96a6867dd9a69498c801c9
+  [8/112] keyset_fee_ppk_present ... ✅ input_fee_ppk=100
+  [9/112] multiple_keysets_unit_filter ... ✅ 1 active sat keyset(s) found
+  [10/112] keyset_keys_are_valid_pubkeys ... ✅ 64 pubkeys all valid compressed secp256k1
+  [11/112] mint_quote_has_accounting_fields ... ✅ amount_paid=0, amount_issued=0, updated_at=1790818219
+  [12/112] mint_quote_uuid_v7 ... ✅ quote=01a0f515-8c22-71b2-8929-e6abef7fa9f0
+  [13/112] mint_quote_accounting_after_payment ... ✅ amount_paid=8 == amount=8
+  [14/112] mint_quote_accounting_after_mint ... ⏭️ quote never became payable
+  [15/112] mint_quote_updated_at_monotonic ... ✅ 1790818265 → 1790818272 → 1790818277
+  [16/112] fee_zero_ppk_swap_succeeds ... ⏭️ mint fee_ppk=100, requires fee_ppk=0
+  [17/112] fee_calculated_correctly ... ✅ fee_ppk=100, 1 inputs, fee=1, output=7
+  [18/112] fee_insufficient_outputs_fails ... ✅ rejected swap requesting 8 (max=7, fee=1)
+  [19/112] fee_exact_balance_succeeds ... ✅ exact balance: input=8, fee=1, output=7
+  [20/112] fee_melt_quote_includes_fee_reserve ... ✅ fee_reserve=0
+  [21/112] fee_per_proof_not_per_amount ... ✅ 1 proof of 64 sats: fee=1 (per-proof, not per-amount)
+  [22/112] melt_p2pk_unsigned_fails ... ✅ unsigned melt rejected
+  [23/112] melt_p2pk_signed_succeeds ... ✅ signed melt paid
+  [24/112] melt_p2pk_sigall_unsigned_fails ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [25/112] melt_p2pk_sigall_transaction_signature_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [26/112] melt_htlc_preimage_only_no_pubkeys_succeeds ... ✅ HTLC preimage melt paid
+  [27/112] melt_htlc_preimage_only_fails ... ✅ wrong preimage rejected
+  [28/112] melt_htlc_signature_only_fails ... ✅ missing preimage rejected
+  [29/112] melt_htlc_preimage_and_signature_succeeds ... ✅ preimage + sig melt paid
+  [30/112] melt_htlc_sigall_preimage_and_transaction_signature_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [31/112] melt_p2pk_post_locktime_anyone_can_spend ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [32/112] melt_p2pk_before_locktime_wrong_key_fails ... ✅ wrong key rejected
+  [33/112] melt_p2pk_before_locktime_correct_key_succeeds ... ⏭️ Exception: RuntimeError: melt_quote failed (400): {'detail': 'mint quote already
+  [34/112] p2pk_sigall_requires_transaction_signature ... ✅ rejected
+  [35/112] p2pk_sigall_sig_inputs_fail ... ✅ rejected
+  [36/112] p2pk_sigall_multisig_2of3 ... ✅ 2-of-3 accepted
+  [37/112] p2pk_sigall_wrong_signer_fails ... ✅ rejected
+  [38/112] p2pk_sigall_duplicate_signatures_fail ... ✅ duplicate rejected
+  [39/112] p2pk_sigall_locktime_before_expiry_primary_only ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [40/112] p2pk_sigall_locktime_after_expiry_primary_still_works ... ✅ primary works after expiry
+  [41/112] p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend ... ✅ anyone-can-spend
+  [42/112] p2pk_sigall_multisig_locktime_primary_still_works ... ✅ multisig primary works after locktime
+  [43/112] p2pk_sigall_mixed_proofs_different_data_fail ... ✅ mixed data rejected
+  [44/112] p2pk_sigall_mixed_proofs_different_kind_fail ... ✅ mixed kind rejected
+  [45/112] p2pk_sigall_mixed_proofs_different_tags_fail ... ✅ mixed tags rejected
+  [46/112] p2pk_sigall_multisig_before_locktime ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [47/112] p2pk_sigall_more_signatures_than_required ... ✅ extra sigs accepted
+  [48/112] p2pk_sigall_refund_multisig_2of2 ... ✅ 2-of-2 refund accepted
+  [49/112] p2pk_sigall_output_amounts_swapped_fail ... ✅ tampered outputs rejected
+  [50/112] p2pk_swap_unsigned_fails ... ✅ rejected
+  [51/112] p2pk_swap_signed_succeeds ... ✅ succeeded
+  [52/112] p2pk_wrong_signer_fails ... ✅ rejected
+  [53/112] p2pk_locktime_after_expiry_primary_still_works ... ✅ primary works after expiry
+  [54/112] p2pk_locktime_after_expiry_refund_succeeds ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [55/112] p2pk_multisig_2of3 ... ✅ 2-of-3 accepted
+  [56/112] p2pk_partial_signatures_fail ... ✅ partial rejected
+  [57/112] p2pk_duplicate_signatures_fail ... ✅ duplicate rejected
+  [58/112] p2pk_locktime_before_expiry_refund_blocked ... ✅ refund blocked before expiry
+  [59/112] p2pk_locktime_after_expiry_no_refund_anyone_can_spend ... ✅ anyone-can-spend
+  [60/112] dleq_proofs_present_in_mint_response ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [61/112] dleq_proof_valid ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [62/112] dleq_proof_absent_graceful ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [63/112] dleq_proof_in_signature_response ... ✅ 3 swap-response DLEQ proofs verified
+  [64/112] dleq_invalid_proof_rejected ... ⏭️ Exception: RuntimeError: mint failed (400): {'detail': 'quote not paid', 'code':
+  [65/112] hash_e_test_vector_verification ... ✅ hash_e + 2 DLEQ test vectors verified
+  [66/112] htlc_preimage_only_no_pubkeys_succeeds ... ✅ preimage accepted
+  [67/112] htlc_preimage_only_fails ... ✅ wrong preimage rejected
+  [68/112] htlc_signature_only_fails ... ✅ signature without preimage rejected
+  [69/112] htlc_swap_preimage_and_signature_succeeds ... ✅ preimage + signature accepted
+  [70/112] htlc_wrong_preimage_fails ... ✅ wrong preimage with valid sig rejected (reason: preimage)
+  [71/112] htlc_locktime_after_expiry_refund_succeeds ... ✅ refund works after expiry
+  [72/112] htlc_multisig_2of3 ... ✅ 2-of-3 multisig + preimage accepted
+  [73/112] htlc_receiver_path_after_locktime ... ✅ receiver path works after locktime
+  [74/112] htlc_sigall_preimage_only_no_pubkeys_succeeds ... ✅ preimage accepted (SIG_ALL)
+  [75/112] htlc_sigall_preimage_only_fails ... ✅ wrong preimage rejected (SIG_ALL)
+  [76/112] htlc_sigall_signature_only_fails ... ✅ signature without preimage rejected (SIG_ALL)
+  [77/112] htlc_sigall_requires_preimage_and_transaction_signature ... ✅ preimage + SIG_ALL signature accepted
+  [78/112] htlc_sigall_wrong_preimage_fails ... ✅ wrong preimage with valid sig rejected (SIG_ALL)
+  [79/112] htlc_sigall_locktime_after_expiry_refund_succeeds ... ✅ refund works after expiry (SIG_ALL)
+  [80/112] htlc_sigall_multisig_2of3 ... ✅ 2-of-3 multisig + preimage accepted (SIG_ALL)
+  [81/112] htlc_sigall_receiver_path_after_locktime ... ✅ receiver path works after locktime (SIG_ALL)
+  [82/112] nut13_keyset_id_integer ... ✅ test vector verified; 1 mint keyset(s) computed: 01471f82…→1721197109
+  [83/112] nut13_secret_derivation ... ✅ secrets for counter 0 and 1 derived correctly from test mnemonic
+  [84/112] nut13_restore_works ... ⏭️ quote never reached PAID — cannot test restore
+  [85/112] nut18_payment_request_decode ... ✅ decoded successfully: id=7f4a2b39, unit=sat, 1 mint(s)
+  [86/112] nut18_payment_request_amount ... ✅ amount=10 sat decoded correctly
+  [87/112] nut20_locked_quote_requires_signature ... ⏭️ quote never reached PAID
+  [88/112] nut20_locked_quote_valid_signature_succeeds ... ⏭️ quote never reached PAID
+  [89/112] nut20_locked_quote_wrong_signature_fails ... ⏭️ quote never reached PAID
+  [90/112] nut20_quote_echoes_pubkey ... ✅ pubkey echoed: 03706ab70f2ab636c808...
+  [91/112] nut26_encode_token_v4 ... ✅ minimal and description test vectors encoded correctly
+  [92/112] nut26_decode_token_v4 ... ✅ minimal + description vectors decoded: id=7f4a2b39, amount=100, desc=Test paymen
+  [93/112] batch_check_returns_quotes ... ✅ states=['UNPAID', 'UNPAID']
+  [94/112] batch_check_rejects_too_many ... ⏭️ Exception: AttributeError: 'int' object has no attribute 'lower'
+  [95/112] batch_mint_rejects_too_many_outputs ... ⏭️ Exception: AttributeError: 'list' object has no attribute 'lower'
+  [96/112] swap_valid_proofs_succeeds ... ✅ 3 signatures returned
+  [97/112] swap_already_spent_fails ... ✅ double-spend rejected (400)
+  [98/112] swap_wrong_keyset_fails ... ✅ wrong keyset rejected
+  [99/112] mint_quote_creates_invoice ... ✅ invoice starts with lntbs1
+  [100/112] mint_quote_zero_amount_fails ... ❌ got 422: {'detail': [{'type': 'greater_than', 'loc': ['body', 'amount'], 'msg': 
+  [101/112] mint_tokens_after_quote ... ❌ quote never paid after 30 retries
+  [102/112] melt_quote_creates_quote ... ✅ amount=4, fee=0
+  [103/112] melt_valid_proofs_succeeds ... ✅ melt settled PAID
+  [104/112] checkstate_unspent_returns_unspent ... ✅ 1/1 UNSPENT
+  [105/112] checkstate_spent_returns_spent ... ✅ 1/1 SPENT
+  [106/112] restore_returns_signatures ... ❌ no signatures in response: {'outputs': [], 'signatures': []}
+  [107/112] token_v3_parses ... ✅ V3 token parsed: 1 proofs
+  [108/112] token_v4_parses ... ✅ V4 token parsed: 1 proofs with DLEQ
+  [109/112] mint_info_nut19_supported ... ❌ nut19 not found in nuts list
+  [110/112] mint_info_returns_required_fields ... ✅ name=Cashu mint, version=Nutshell/0.21.0
+  [111/112] concurrent_double_melt_rejected ... ✅ exactly one melt paid; loser rejected with HTTP 400
+  [112/112] sequential_double_melt_rejected ... ✅ first melt paid; second rejected with HTTP 400
+
+Matrix written to reports/matrix.md
+
+13 failure(s) detected
+EXIT:1
