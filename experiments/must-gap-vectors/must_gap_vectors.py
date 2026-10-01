@@ -479,6 +479,11 @@ def main() -> int:
     out = []
     for m in mints:
         r = run_vectors(m)
+        for cell in r.values():
+            if isinstance(cell, dict) and cell.get("verdict") not in (None, "SKIP"):
+                if "Rate limit exceeded" in str(cell.get("body", "")):
+                    cell["verdict"] = "SKIP"
+                    cell["rate_limited"] = True
         out.append(r)
         print(json.dumps(r), flush=True)
     print("\n==== SUMMARY ====")
