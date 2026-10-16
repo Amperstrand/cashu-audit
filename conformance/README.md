@@ -59,7 +59,9 @@ matcher vocabulary from the corpus manifest, mode-aware preconditions,
 rate-limiter-polite pacing), `portal` (the portal checkout's
 vendored-corpus vitest suite). Rows are PASS / FAIL / SKIP (unmet
 precondition, never silent) / FILL (corpus cell was `unknown` — the
-runner fills the matrix). First live run 2026-10-16 against the
-degraded rig: 79 rows — every FAIL triaged to a corpus-precondition
-bug, a runner bug, or a rig anomaly (see the report JSON and
-OpenTollGate/tollgate#30).
+runner fills the matrix). First live runs 2026-10-16 against the
+degraded rig: 79 rows — every FAIL ultimately triaged to a corpus bug
+(including one wrong content-type assertion initially misread as a rig
+anomaly; the error format prints want != actual — read it before
+believing a ghost) or a runner bug. Zero unexplained FAILs (report JSONs
+and OpenTollGate/tollgate#30).
