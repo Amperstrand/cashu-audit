@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Render reports/STATUS.md from the nightly report JSONs."""
+"""Render the nightly STATUS page from the report JSONs."""
 
+import argparse
 import datetime
 import glob
 import json
@@ -9,6 +10,9 @@ import sys
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default="conformance/NIGHTLY-STATUS.md")
+    args = ap.parse_args()
     files = sorted(glob.glob("reports/nightly-*.json"))
     lines = [
         "# Nightly corpus status",
@@ -40,8 +44,8 @@ def main() -> int:
         )
     lines.append("")
     lines.append("_generated %s UTC_" % datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M"))
-    pathlib.Path("reports/STATUS.md").write_text("\n".join(lines) + "\n")
-    print("reports/STATUS.md written from %d report(s)" % len(files))
+    pathlib.Path(args.out).write_text("\n".join(lines) + "\n")
+    print("%s written from %d report(s)" % (args.out, len(files)))
     return 0
 
 

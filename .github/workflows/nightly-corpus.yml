@@ -92,17 +92,18 @@ jobs:
         run: |
           python3 conformance/nightly_diff.py \
             --report "reports/nightly-$(date -u +%Y-%m-%d).json" \
-            --baseline reports/nightly-baseline.json \
+            --baseline conformance/nightly-baseline.json \
             --file || echo "GATE_RC=$?" >> "$GITHUB_ENV"
 
       - name: Update STATUS page
-        run: python3 conformance/render_status.py
+        run: |
+          python3 conformance/render_status.py --out conformance/NIGHTLY-STATUS.md
 
       - name: Commit baseline + STATUS (auto-generated state)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add reports/nightly-baseline.json reports/STATUS.md "reports/nightly-$(date -u +%Y-%m-%d).json" 2>/dev/null || git add reports/ || true
+          git add conformance/nightly-baseline.json conformance/NIGHTLY-STATUS.md
           git diff --cached --quiet && echo "no state change" || {
             git commit -q -m "nightly-corpus: baseline/status update $(date -u +%Y-%m-%d)"
             git push
@@ -114,3 +115,4 @@ jobs:
         with:
           name: nightly-report
           path: reports/
+          if-no-files-found: ignore
