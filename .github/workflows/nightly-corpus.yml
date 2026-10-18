@@ -3,7 +3,6 @@ name: nightly-corpus
 on:
   schedule:
     - cron: '17 3 * * *'
-    - cron: '18 12 * * *'  # TEMP: capture a schedule-event run as landing evidence (issue #49 era); remove after first firing
   workflow_dispatch:
 
 permissions:
