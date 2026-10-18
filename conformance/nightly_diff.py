@@ -20,7 +20,6 @@ import os
 import re
 import subprocess
 import sys
-import urllib.parse
 from pathlib import Path
 
 REPO = "Amperstrand/cashu-audit"
@@ -54,9 +53,14 @@ def gh(*args: str) -> str:
 
 
 def issue_exists(regkey: str) -> bool:
-    query = urllib.parse.quote(f"repo:{REPO} is:issue is:open REGKEY:{regkey} in:body")
-    out = gh("search", "issues", query, "--json", "number", "--limit", "1")
-    return bool(json.loads(out))
+    # Direct title match against open issues. GitHub SEARCH cannot match
+    # these keys (phrase and field queries both tokenize on the slashes —
+    # verified: identical open issues return empty), so the gate lists
+    # instead; nightly volume keeps that to one call (limit 200).
+    out = gh("issue", "list", "--repo", REPO, "--state", "open",
+             "--json", "title", "--limit", "200")
+    titles = {i["title"] for i in json.loads(out)}
+    return any(regkey in title for title in titles)
 
 
 def file_issue(regkey: str, kind: str, rows: list[dict]) -> str:
