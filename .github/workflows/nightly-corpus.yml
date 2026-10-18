@@ -1,0 +1,109 @@
+name: nightly-corpus
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  corpus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout the token corpus (OpenTollGate/tollgate)
+        uses: actions/checkout@v4
+        with:
+          repository: OpenTollGate/tollgate
+          path: corpus-repo
+
+      - name: Checkout the portal (vendored-corpus suite)
+        uses: actions/checkout@v4
+        with:
+          repository: OpenTollGate/tollgate-captive-portal-site
+          path: portal-repo
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.0'
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache cdk-cli build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            cdk-target
+          key: cdk-cli-v0.18.1-${{ runner.os }}
+
+      - name: Build cdk-cli 0.18.1 (primary reference wallet)
+        run: |
+          git clone --depth 1 --branch v0.18.1 https://github.com/cashubtc/cdk.git cdk-src
+          cd cdk-src && CARGO_TARGET_DIR=$GITHUB_WORKSPACE/cdk-target cargo build -p cdk-cli --release
+          mkdir -p "$HOME/.local/bin" && ln -sf "$GITHUB_WORKSPACE/cdk-target/release/cdk-cli" "$HOME/.local/bin/cdk-cli"
+
+      - name: Install nutshell (secondary reference wallet)
+        run: pip install "cashu==0.21.0"
+
+      - name: Install runner dependencies
+        run: pip install -r conformance/requirements.txt
+
+      - name: Corpus self-validation
+        run: python3 corpus-repo/corpus/validate.py
+
+      - name: Run consumer-conformance lanes (offline decode + portal)
+        run: |
+          python3 conformance/consumer_conformance.py \
+            --corpus corpus-repo/corpus \
+            --cdk-cli "$HOME/.local/bin/cdk-cli" \
+            --cashu "$(command -v cashu)" \
+            --portal portal-repo \
+            --lane lifecycle,portal \
+            --report-out "reports/nightly-$(date -u +%Y-%m-%d).json"
+
+      - name: Portal vendored-corpus suite (independent leg)
+        working-directory: portal-repo
+        run: |
+          npm ci --silent
+          npx vitest run tests/unit/corpus-conformance.test.js
+
+      - name: Divergence gate (dedupe by REGKEY; bootstrap records baseline)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 conformance/nightly_diff.py \
+            --report "reports/nightly-$(date -u +%Y-%m-%d).json" \
+            --baseline reports/nightly-baseline.json \
+            --file || echo "GATE_RC=$?" >> "$GITHUB_ENV"
+
+      - name: Update STATUS page
+        run: python3 conformance/render_status.py
+
+      - name: Commit baseline + STATUS (auto-generated state)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add reports/nightly-baseline.json reports/STATUS.md "reports/nightly-$(date -u +%Y-%m-%d).json" 2>/dev/null || git add reports/ || true
+          git diff --cached --quiet && echo "no state change" || {
+            git commit -q -m "nightly-corpus: baseline/status update $(date -u +%Y-%m-%d)"
+            git push
+          }
+          [ -z "${GATE_RC:-}" ] || { echo "nightly gate flagged divergences (rc=$GATE_RC)"; exit "$GATE_RC"; }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-report
+          path: reports/
