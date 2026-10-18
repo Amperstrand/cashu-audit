@@ -65,3 +65,29 @@ degraded rig: 79 rows — every FAIL ultimately triaged to a corpus bug
 anomaly; the error format prints want != actual — read it before
 believing a ghost) or a runner bug. Zero unexplained FAILs (report JSONs
 and OpenTollGate/tollgate#30).
+
+## Nightly corpus workflow (ops)
+
+`.github/workflows/nightly-corpus.yml` (cron `17 3 * * *` UTC + dispatch):
+
+- **Coverage**: the offline surface — corpus self-validation, the
+  consumer-conformance decode lanes (cdk-cli v0.18.1 cargo-cached,
+  nutshell 0.21.0 with `marshmallow<4` pinned after the first run caught
+  the environs breakage), and the portal's vendored-corpus suite (9
+  tests). GH runners cannot reach the lab rig/fakewallet, so the
+  http/checkstate legs SKIP — those stay on the in-lab runner.
+- **Divergence gate** (`nightly_diff.py`): each run diffs its report
+  against `conformance/nightly-baseline.json`; NEW or CHANGED
+  divergence rows file one issue each (title carries the key verbatim).
+  Dedupe matches the key against open-issue TITLES by direct list —
+  GitHub search cannot phrase-match the slash-laden keys (proven the
+  hard way: issues #44–#46). Bootstrap (missing baseline) records and
+  files nothing.
+- **State**: baseline + `conformance/NIGHTLY-STATUS.md` are committed
+  back by the workflow's bot identity; `reports/` stays untracked
+  (house gitignore) and ships as the run artifact.
+- **Pipeline health**: a workflow-level failure (infra, not verdicts)
+  files/keeps a single open `pipeline-health` issue, deduped the same
+  way; close it when a nightly passes again.
+- Tag `nightly-corpus-v1` marks the first steady-state green run
+  (39115159562).
