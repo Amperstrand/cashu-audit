@@ -127,11 +127,10 @@ jobs:
           KEY="nightly-corpus/pipeline-health"
           OPEN=$(gh issue list --repo Amperstrand/cashu-audit --state open --json title --limit 200 | jq -r '.[].title' | grep -c "$KEY" || true)
           if [ "$OPEN" = "0" ]; then
+            BODY="The nightly pipeline itself failed (infra class — not a verdict divergence; the divergence gate files its own issues). Run: https://github.com/Amperstrand/cashu-audit/actions/runs/${{ github.run_id }} — this issue stays open across failures until the pipeline is green again; close it when a subsequent nightly passes."
             gh issue create --repo Amperstrand/cashu-audit \
               --title "[nightly-corpus] pipeline-health: $KEY (run ${{ github.run_id }} failed)" \
-              --body "The nightly pipeline itself failed (infra class — not a verdict divergence; the divergence gate files its own issues). Run: https://github.com/Amperstrand/cashu-audit/actions/runs/${{ github.run_id }}
-
-Dedupe: this issue stays open across failures until the pipeline is green again; check the linked run for the failing step. Close it when a subsequent nightly passes." || true
+              --body "$BODY" || true
           else
             echo "pipeline-health issue already open — not duplicating"
           fi
