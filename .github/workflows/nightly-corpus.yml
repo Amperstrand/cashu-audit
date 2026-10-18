@@ -55,13 +55,20 @@ jobs:
           mkdir -p "$HOME/.local/bin" && ln -sf "$GITHUB_WORKSPACE/cdk-target/release/cdk-cli" "$HOME/.local/bin/cdk-cli"
 
       - name: Install nutshell (secondary reference wallet)
-        run: pip install "cashu==0.21.0"
+        # marshmallow<4: cashu 0.21.0's environs 9.5.0 is incompatible with
+        # marshmallow 4.x (`ma.__version_info__` removed) — unpinned installs
+        # broke the first nightly run; this pin matches the verified venv.
+        run: pip install "cashu==0.21.0" "marshmallow<4"
 
       - name: Install runner dependencies
         run: pip install -r conformance/requirements.txt
 
       - name: Corpus self-validation
         run: python3 corpus-repo/corpus/validate.py
+
+      - name: Portal node_modules (vendored-corpus suite needs them in-runner too)
+        working-directory: portal-repo
+        run: npm ci --silent
 
       - name: Run consumer-conformance lanes (offline decode + portal)
         run: |
