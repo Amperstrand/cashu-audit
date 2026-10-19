@@ -14,6 +14,9 @@ jobs:
   matrix:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write  # registry bot push; without this the GITHUB_TOKEN is
+                       # read-only and "Commit registry" dies on 403 (run 39208274306)
     env:
       # Floating arms give inter-run drift detection; pin pairs to window-
       # pin regressions. Edit freely; keep the dash-less family prefix.
