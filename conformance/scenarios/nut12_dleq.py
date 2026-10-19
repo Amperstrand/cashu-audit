@@ -32,6 +32,7 @@ from conformance.crypto import (
     pubkey_neg,
 )
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -250,7 +251,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "dleq_proof_absent_graceful", CAT,
-        Result.FAIL, f"swap failed ({code}): {str(body)[:200]}",
+        Result.FAIL, f"swap failed ({code}): {fmt_body(body)}",
     )
 
 

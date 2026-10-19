@@ -15,6 +15,7 @@ from conformance.builder import ProofBuilder
 from conformance.client import MintClient
 from conformance.crypto import generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -79,7 +80,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "swap_already_spent_fails", "NUT-03 Swap Basics",
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -107,7 +108,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "swap_wrong_keyset_fails", "NUT-03 Swap Basics",
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -143,7 +144,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "mint_quote_zero_amount_fails", "NUT-04 Mint Quote Basics",
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -239,7 +240,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "melt_valid_proofs_succeeds", "NUT-05 Melt Basics",
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -327,7 +328,7 @@ def _(mint: MintClient) -> ScenarioResult:
     if code != 200:
         return ScenarioResult(
             "restore_returns_signatures", "NUT-09 Restore Basics",
-            Result.FAIL, f"HTTP {code}: {str(body)[:200]}",
+            Result.FAIL, f"HTTP {code}: {fmt_body(body)}",
         )
     if isinstance(body, dict):
         sigs = body.get("signatures") or body.get("promises") or []
@@ -338,7 +339,7 @@ def _(mint: MintClient) -> ScenarioResult:
             )
     return ScenarioResult(
         "restore_returns_signatures", "NUT-09 Restore Basics",
-        Result.FAIL, f"no signatures in response: {str(body)[:200]}",
+        Result.FAIL, f"no signatures in response: {fmt_body(body)}",
     )
 
 

@@ -23,6 +23,7 @@ from conformance.builder import (
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -118,7 +119,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_multisig_2of3", "NUT-11 P2PK SIG_ALL", Result.PASS, "2-of-3 accepted")
-    return ScenarioResult("p2pk_sigall_multisig_2of3", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_multisig_2of3", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_wrong_signer_fails", "NUT-11 P2PK SIG_ALL")
@@ -208,7 +209,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.PASS, "primary works after expiry")
-    return ScenarioResult("p2pk_sigall_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_ALL")
@@ -222,7 +223,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_ALL", Result.PASS, "anyone-can-spend")
-    return ScenarioResult("p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_multisig_locktime_primary_still_works", "NUT-11 P2PK SIG_ALL")
@@ -246,7 +247,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_multisig_locktime_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.PASS, "multisig primary works after locktime")
-    return ScenarioResult("p2pk_sigall_multisig_locktime_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_multisig_locktime_primary_still_works", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_mixed_proofs_different_data_fail", "NUT-11 P2PK SIG_ALL")
@@ -315,7 +316,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_multisig_before_locktime", "NUT-11 P2PK SIG_ALL", Result.PASS, "2-of-3 before locktime accepted")
-    return ScenarioResult("p2pk_sigall_multisig_before_locktime", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_multisig_before_locktime", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_more_signatures_than_required", "NUT-11 P2PK SIG_ALL")
@@ -334,7 +335,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_more_signatures_than_required", "NUT-11 P2PK SIG_ALL", Result.PASS, "extra sigs accepted")
-    return ScenarioResult("p2pk_sigall_more_signatures_than_required", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_more_signatures_than_required", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_refund_multisig_2of2", "NUT-11 P2PK SIG_ALL")
@@ -356,7 +357,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _attempt_swap(mint, proofs, api_outputs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_sigall_refund_multisig_2of2", "NUT-11 P2PK SIG_ALL", Result.PASS, "2-of-2 refund accepted")
-    return ScenarioResult("p2pk_sigall_refund_multisig_2of2", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_sigall_refund_multisig_2of2", "NUT-11 P2PK SIG_ALL", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_sigall_output_amounts_swapped_fail", "NUT-11 P2PK SIG_ALL")

@@ -92,3 +92,24 @@ def expect_reject_as(expected_detail: str):
 
 def expect_success(status: int, body) -> bool:
     return status == 200
+
+
+def fmt_body(body, limit: int = 400) -> str:
+    """Render a wire body for FAIL verdicts WITHOUT hiding the verdict.
+
+    ISSUES-class lesson (2026-10-19, audit#53 → cashu-cf ISSUE-124): the
+    old `str(body)[:200]` truncation cut melt responses before their
+    `state`/`paid` fields — five witness-bypass FAILs read as opaque
+    quote-shaped blobs for a month while the mints were paying unsigned
+    and forged proofs. Verdict fields always come first, never truncated;
+    the remainder is capped.
+    """
+    if isinstance(body, dict):
+        verdict_keys = ("state", "paid", "error", "code", "detail")
+        parts = [f"{k}={body[k]!r}" for k in verdict_keys if k in body]
+        rest = {k: v for k, v in body.items() if k not in verdict_keys}
+        s = " ".join(parts)
+        if rest:
+            s += f" rest={rest!r}"
+        return s[: limit + 200] if len(s) > limit + 200 else s
+    return str(body)[:limit]

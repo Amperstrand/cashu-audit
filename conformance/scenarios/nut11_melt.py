@@ -32,6 +32,7 @@ from conformance.builder import (
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -145,7 +146,7 @@ def _(mint: MintClient) -> ScenarioResult:
             "melt_p2pk_unsigned_fails", CATEGORY, Result.PASS, "unsigned melt rejected"
         )
     return ScenarioResult(
-        "melt_p2pk_unsigned_fails", CATEGORY, Result.FAIL, f"got {code}: {str(body)[:200]}"
+        "melt_p2pk_unsigned_fails", CATEGORY, Result.FAIL, f"got {code}: {fmt_body(body)}"
     )
 
 
@@ -164,7 +165,7 @@ def _(mint: MintClient) -> ScenarioResult:
             "melt_p2pk_signed_succeeds", CATEGORY, Result.PASS, "signed melt paid"
         )
     return ScenarioResult(
-        "melt_p2pk_signed_succeeds", CATEGORY, Result.FAIL, f"got {code}: {str(body)[:200]}"
+        "melt_p2pk_signed_succeeds", CATEGORY, Result.FAIL, f"got {code}: {fmt_body(body)}"
     )
 
 
@@ -189,7 +190,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_p2pk_sigall_unsigned_fails",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -223,7 +224,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_p2pk_sigall_transaction_signature_succeeds",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -251,7 +252,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_htlc_preimage_only_no_pubkeys_succeeds",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -277,7 +278,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_htlc_preimage_only_fails",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -312,7 +313,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_htlc_signature_only_fails",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -345,7 +346,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_htlc_preimage_and_signature_succeeds",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -386,7 +387,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_htlc_sigall_preimage_and_transaction_signature_succeeds",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -415,7 +416,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_p2pk_post_locktime_anyone_can_spend",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -442,7 +443,7 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_p2pk_before_locktime_wrong_key_fails",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -468,5 +469,5 @@ def _(mint: MintClient) -> ScenarioResult:
         "melt_p2pk_before_locktime_correct_key_succeeds",
         CATEGORY,
         Result.FAIL,
-        f"got {code}: {str(body)[:200]}",
+        f"got {code}: {fmt_body(body)}",
     )

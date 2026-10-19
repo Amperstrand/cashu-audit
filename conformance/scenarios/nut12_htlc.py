@@ -30,6 +30,7 @@ from conformance.builder import (
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -145,7 +146,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_preimage_only_no_pubkeys_succeeds", CAT_IN,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -212,7 +213,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_swap_preimage_and_signature_succeeds", CAT_IN,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -266,7 +267,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_locktime_after_expiry_refund_succeeds", CAT_IN,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -291,7 +292,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_multisig_2of3", CAT_IN,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -321,7 +322,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_receiver_path_after_locktime", CAT_IN,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -344,7 +345,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_sigall_preimage_only_no_pubkeys_succeeds", CAT_ALL,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -412,7 +413,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_sigall_requires_preimage_and_transaction_signature", CAT_ALL,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -464,7 +465,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_sigall_locktime_after_expiry_refund_succeeds", CAT_ALL,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -491,7 +492,7 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_sigall_multisig_2of3", CAT_ALL,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -523,5 +524,5 @@ def _(mint: MintClient) -> ScenarioResult:
         )
     return ScenarioResult(
         "htlc_sigall_receiver_path_after_locktime", CAT_ALL,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )

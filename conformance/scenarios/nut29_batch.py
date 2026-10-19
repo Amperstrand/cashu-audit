@@ -9,6 +9,7 @@ import time
 
 from conformance.client import MintClient
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -29,7 +30,7 @@ def _(mint: MintClient) -> ScenarioResult:
     if code != 200:
         return ScenarioResult(
             "batch_check_returns_quotes", CAT,
-            Result.FAIL, f"HTTP {code}: {str(body)[:200]}",
+            Result.FAIL, f"HTTP {code}: {fmt_body(body)}",
         )
 
     if not isinstance(body, list) or len(body) != 2:
@@ -77,7 +78,7 @@ def _(mint: MintClient) -> ScenarioResult:
             )
     return ScenarioResult(
         "batch_check_rejects_too_many", CAT,
-        Result.FAIL, f"expected batch_too_large, got {code}: {str(body)[:200]}",
+        Result.FAIL, f"expected batch_too_large, got {code}: {fmt_body(body)}",
     )
 
 
@@ -105,5 +106,5 @@ def _(mint: MintClient) -> ScenarioResult:
     return ScenarioResult(
         "batch_mint_rejects_too_many_outputs", CAT,
         Result.FAIL,
-        f"expected too_many_outputs, got {code}: {str(body)[:200]}",
+        f"expected too_many_outputs, got {code}: {fmt_body(body)}",
     )

@@ -10,6 +10,7 @@ from conformance.builder import ProofBuilder
 from conformance.client import MintClient
 from conformance.crypto import generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -90,7 +91,7 @@ def _(mint: MintClient) -> ScenarioResult:
         return ScenarioResult(
             "fee_calculated_correctly", "NUT-08 Fees",
             Result.FAIL,
-            f"swap failed ({code}): {str(body)[:200]}",
+            f"swap failed ({code}): {fmt_body(body)}",
         )
     result = body if isinstance(body, dict) else {}
     signatures = result.get("signatures", [])
@@ -136,7 +137,7 @@ def _(mint: MintClient) -> ScenarioResult:
     return ScenarioResult(
         "fee_insufficient_outputs_fails", "NUT-08 Fees",
         Result.FAIL,
-        f"expected rejection, got {code}: {str(body)[:200]}",
+        f"expected rejection, got {code}: {fmt_body(body)}",
     )
 
 
@@ -172,7 +173,7 @@ def _(mint: MintClient) -> ScenarioResult:
     return ScenarioResult(
         "fee_exact_balance_succeeds", "NUT-08 Fees",
         Result.FAIL,
-        f"expected success, got {code}: {str(body)[:200]}",
+        f"expected success, got {code}: {fmt_body(body)}",
     )
 
 

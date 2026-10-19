@@ -27,6 +27,7 @@ from conformance.builder import ProofBuilder
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -108,7 +109,7 @@ def _(mint: MintClient) -> ScenarioResult:
     return ScenarioResult(
         "nut20_locked_quote_requires_signature", CAT,
         Result.FAIL,
-        f"expected rejection, got {code}: {str(body)[:200]}",
+        f"expected rejection, got {code}: {fmt_body(body)}",
     )
 
 
@@ -151,7 +152,7 @@ def _(mint: MintClient) -> ScenarioResult:
             )
     return ScenarioResult(
         "nut20_locked_quote_valid_signature_succeeds", CAT,
-        Result.FAIL, f"got {code}: {str(body)[:200]}",
+        Result.FAIL, f"got {code}: {fmt_body(body)}",
     )
 
 
@@ -194,7 +195,7 @@ def _(mint: MintClient) -> ScenarioResult:
     return ScenarioResult(
         "nut20_locked_quote_wrong_signature_fails", CAT,
         Result.FAIL,
-        f"expected rejection, got {code}: {str(body)[:200]}",
+        f"expected rejection, got {code}: {fmt_body(body)}",
     )
 
 

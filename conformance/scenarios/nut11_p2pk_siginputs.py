@@ -17,6 +17,7 @@ from conformance.builder import (
 from conformance.client import MintClient
 from conformance.crypto import KeyPair, generate_secret
 from conformance.scenarios import (
+    fmt_body,
     scenario,
     ScenarioResult,
     Result,
@@ -79,7 +80,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _try_spend(mint, builder, proofs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_swap_signed_succeeds", "NUT-11 P2PK SIG_INPUTS", Result.PASS, "succeeded")
-    return ScenarioResult("p2pk_swap_signed_succeeds", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_swap_signed_succeeds", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_wrong_signer_fails", "NUT-11 P2PK SIG_INPUTS")
@@ -108,7 +109,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _try_spend(mint, builder, proofs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_INPUTS", Result.PASS, "primary works after expiry")
-    return ScenarioResult("p2pk_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_locktime_after_expiry_primary_still_works", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_locktime_after_expiry_refund_succeeds", "NUT-11 P2PK SIG_INPUTS")
@@ -123,7 +124,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _try_spend(mint, builder, proofs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_locktime_after_expiry_refund_succeeds", "NUT-11 P2PK SIG_INPUTS", Result.PASS, "refund works after expiry")
-    return ScenarioResult("p2pk_locktime_after_expiry_refund_succeeds", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_locktime_after_expiry_refund_succeeds", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_multisig_2of3", "NUT-11 P2PK SIG_INPUTS")
@@ -140,7 +141,7 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _try_spend(mint, builder, proofs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_multisig_2of3", "NUT-11 P2PK SIG_INPUTS", Result.PASS, "2-of-3 accepted")
-    return ScenarioResult("p2pk_multisig_2of3", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_multisig_2of3", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {fmt_body(body)}")
 
 
 @scenario("p2pk_partial_signatures_fail", "NUT-11 P2PK SIG_INPUTS")
@@ -198,4 +199,4 @@ def _(mint: MintClient) -> ScenarioResult:
     code, body = _try_spend(mint, builder, proofs)
     if expect_success(code, body):
         return ScenarioResult("p2pk_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_INPUTS", Result.PASS, "anyone-can-spend")
-    return ScenarioResult("p2pk_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {str(body)[:200]}")
+    return ScenarioResult("p2pk_locktime_after_expiry_no_refund_anyone_can_spend", "NUT-11 P2PK SIG_INPUTS", Result.FAIL, f"got {code}: {fmt_body(body)}")
