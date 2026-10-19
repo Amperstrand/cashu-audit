@@ -1,0 +1,39 @@
+=== 1. mint regular proofs (scenario: _swap_for_condition) ===
+minted [8] total=8 swap_after_fee=7
+=== 2. swap to P2PK-conditioned secrets ===
+  proof amt=1 secret=["P2PK",{"nonce":"aebc74229f893278702f84ad22a19f68cc0427247775d7d5e49596c8ee59f375","data":"03b30dcd617a7828ca12ad1c3b9923a848216e78fe4edf4bb8c00027649fea3fc0","tags":[["sigflag","SIG_INPUTS"],["n_sigs","1"]]}]
+  proof amt=2 secret=["P2PK",{"nonce":"457d6f2aa409b0956b2d48bdf0be269eb7ce89b60aebbb0635da07ab013a9f0a","data":"03b30dcd617a7828ca12ad1c3b9923a848216e78fe4edf4bb8c00027649fea3fc0","tags":[["sigflag","SIG_INPUTS"],["n_sigs","1"]]}]
+  proof amt=4 secret=["P2PK",{"nonce":"f44368d172c31056eeb85243cffd391ec52a446a18d42b54ba222002ee5493df","data":"03b30dcd617a7828ca12ad1c3b9923a848216e78fe4edf4bb8c00027649fea3fc0","tags":[["sigflag","SIG_INPUTS"],["n_sigs","1"]]}]
+  pubkey (witness key we withhold): 03b30dcd617a7828ca12ad1c3b9923a848216e78fe4edf4bb8c00027649fea3fc0
+=== 3. melt quote via the suite's self-loop helper ===
+  mint_quote(4) -> {"quote": "01a15425-000d-77a9-be2e-deb47786719e", "request": "lnbc40n1qyqqqqqyhwr45h85nxspy64l50mdp69pahu5a7hhf3ake0su0e8aw6g6y3fk44sdjyc36xhk", "state": "UNPAID", "amount": 4, "unit": "sat", "amount_paid": 0, "amount_issued": 0, "updated_at": 1792413073, "expiry": 1792416673, "method": "bolt11"}
+  melt_quote -> {"quote": "01a15425-0459-765d-bf33-2aaee79fe92c", "amount": 4, "fee_reserve": 1, "state": "UNPAID", "expiry": 1792416674, "request": "lnbc40n1qyqqqqqyhwr45h85nxspy64l50mdp69pahu5a7hhf3ake0su0e8aw6g6y3fk44sdjyc36xhk", "unit": "sat", "method": "bolt11"}
+=== 4. quote state BEFORE the melt (confound check) ===
+  GET /v1/melt/quote/01a15425-0459-765d-bf33-2aaee79fe92c -> 200 {"quote":"01a15425-0459-765d-bf33-2aaee79fe92c","amount":4,"fee_reserve":1,"state":"UNPAID","expiry":1792416674,"request":"lnbc40n1qyqqqqqyhwr45h85nxspy64l50mdp69pahu5a7hhf3ake0su0e8aw6g6y3fk44sdjyc36xhk","unit":"sat","method":"bolt11"}
+=== 5. MELT with NO witness (the assertion under test) ===
+  melt -> HTTP 200
+  body -> {
+  "quote": "01a15425-0459-765d-bf33-2aaee79fe92c",
+  "amount": 4,
+  "unit": "sat",
+  "method": "bolt11",
+  "request": "lnbc40n1qyqqqqqyhwr45h85nxspy64l50mdp69pahu5a7hhf3ake0su0e8aw6g6y3fk44sdjyc36xhk",
+  "fee_reserve": 1,
+  "state": "PAID",
+  "expiry": 1792416674,
+  "paid": true,
+  "preimage": "7612f79f1aaf9067f5d211748ab1ba9069e58fcadb225a38be7ae895061228e9",
+  "payment_preimage": "7612f79f1aaf9067f5d211748ab1ba9069e58fcadb225a38be7ae895061228e9",
+  "change": [
+    {
+      "amount": 1,
+      "id": "008e808b89acc141",
+      "C_": "03fc761fceff0faa09fa27acc892b3196cbf19aa0ab16a813c08882b02102aff29",
+      "dleq": {
+        "e": "cb5cf6e622dee6bafaecc7703499e6a5a52afddcd289b469a333e626e341eb12",
+        "s": "4e20a912c90a2bb1c2543b4fa0ba04de67b35d14887f6f76ddef0151e0d7ba08"
+      }
+    }
+  ]
+}
+=== VERDICT: BYPASS: unsigned P2PK witness melted PAID ===

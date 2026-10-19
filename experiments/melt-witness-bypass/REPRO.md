@@ -37,3 +37,28 @@ spendable via melt on this software.
 Controls on record: scenario #23 (signed melt) PASSes on the same
 flow — witness verification *with* a witness works; the morning run's
 matrix shows the mint-side split (melt ✗ / swap ✓) within one run.
+
+## 2026-10-19 escalation + root cause + fix
+
+**Escalation (owner-sanctioned fix):** the hole is bigger than the
+witness bypass. `probe_forged.py` (captured: `probe-out-forged-melt.txt`)
+— a completely fabricated proof (random secret, off-curve C hex, never
+minted) melted and **PAID** a 4-sat invoice. Control `probe_forged_swap.py`
+(`probe-out-forged-swap.txt`): the same fabrication through /v1/swap is
+**rejected** with full cryptographic verification.
+
+**Root cause** (Amperstrand/cashu-audit #53 → cashu-cf ISSUE-124): the
+ISSUE-051 melt saga performs NO input verification — both checks the
+deleted legacy melt path had (proof signatures via
+`verifyProofSignatureWithPrivateKey`; spending conditions via
+`verifySpendingConditions`) were lost in cashu-cf's 2114eb6 big deletion.
+The proof ledger has no issuance record (unknown Y reads UNSPENT), so
+nothing else rejects fabricated proofs.
+
+**Fix:** Amperstrand/cashu-cf `aba6cd6` — `src/melt/verify-inputs.ts`,
+saga Phase 0.5, swap-path ordering parity (verify before claiming).
+Unit battery 2380/2380 incl. real-crypto negatives/positives. Deployed
+status: testnut deploy pending owner Cloudflare token (no credentials on
+ai-legion); live re-probes after deploy should flip all three probe
+verdicts (forged→400, unsigned witness→403, control melt→200).
+

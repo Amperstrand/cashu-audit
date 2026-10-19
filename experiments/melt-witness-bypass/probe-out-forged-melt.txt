@@ -1,0 +1,19 @@
+melt quote: {"quote": "01a15424-70ab-739d-89e1-f16e2311ac18", "amount": 4, "fee_reserve": 1, "state": "UNPAID", "expiry": 1792416636, "request": "lnbc40n1qyqqqqqyaw39yk3flw2vnrc3m7xxgdwavmw7zgpc69gn8nd29hzw4gc2vd
+
+FORGED MELT -> HTTP 200
+{
+  "quote": "01a15424-70ab-739d-89e1-f16e2311ac18",
+  "amount": 4,
+  "unit": "sat",
+  "method": "bolt11",
+  "request": "lnbc40n1qyqqqqqyaw39yk3flw2vnrc3m7xxgdwavmw7zgpc69gn8nd29hzw4gc2vdxk44sddv4ydl67",
+  "fee_reserve": 1,
+  "state": "PAID",
+  "expiry": 1792416636,
+  "paid": true,
+  "preimage": "8e884a1b1203b973fbbab69045c8dd731cdf8386e94c2ddb9cd305487f364782",
+  "payment_preimage": "8e884a1b1203b973fbbab69045c8dd731cdf8386e94c2ddb9cd305487f364782",
+  "change": []
+}
+
+VERDICT: CATASTROPHIC: forged proof melted PAID

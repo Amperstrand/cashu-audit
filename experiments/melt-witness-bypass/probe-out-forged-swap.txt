@@ -1,0 +1,10 @@
+keyset 008e808b89acc141: lowest denom 1, A=0200f474e62cdda7eee57236...
+
+FORGED SWAP -> HTTP 400
+{
+  "error": "invalid_request",
+  "detail": "Proof verification failed at index 0: bad point: is not on curve, sqrt error: Cannot find square root",
+  "code": 14005
+}
+
+VERDICT: rejected (swap verification holds)
