@@ -53,7 +53,14 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           git add conformance/runs/
           git diff --cached --quiet || git commit -m "runs: version-matrix $(date -u +%F)"
-          git push
+          # Race-tolerant push: main can move under the run (issue #49's
+          # mechanism, observed bot-side 2026-10-19) — rebase and retry.
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase origin main || { echo "rebase conflict on registry files"; exit 1; }
+            sleep 5
+          done
+          echo "push failed after retries"; exit 1
 
       - name: Job summary
         run: |

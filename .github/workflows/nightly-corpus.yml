@@ -108,7 +108,13 @@ jobs:
           git add conformance/nightly-baseline.json conformance/NIGHTLY-STATUS.md
           git diff --cached --quiet && echo "no state change" || {
             git commit -q -m "nightly-corpus: baseline/status update $(date -u +%Y-%m-%d)"
-            git push
+            # Race-tolerant push: main can move under the run (issue #49's
+            # mechanism, observed bot-side on version-matrix 2026-10-19).
+            for i in 1 2 3; do
+              git push && break
+              git pull --rebase origin main || { echo "rebase conflict on state files"; exit 1; }
+              sleep 5
+            done
           }
           [ -z "${GATE_RC:-}" ] || { echo "nightly gate flagged divergences (rc=$GATE_RC)"; exit "$GATE_RC"; }
 
