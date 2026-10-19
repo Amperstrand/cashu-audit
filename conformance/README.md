@@ -91,3 +91,6 @@ and OpenTollGate/tollgate#30).
   way; close it when a nightly passes again.
 - Tag `nightly-corpus-v1` marks the first steady-state green run
   (39115159562).
+- The permanent cron fires unattended: run 39195559901 (2026-10-19
+  03:37 UTC, success — ~20 min scheduler jitter past the 03:17 target;
+  the TEMP evidence cron was removed after it fired once, PR #52).
