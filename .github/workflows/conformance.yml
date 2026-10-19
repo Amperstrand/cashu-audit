@@ -1,8 +1,12 @@
 name: Conformance
 
 on:
-  schedule:
-    - cron: '0 6 * * 1'
+  # Weekly schedule removed 2026-10-19 (issue #33): the live-mint lane ran
+  # 2h20m/wk with ~100 skips ("quote never reached PAID") and FAILs dominated
+  # by wrong frozen predictions (melt-quote-creation signature assertions) —
+  # not actionable signal. Deterministic surface lives in nightly-corpus.
+  # Manual dispatch stays for ad-hoc online runs; schedule returns with the
+  # #33 rebuild (deterministic + artifact-only, per #34's closed design).
   workflow_dispatch:
 
 jobs:
