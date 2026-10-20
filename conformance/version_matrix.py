@@ -68,7 +68,7 @@ CDK_PORT = 3338  # both families listen on this INSIDE the container
 NUTSHELL_TOML = None  # nutshell needs no config file
 CDK_TOML = """[info]
 url = "http://127.0.0.1:{url_port}/"
-listen_host = "0.0.0.0"
+listen_host = "{listen_host}"
 listen_port = {cdk_port}
 mnemonic = "env:AB_CDK_MNEMONIC"
 
@@ -130,6 +130,18 @@ class Arm:
         self.workdir: Path | None = None
         self.mnemonic: str | None = None
         self.identity: str | None = None
+        # Host-network mode (2026-10-20): boot with `--network host` and the
+        # mint listening directly on 127.0.0.1:<port> instead of a published
+        # bridge port. For hosts whose docker bridge hairpin is broken
+        # (ai-legion: container-internal OK, host-published ports SYN-ACK
+        # then hang — `No route to host` from the gateway).
+        self.host_network: bool = False
+
+    def _net_args(self) -> list[str]:
+        """docker run network args + the port the mint listens on."""
+        if self.host_network:
+            return ["--network", "host"], self.port
+        return ["-p", f"{self.port}:{CDK_PORT}"], CDK_PORT
 
     def bring_up(self) -> None:
         if self.url_spec:
@@ -150,11 +162,12 @@ class Arm:
 
     def _bring_up_nutshell(self) -> None:
         self.container = f"abm-{self.name}"
-        sh(["docker", "run", "-d", "-p", f"{self.port}:{CDK_PORT}",
+        net, listen_port = self._net_args()
+        sh(["docker", "run", "-d", *net,
             "--name", self.container,
             "-e", "MINT_BACKEND_BOLT11_SAT=FakeWallet",
-            "-e", "MINT_LISTEN_HOST=0.0.0.0",
-            "-e", f"MINT_LISTEN_PORT={CDK_PORT}",
+            "-e", "MINT_LISTEN_HOST=127.0.0.1" if self.host_network else "MINT_LISTEN_HOST=0.0.0.0",
+            "-e", f"MINT_LISTEN_PORT={listen_port}",
             "-e", "MINT_RATE_LIMIT=FALSE",
             "-e", f"MINT_PRIVATE_KEY={fresh_hex_key()}",
             self.image, "poetry", "run", "mint"])
@@ -183,8 +196,11 @@ class Arm:
             shutil.rmtree(self.workdir)
         self.workdir.mkdir(parents=True)
         self.mnemonic = fresh_mnemonic()
+        net, listen_port = self._net_args()
         (self.workdir / "config.toml").write_text(
-            CDK_TOML.format(url_port=self.port, cdk_port=CDK_PORT))
+            CDK_TOML.format(url_port=self.port,
+                            cdk_port=listen_port,
+                            listen_host="127.0.0.1" if self.host_network else "0.0.0.0"))
         init = sh(["docker", "run", "--rm", "-v", f"{self.workdir}:/data",
                    "-e", f"AB_CDK_MNEMONIC={self.mnemonic}", self.image,
                    "cdk-mintd", "-w", "/data", "config", "init", "--new-mint",
@@ -193,7 +209,7 @@ class Arm:
             raise RuntimeError(f"cdk config init failed for {self.name}: "
                                f"{init.stdout[-200:]} {init.stderr[-200:]}")
         self.container = f"abm-{self.name}"
-        sh(["docker", "run", "-d", "-p", f"{self.port}:{CDK_PORT}",
+        sh(["docker", "run", "-d", *net,
             "--name", self.container, "-v", f"{self.workdir}:/data",
             "-e", f"AB_CDK_MNEMONIC={self.mnemonic}",
             self.image, "cdk-mintd", "-w", "/data"])
@@ -203,12 +219,13 @@ class Arm:
         # CDK_MINTD) — note CDK_MINTD_LN_BACKEND, not CDK_MINTD_BACKEND,
         # and LISTEN_HOST/LISTEN_PORT, not HOST/PORT.
         self.container = f"abm-{self.name}"
-        sh(["docker", "run", "-d", "-p", f"{self.port}:{CDK_PORT}",
+        net, listen_port = self._net_args()
+        sh(["docker", "run", "-d", *net,
             "--name", self.container,
             "-e", "CDK_MINTD_LN_BACKEND=FakeWallet",
             "-e", "CDK_MINTD_FAKE_WALLET_SUPPORTED_UNITS=sat",
-            "-e", "CDK_MINTD_LISTEN_HOST=0.0.0.0",
-            "-e", f"CDK_MINTD_LISTEN_PORT={CDK_PORT}",
+            "-e", f"CDK_MINTD_LISTEN_HOST={'127.0.0.1' if self.host_network else '0.0.0.0'}",
+            "-e", f"CDK_MINTD_LISTEN_PORT={listen_port}",
             "-e", f"CDK_MINTD_URL=http://127.0.0.1:{self.port}/",
             "-e", "CDK_MINTD_MINT_NAME=AB matrix arm",
             "-e", f"CDK_MINTD_MNEMONIC={fresh_mnemonic()}",
@@ -373,6 +390,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--docker-arm", action="append", default=[], metavar="NAME=family:image",
                         help="e.g. cdk-0.17.6=cdk:cashubtc/mintd:0.17.6")
+    parser.add_argument("--host-network", action="store_true",
+                        help="boot arms with --network host, mint on 127.0.0.1:<port> "
+                             "(for hosts with a broken docker bridge hairpin)")
     parser.add_argument("--git-arm", action="append", default=[], metavar="NAME=family:repo:ref",
                         help="experimental: build image from a git checkout, e.g. "
                              "nutshell@dev=nutshell:../nutshell:origin/main")
@@ -391,6 +411,7 @@ def main() -> int:
     arms: list[Arm] = []
     for spec in args.docker_arm:
         arms.append(parse_arm_spec(spec, "docker"))
+        arms[-1].host_network = args.host_network
     for spec in args.git_arm:
         arms.append(parse_arm_spec(spec, "git"))
     for spec in args.url_arm:
