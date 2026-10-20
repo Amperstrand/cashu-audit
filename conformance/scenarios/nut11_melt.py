@@ -70,12 +70,28 @@ def _set_witness(proofs: list[Proof], key: KeyPair) -> None:
 
 
 def _create_melt_quote(mint: MintClient) -> str:
-    """Create a melt quote using a real BOLT11 invoice from the mint's FakeWallet."""
-    mint_resp = mint.mint_quote(4)
-    invoice = mint_resp.get("request", "lnbc1000n1p")
-    resp = mint.melt_quote(invoice)
-    time.sleep(2)
-    return resp["quote"]
+    """Create a melt quote using a real BOLT11 invoice from the mint's FakeWallet.
+
+    FakeWallet auto-pays quotes near-instantly — the invoice from an earlier
+    mint_quote may already read PAID by the time we melt-quote against it
+    (nutshell 0.20.3 arm, 2026-10-20: `11000 mint quote already paid`). Retry
+    with a FRESH invoice until one lands unpaid.
+    """
+    last_err = None
+    for _ in range(5):
+        mint_resp = mint.mint_quote(4)
+        invoice = mint_resp.get("request", "lnbc1000n1p")
+        try:
+            resp = mint.melt_quote(invoice)
+        except Exception as e:  # client raises on 4xx
+            last_err = e
+            if "already paid" in str(e).lower():
+                time.sleep(0.5)
+                continue
+            raise
+        time.sleep(2)
+        return resp["quote"]
+    raise RuntimeError(f"melt_quote failed after retries: {last_err}")
 
 
 def _change_outputs(builder: ProofBuilder, proofs: list[Proof]) -> list[OutputResult]:
