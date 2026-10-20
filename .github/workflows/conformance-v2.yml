@@ -1,0 +1,53 @@
+name: conformance-v2
+
+# #33 rebuild: the deterministic live-verdict lane on LOCAL docker arms
+# (#34's closed design — deterministic, artifact-only). Replaces the
+# delisted public-test-mint lane (2026-10-19 triage: ~100 skips, FAILs
+# dominated by rig artifacts and truncated bodies). The invoice-oracle
+# arm keeps melt-success scenarios race-free (nutshell FakeWallet
+# auto-settles its own invoices — see conformance/run_arm_lane.py).
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Mondays 06:00 UTC (the delisted lane's slot)
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Target arm spec (NAME=family:image)"
+        required: false
+        default: "ns=nutshell:cashubtc/nutshell:0.20.3"
+
+permissions:
+  contents: read
+
+jobs:
+  arms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install runner dependencies
+        run: pip install -r conformance/requirements.txt
+
+      - name: Pull arm images (fail loudly before the run, not mid-boot)
+        run: docker pull cashubtc/nutshell:0.20.3
+
+      - name: Run deterministic conformance lane (target + invoice-oracle arms)
+        run: |
+          python3 conformance/run_arm_lane.py \
+            --target "${{ github.event.inputs.target || 'ns=nutshell:cashubtc/nutshell:0.20.3' }}" \
+            --expected-fail conformance/expected-fail-nutshell-0.20.3.json \
+            --out reports
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conformance-v2-report
+          path: reports/conformance-v2-*
+          if-no-files-found: error
