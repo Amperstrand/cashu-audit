@@ -7,5 +7,6 @@
   "htlc_sigall_receiver_path_after_locktime": "POSITIONED: same SIG_ALL/HTLC witness split as above",
   "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body — error-identity class (wire shape), version fact",
   "mint_info_nut19_supported": "VERSION FACT: nutshell 0.20.3 does not advertise NUT-19 in nuts list",
-  "concurrent_double_melt_rejected": "SUITE ARTIFACT: module builds melt quotes without the invoice-oracle (auto-settle race); flip to PASS once the oracle helper is shared — tracked as the next #33 rebuild step"
+  "concurrent_double_melt_rejected": "SUITE ARTIFACT: module builds melt quotes without the invoice-oracle (auto-settle race); flip to PASS once the oracle helper is shared — tracked as the next #33 rebuild step",
+  "melt_valid_proofs_succeeds": "SUITE ARTIFACT: nut_basics builds melt quotes without the invoice-oracle (auto-settle race — surfaced on GH's fresh arms as the gating FAIL, run 39504637173); same fix as above"
 }
