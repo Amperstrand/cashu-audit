@@ -18,11 +18,7 @@ CATEGORY = "Security: Concurrency"
 
 
 def _create_melt_quote(mint: MintClient) -> str:
-    mint_resp = mint.mint_quote(4)
-    invoice = mint_resp.get("request", "lnbc1000n1p")
-    resp = mint.melt_quote(invoice)
-    time.sleep(2)
-    return resp["quote"]
+    return mint.create_fresh_melt_quote(4)["quote"]
 
 
 def _change_outputs(builder: ProofBuilder, total: int, n_inputs: int) -> list[dict] | None:

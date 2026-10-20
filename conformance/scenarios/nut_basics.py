@@ -189,10 +189,7 @@ def _(mint: MintClient) -> ScenarioResult:
 @scenario("melt_quote_creates_quote", "NUT-05 Melt Basics")
 def _(mint: MintClient) -> ScenarioResult:
     """POST /v1/melt/quote/bolt11 returns quote with amount and fee."""
-    # Get a real BOLT11 invoice from the mint first
-    mint_resp = mint.mint_quote(4)
-    invoice = mint_resp["request"]
-    melt_resp = mint.melt_quote(invoice)
+    melt_resp = mint.create_fresh_melt_quote(4)
     if (
         "quote" in melt_resp
         and "amount" in melt_resp
@@ -216,10 +213,7 @@ def _(mint: MintClient) -> ScenarioResult:
     proofs = builder.mint_proofs(16)
     total = sum(p.amount for p in proofs)
 
-    mint_resp = mint.mint_quote(4)
-    invoice = mint_resp["request"]
-    time.sleep(2)
-    melt_resp = mint.melt_quote(invoice)
+    melt_resp = mint.create_fresh_melt_quote(4)
     quote_id = melt_resp["quote"]
     melt_amount = melt_resp.get("amount", 4)
     fee_reserve = melt_resp.get("fee_reserve", 0)

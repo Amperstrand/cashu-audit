@@ -180,9 +180,7 @@ def _(mint: MintClient) -> ScenarioResult:
 @scenario("fee_melt_quote_includes_fee_reserve", "NUT-08 Fees")
 def _(mint: MintClient) -> ScenarioResult:
     """Melt quote response includes the fee_reserve field (NUT-08)."""
-    mint_resp = mint.mint_quote(4)
-    invoice = mint_resp["request"]
-    melt_resp = mint.melt_quote(invoice)
+    melt_resp = mint.create_fresh_melt_quote(4)
     if "fee_reserve" in melt_resp:
         return ScenarioResult(
             "fee_melt_quote_includes_fee_reserve", "NUT-08 Fees",

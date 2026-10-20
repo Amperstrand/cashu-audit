@@ -1,6 +1,8 @@
 """Mint HTTP API client — thin wrapper over Cashu NUT REST endpoints."""
 from __future__ import annotations
 
+import time
+
 import requests
 from typing import Any
 
@@ -82,6 +84,42 @@ class MintClient:
         if code != 200:
             raise RuntimeError(f"melt_quote failed ({code}): {data}")
         return data
+
+    def create_fresh_melt_quote(self, amount: int = 4, settle_delay: float = 2.0) -> dict:
+        """Create a melt quote whose invoice is not auto-settled at THIS mint.
+
+        Preferred path: an invoice from the attached ``invoice_oracle`` mint
+        (a scratch arm) — FakeWallet mints auto-settle their OWN invoices
+        near-instantly (nutshell arms: ``11000 mint quote already paid``),
+        which races every melt-success scenario. An external invoice is
+        unknown to the target and stays UNPAID until the melt executes.
+
+        Fallback (no oracle): the rig-era self-loop with fresh-invoice
+        retries — race-tolerant for scenarios that melt immediately.
+
+        Returns the full melt-quote response dict.
+        """
+        oracle = getattr(self, "invoice_oracle", None)
+        if oracle is not None:
+            invoice = oracle.mint_quote(amount).get("request", "lnbc1000n1p")
+            resp = self.melt_quote(invoice)
+            time.sleep(settle_delay)
+            return resp
+
+        last_err = None
+        for _ in range(5):
+            invoice = self.mint_quote(amount).get("request", "lnbc1000n1p")
+            try:
+                resp = self.melt_quote(invoice)
+            except Exception as e:
+                last_err = e
+                if "already paid" in str(e).lower():
+                    time.sleep(0.5)
+                    continue
+                raise
+            time.sleep(settle_delay)
+            return resp
+        raise RuntimeError(f"melt_quote failed after retries: {last_err}")
 
     def melt(self, quote: str, inputs: list[dict], outputs: list[dict] | None = None) -> tuple[int, dict | str]:
         body: dict[str, Any] = {"quote": quote, "inputs": inputs}
