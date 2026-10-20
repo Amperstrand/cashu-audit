@@ -70,13 +70,24 @@ def _set_witness(proofs: list[Proof], key: KeyPair) -> None:
 
 
 def _create_melt_quote(mint: MintClient) -> str:
-    """Create a melt quote using a real BOLT11 invoice from the mint's FakeWallet.
+    """Create a melt quote using a real BOLT11 invoice.
 
-    FakeWallet auto-pays quotes near-instantly — the invoice from an earlier
-    mint_quote may already read PAID by the time we melt-quote against it
-    (nutshell 0.20.3 arm, 2026-10-20: `11000 mint quote already paid`). Retry
-    with a FRESH invoice until one lands unpaid.
+    Preferred: an invoice from the attached ``invoice_oracle`` mint (a
+    second scratch arm) — the target mint's FakeWallet auto-settles its
+    OWN invoices mid-flight (nutshell 0.20.3 arm, 2026-10-20: success-path
+    scenarios lost the race → ``11000 mint quote already paid``); an
+    external invoice is unknown to it and stays UNPAID until the melt.
+
+    Fallback (no oracle attached): the rig-era self-loop with a retry —
+    race-tolerant for the rejection scenarios that melt quickly.
     """
+    oracle = getattr(mint, "invoice_oracle", None)
+    if oracle is not None:
+        invoice = oracle.mint_quote(4).get("request", "lnbc1000n1p")
+        resp = mint.melt_quote(invoice)
+        time.sleep(2)
+        return resp["quote"]
+
     last_err = None
     for _ in range(5):
         mint_resp = mint.mint_quote(4)
