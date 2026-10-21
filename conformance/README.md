@@ -94,3 +94,32 @@ and OpenTollGate/tollgate#30).
 - The permanent cron fires unattended: run 39195559901 (2026-10-19
   03:37 UTC, success — ~20 min scheduler jitter past the 03:17 target;
   the TEMP evidence cron was removed after it fired once, PR #52).
+
+## Weekly conformance-v2 lane (ops)
+
+`.github/workflows/conformance-v2.yml` (Mondays 06:00 UTC + dispatch): the
+deterministic live-verdict lane on LOCAL docker arms — #33's rebuild of
+the delisted public-test-mint lane, #34's closed design (deterministic,
+artifact-only). Three arms: nutshell 0.20.3 / nutshell 0.21.0 / cdk 0.18.1,
+each booted by `run_arm_lane.py` together with an **invoice-oracle** arm
+(a scratch mint whose only job is issuing invoices the target has never
+seen — FakeWallet mints auto-settle their own invoices, which raced every
+melt-success scenario before this).
+
+- **Per-arm seeds** (`expected-fail-*.json`): documented divergences with
+  justifications (registry-linked where positioned). Expected fails do not
+  gate; every unlisted FAIL does.
+- **Divergence gate** (`v2_diff.py`): compares the run's verdicts against
+  `v2-baseline/<arm>.json`; red on NEW or PASS→FAIL/TIMEOUT flips only.
+  `EXPECTED_FAIL → PASS` is reported as a RESOLUTION — the cue to update
+  the seed and the registry entry. Mutation-checked (a planted FAIL
+  refuses).
+- **Local runs**: `python3 conformance/run_arm_lane.py --target
+  ns=nutshell:cashubtc/nutshell:0.20.3 --host-network --expected-fail
+  conformance/expected-fail-nutshell-0.20.3.json` (`--host-network` for
+  hosts with a broken docker bridge hairpin — ai-legion; GH runners don't
+  need it).
+- Reference verdicts: ns-0.20.3 98P/8EF/6S · ns-0.21.0 104P/2EF/6S ·
+  cdk-0.18.1 102P/4EF/5S+1 non-gating TIMEOUT. Note 0.21.0 passes all six
+  0.20.3 SIG_ALL/HTLC positioned divergences — the lane reproduces the
+  registry's convergence data deterministically.
