@@ -1,0 +1,4 @@
+{
+  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body — error-identity class (wire shape), version fact",
+  "mint_info_nut19_supported": "VERSION FACT: nutshell 0.21.0 does not advertise NUT-19 in nuts list"
+}

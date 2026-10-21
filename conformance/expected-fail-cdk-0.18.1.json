@@ -1,0 +1,6 @@
+{
+  "htlc_locktime_after_expiry_refund_succeeds": "POSITIONED: cdk's HTLC refund-path witness handling — 'Secret is not a HTLC secret' (code 50000); registry cdk#2252 item 6 family (nutshell accepts optional preimage, cdk rejects)",
+  "swap_wrong_keyset_fails": "SHAPE: cdk validates NUT-02 keyset IDs at deserialization (422, ID length) before the semantic swap check — suite's bogus-id fixture dies on the wire shape",
+  "batch_mint_rejects_too_many_outputs": "SHAPE: cdk's strict QuoteId UUID parse (422) fires before the too-many-outputs check the scenario targets",
+  "mint_info_returns_required_fields": "ARM CONFIG ARTIFACT: the lane's CDK_TOML sets no mint name — info legitimately lacks 'name' (matrix arms never checked it)"
+}

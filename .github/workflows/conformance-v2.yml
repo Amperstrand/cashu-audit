@@ -2,10 +2,17 @@ name: conformance-v2
 
 # #33 rebuild: the deterministic live-verdict lane on LOCAL docker arms
 # (#34's closed design — deterministic, artifact-only). Replaces the
-# delisted public-test-mint lane (2026-10-19 triage: ~100 skips, FAILs
-# dominated by rig artifacts and truncated bodies). The invoice-oracle
-# arm keeps melt-success scenarios race-free (nutshell FakeWallet
-# auto-settles its own invoices — see conformance/run_arm_lane.py).
+# delisted public-test-mint lane. Per-arm expected-fail seeds document
+# positioned divergences (registry-linked); the divergence gate
+# (v2_diff.py) goes red only on NEW/CHANGED verdicts vs the committed
+# baselines — EXPECTED_FAIL->PASS resolutions are reported, not gating.
+#
+# Arm notes:
+# - nutshell 0.21.0's docker image is fine (the 2026-10-20 'unauthorized'
+#   /v1/info was the ai-legion broken-bridge artifact, not the image).
+# - cdk 0.18.1 boots via config-init (version_matrix Arm); needs the
+#   `mnemonic` pip dep. p2pk_sigall_mixed_proofs_different_tags_fail
+#   TIMEOUTs non-gating on cdk (known SIG_ALL slowness family).
 
 on:
   schedule:
@@ -13,9 +20,9 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Target arm spec (NAME=family:image)"
+        description: "Single target arm spec (NAME=family:image); empty = full matrix"
         required: false
-        default: "ns=nutshell:cashubtc/nutshell:0.20.3"
+        default: ""
 
 permissions:
   contents: read
@@ -24,6 +31,22 @@ jobs:
   arms:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arm: nutshell-0.20.3
+            target: "ns203=nutshell:cashubtc/nutshell:0.20.3"
+            seed: conformance/expected-fail-nutshell-0.20.3.json
+            image: cashubtc/nutshell:0.20.3
+          - arm: nutshell-0.21.0
+            target: "ns210=nutshell:cashubtc/nutshell:0.21.0"
+            seed: conformance/expected-fail-nutshell-0.21.0.json
+            image: cashubtc/nutshell:0.21.0
+          - arm: cdk-0.18.1
+            target: "cdk181=cdk:cashubtc/mintd:0.18.1"
+            seed: conformance/expected-fail-cdk-0.18.1.json
+            image: cashubtc/mintd:0.18.1
     steps:
       - uses: actions/checkout@v4
 
@@ -35,19 +58,24 @@ jobs:
         run: pip install -r conformance/requirements.txt
 
       - name: Pull arm images (fail loudly before the run, not mid-boot)
-        run: docker pull cashubtc/nutshell:0.20.3
+        run: docker pull ${{ matrix.image }}
 
       - name: Run deterministic conformance lane (target + invoice-oracle arms)
         run: |
           python3 conformance/run_arm_lane.py \
-            --target "${{ github.event.inputs.target || 'ns=nutshell:cashubtc/nutshell:0.20.3' }}" \
-            --expected-fail conformance/expected-fail-nutshell-0.20.3.json \
+            --target "${{ github.event.inputs.target || matrix.target }}" \
+            --expected-fail ${{ matrix.seed }} \
             --out reports
+
+      - name: Divergence gate (vs committed baseline)
+        run: |
+          ls reports/conformance-v2-*.json | head -1 | xargs -I{} \
+            python3 conformance/v2_diff.py --report {} --baseline conformance/v2-baseline/${{ matrix.arm }}.json
 
       - name: Upload report artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: conformance-v2-report
+          name: conformance-v2-${{ matrix.arm }}
           path: reports/conformance-v2-*
           if-no-files-found: error
