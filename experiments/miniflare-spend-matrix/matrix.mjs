@@ -268,6 +268,65 @@ async function meltQuoteFor(mf, sats) {
   } finally { await mf.dispose(); rmSync(persistDir, { recursive: true, force: true }); }
 }
 
+// ── S9: mint replay on a consumed quote (double issuance lock) ──
+{
+  const { mf, persistDir } = bootWorker('s9');
+  try {
+    const { wallet, keysetId } = await mintReal(mf, 8);
+    const q2 = await wallet.createMintQuoteBolt11(8);
+    let paid2 = q2;
+    const dl = Date.now() + 8000;
+    while (paid2.state !== 'PAID' && Date.now() < dl) {
+      paid2 = { ...q2, ...(await wallet.checkMintQuoteBolt11(q2)) };
+      await new Promise(r => setTimeout(r, 50));
+    }
+    const bm = blindMessage(new TextEncoder().encode('s9-replay-secret'));
+    const body = { quote: paid2.quote, outputs: [{ amount: 8, B_: pointToHex(bm.B_), id: keysetId }] };
+    const first = await raw(mf, '/v1/mint/bolt11', body);
+    // (a) SAME outputs re-POSTed: restore/idempotency replay — 200 with the
+    // IDENTICAL signature (deterministic k·B_; value-neutral by design)
+    const second = await raw(mf, '/v1/mint/bolt11', body);
+    const sameSigs = JSON.stringify(second.body?.signatures) === JSON.stringify(first.body?.signatures);
+    const okA = first.status === 200 && second.status === 200 && sameSigs;
+    check('S9a same-output replay → 200 IDENTICAL signatures (no new value)', okA, `first=${first.status} second=${second.status} identical=${sameSigs}`);
+    // (b) same quote, DIFFERENT output: re-issuance attempt → must reject
+    const bm2 = blindMessage(new TextEncoder().encode('s9-replay-secret-2'));
+    const third = await raw(mf, '/v1/mint/bolt11', { quote: paid2.quote, outputs: [{ amount: 8, B_: pointToHex(bm2.B_), id: keysetId }] });
+    const okB = third.status === 400 && String(third.body?.code) === '20002';
+    check('S9b different-output re-mint on consumed quote → 400/20002', okB, `status=${third.status} error=${third.body?.error} code=${third.body?.code}`);
+  } finally { await mf.dispose(); rmSync(persistDir, { recursive: true, force: true }); }
+}
+
+// ── S10: melt HTLC (NUT-14) conditioned proof WITHOUT preimage witness ──
+{
+  const { mf, persistDir } = bootWorker('s10');
+  try {
+    const { proofs, keysetId } = await mintReal(mf, 8);
+    const { createHash } = await import('node:crypto');
+    const preimage = randomBytes(32);
+    const hashlock = createHash('sha256').update(preimage).digest('hex');
+    const htlcSecret = JSON.stringify(['HTLC', { nonce: bytesToHex(randomBytes(32)), data: hashlock }]);
+    const bm = blindMessage(new TextEncoder().encode(htlcSecret));
+    const sr = await raw(mf, '/v1/swap', {
+      inputs: proofs.map(p => ({ amount: p.amount, secret: p.secret, C: p.C, id: p.id })),
+      outputs: [{ amount: 8, B_: pointToHex(bm.B_), id: keysetId }]
+    });
+    if (sr.status !== 200) { check('S10 setup swap', false, sr.text.slice(0, 120)); }
+    else {
+      const sig = sr.body.signatures[0];
+      const keysResp = await (await mf.dispatchFetch(`${BASE}/v1/keys/${keysetId}`)).json();
+      const pubKeys = keysResp.keysets?.[0]?.keys ?? keysResp.keys;
+      const A = pointFromHex(pubKeys[String(8)]);
+      const C = unblindSignature(pointFromHex(sig.C_), bm.r, A);
+      const htlcInput = { amount: 8, secret: htlcSecret, C: pointToHex(C), id: keysetId };
+      const q = await meltQuoteFor(mf, 4);
+      const r = await raw(mf, '/v1/melt', { quote: q.quote, inputs: [htlcInput], outputs: [] });
+      const ok = r.status === 403 && r.body?.code === '30006';
+      check('S10 HTLC witness-less melt → 403/30006', ok, `status=${r.status} error=${r.body?.error} code=${r.body?.code} detail=${(r.body?.detail ?? '').slice(0, 80)}`);
+    }
+  } finally { await mf.dispose(); rmSync(persistDir, { recursive: true, force: true }); }
+}
+
 const fails = results.filter(r => !r.pass);
 console.log(`\nmatrix: ${results.length - fails.length}/${results.length} PASS`);
 process.exit(fails.length ? 1 : 0);

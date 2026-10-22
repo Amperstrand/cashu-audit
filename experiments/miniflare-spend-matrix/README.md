@@ -35,6 +35,8 @@ must match it exactly (error-identity assertions, never any-4xx-is-pass).
 | S6 | race: N=16 concurrent identical MELTs, same real proof + same quote | exactly ONE 200 state=PAID (single preimage); every other response non-200 (double-spend / quote-claimed family) | PAID=1/16, one preimage, losers 403/10005 |
 | S7 | checkstate after a successful swap: Y of the burned input | POST /v1/checkstate → state SPENT (ISSUE-067 class — burned proofs must not read UNSPENT) | 200, state=SPENT |
 | S8 | swap with the SAME proof listed twice in inputs | non-200 rejection, duplicate-proof family (saga map reserves 14008); no signatures issued | 400 `duplicate_proof`/14008 (cashu-cf 33c681e, ISSUE-126) |
+| S9 (frozen 2026-10-22, pre-run) | mint replay: re-POST /v1/mint/bolt11 with the SAME outputs on an exhausted quote | 400 quote-already-issued family (20002 per cashu-cf error registry); no second issuance | **prediction WRONG** — same-outputs replay is 200-with-IDENTICAL-signatures by design (restore/idempotency path, deterministic k·B_, value-neutral). Locked as two cases: S9a same outputs → 200 + identical sigs; S9b different outputs on consumed quote → 400/20002 |
+| S10 (frozen 2026-10-22, pre-run) | melt: HTLC (NUT-14) conditioned proof, NO preimage witness | 403 spending_condition_not_met family (30006) | 403/30006, detail `No witness in proof` |
 
 Control (runs first, must be green or everything above is noise):
 mint→quote→PAID→mintProofs through cashu-ts v4 wallet.
@@ -96,3 +98,14 @@ aligned to melt's 14008). Wire re-verified: `out/matrix-postfix.log` 9/9.
 - single blank output → dust truncation misread as overcharge (S5)
 - S8 first check passed a 200 through a family regex — tightened to
   exact error-identity assertions (this is why identity, not family)
+
+## Run 2026-10-22 (final): 12/12 PASS — S9a/S9b/S10 added
+
+- S9 prediction error (documented per method): same-outputs mint replay is
+  NOT quote-exhaustion abuse — it returns the IDENTICAL signature via the
+  restore/idempotency path (deterministic k·B_, value-neutral). The
+  re-issuance abuse case is different-outputs-on-consumed-quote → 400/20002.
+  Both now locked.
+- S10: HTLC (NUT-14) witness-less melt locked at 403/30006
+  `No witness in proof` (completes the spending-condition trio with S3's
+  SIG_ALL).
