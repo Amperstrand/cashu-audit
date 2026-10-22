@@ -110,3 +110,25 @@ The divergence database is the highest-value artifact for the Cashu community. I
   ongoing probe — run it in every matrix pass.
 - Lesson for the framework: audit both sides of every encoding boundary — the
   wallet trap AND mint leniency are the same divergence seen from two ends.
+
+## 2026-10-22 — miniflare as a free real-mint probe target + v4 transport traps
+
+- cashu-cf's miniflare lane (miniflare@5-alpha, wrangler-shaped
+  `workers[].config` constructor) gives audits a FREE in-process mint:
+  real bundle, real Durable Objects, real crypto — zero live exposure,
+  zero deploys. `experiments/miniflare-spend-matrix/` is the template:
+  frozen predictions → characterization → error-identity locks →
+  repro scripts preserved. It found cashu-cf ISSUE-126 (duplicate-input
+  swap amplification: 8→16 liquid) in its first adversarial run —
+  the local matrix caught what weeks of clean-traffic greens could not.
+- cashu-ts v4 transport traps (bite every probe script):
+  1. `new Wallet(url, { customRequest })` SILENTLY DROPS the transport —
+     v4 forwards only `authProvider`/`logger` to its internal Mint. Wire
+     as `new Wallet(new Mint(url, { customRequest }), { unit })`.
+  2. v4 request bodies carry BigInt/Amount value objects — serialize with
+     a bigint→Number replacer at the boundary; and v4 MUTATES parsed
+     response objects in place (Amount instances appear inside objects the
+     caller captured by reference).
+- Error-identity lesson reinforced: the first S8 check "passed" a 200
+  through a family regex. Always assert the exact (status, error, code)
+  triple; family regexes are how enforcement gaps read as green.
