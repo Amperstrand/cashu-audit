@@ -109,3 +109,14 @@ aligned to melt's 14008). Wire re-verified: `out/matrix-postfix.log` 9/9.
 - S10: HTLC (NUT-14) witness-less melt locked at 403/30006
   `No witness in proof` (completes the spending-condition trio with S3's
   SIG_ALL).
+
+## ISSUE-127 race harness (2026-10-22)
+
+`issue-127-race-repro-minimal.mjs` / `-mintflow.mjs` — N-iteration
+two-boot harness for the cashu-cf keyset lazy-boot ordering race
+(first /v1/keysets after a KEYSET_VERSION bump served pre-rotation).
+Status at commit time: 0/20 stale under current conditions (both
+variants); the stale outcome manifested 2/2 earlier in the session under
+different machine load, with log-ordering proof (listing answered before
+the boot rotation fired). Timing-dependent — use under load or with
+artificial first-request concurrency to widen the window.
