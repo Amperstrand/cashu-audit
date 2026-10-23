@@ -1,0 +1,10 @@
+== boot nutshell arm (FakeWallet, host net :39119)
+== w1: invoice 6 (FakeWallet settles) -> send 5 --legacy
+== BYPASS leg: w2 <- [no-dleq, GARBAGE, no-dleq]
+Received 4 sat
+Balance: 4 sat
+== CONTROL leg: w2 <- [GARbage] alone (expect invalid)
+Exception: DLEQ proof invalid.
+
+VERDICT: bypass-received=YES garbage-alone-rejected=YES
+RESULT: BYPASS CONFIRMED — garbage dleq follower skipped when a dleq-less proof precedes it (wallet.py return-vs-continue)
