@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# docker-nutshell — nutshell reference wallet via docker, immune to PyPI
+# deletions (2026-10-23: breez-sdk-spark <0.18 fully removed from PyPI made
+# cashu 0.20.3+ uninstallable — issue #54). Exec-compatible with
+# consumer_conformance's CLI contract: `cashu -h <mint> -y -t decode <token>`
+# (each run is a fresh cold container, matching the cold-HOME semantics the
+# runner already expects; the token rides as an argv element, no stdin).
+set -euo pipefail
+exec docker run --rm cashubtc/nutshell:0.21.0 poetry run cashu "$@"
