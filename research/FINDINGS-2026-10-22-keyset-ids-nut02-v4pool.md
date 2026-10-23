@@ -120,9 +120,12 @@ cashu-ts 4.11.0), headline splits:
 **New divergence (spec-adjudicated)**: NUT-28 (28.md:113) mandates
 `pe` as a 33-byte CBOR bstr; Nutshell and cashu-ts conform; cdk
 0.18.2 `ProofV4.pe` (nut00/mod.rs:457) parses hex-string serde →
-**spec-conformant P2BK tokens are undecodable on cdk wallets**
+**spec-conformant P2BK tokens are undecodable by cdk wallets**
 (repro: `v4_v2_pe_kg181.cashu`; same struct uses a bytes (de)serializer
-for `c`, fix is local).
+for `c`, fix is local). Version generality (2026-10-23): `ProofV4` is
+byte-identical in cdk 0.18.1 and 0.18.2 (serde attrs included) — the
+defect ships in both, so the nightly's frozen 0.18.1 reference rejects
+the pe vector identically.
 
 ## Next actions
 
