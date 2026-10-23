@@ -51,6 +51,8 @@ designated positions.
 | cdk-cli 0.18.2 (--allow-untrusted) | `Error: Invalid DLEQ proof` | same class | same class |
 | cashu-ts 4.11 / rc.9 | reject (per-proof loop) | reject | reject |
 
+**Runnable repro + independent confirmation (2026-10-23): `experiments/dleq-bypass-nutshell/`** — fresh arm, fresh wallets: received-with-garbage vs control-rejected.
+
 Root cause (src cashu/wallet/wallet.py:998-1002):
 `verify_proofs_dleq` iterates `for proof in proofs: if not
 proof.dleq: return` — **`return` where `continue` belongs**: the
