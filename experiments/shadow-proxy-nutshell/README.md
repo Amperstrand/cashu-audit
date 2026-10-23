@@ -102,3 +102,18 @@ F3 resolved cashu-cf-side: branch `fix/keys-unknown-id-400-alignment`
 (e99a11e) — /v1/keys/{unknown} now 400, characterization-locked. The
 divergence closes on merge+deploy; re-run this study to confirm
 three-way 400 alignment (ns / cdk / cf).
+
+## Run 4 extension (2026-10-23): A7 + fee/denomination catalogue
+
+- **A7 (locked)**: fee-aware valid swap → both mints 200, burned Y reads
+  SPENT via /v1/checkstate (ISSUE-067 class holds on both). NUT-02 fee
+  math agrees: ceil(ppk/1000) per input.
+- **F5 (catalogue)**: nutshell 0.20.3 default keyset ppk=100 + strict
+  balance enforcement — `400/11000 "inputs (8) - fees (1) vs outputs (8)
+  are not balanced."` cashu-cf study config ppk=0 (same rule, different
+  config). Wallets must read keyset fees before building swap outputs.
+- **F6 (catalogue)**: nutshell rejects a single NON-DENOMINATION output
+  (amount 7) with the OPAQUE `400 code 0 detail:"7"` — the #1008
+  open-question class ("reject and log? what error?"), now measured on
+  the plain-swap path too. cashu-cf splits refund amounts across
+  available blank outputs (imprintSplitAmounts) instead.
