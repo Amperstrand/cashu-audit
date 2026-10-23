@@ -77,6 +77,11 @@ Adjacent source facts:
 - cashu-ts `getDecodedToken(tok, [])` structurally cannot decode V2
   tokens: the empty-keyset-list guard (core.ts:819-822) fires before
   id-length discrimination, even for full 66-hex ids.
+- cashu-ts 5.0.0-rc.9 full-pool run (18 vectors, 2026-10-23):
+  verdict parity 18/18 with 4.11.0, but the two type-error rejections
+  (text-`i`, text-`c`) lost their wrapped CTSError messages — raw
+  `expected Uint8Array, got type=string` surfaces instead
+  (error-identity regression; verdicts unchanged).
 
 ## 6c. NUT-07 startup cost (cdk#2631) — sequential saga recovery, unfixed in 0.18.2
 
