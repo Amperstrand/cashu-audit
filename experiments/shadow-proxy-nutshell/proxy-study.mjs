@@ -264,6 +264,41 @@ try {
       nsR.second,
       'cf 200 identical sig; ns characterize', `cf-identical=${sameSigs(cfR)}, ns-identical=${sameSigs(nsR)}`);  }
 
+  // A7: valid swap → checkstate SPENT for the burned Y (ISSUE-067 class, comparative).
+  // Fee-aware: NUT-02 input fee (ceil(ppk/1000) per input) must be deducted
+  // from the output — nutshell's default keyset carries ppk=100 (1 sat on one
+  // input) and enforces balance strictly (400/11000 "not balanced").
+  {
+    const swapAndCheck = async (t) => {
+      const m = await mintWithSecret(t, 8, 'check-' + bytesToHex(randomBytes(6)));
+      const keys = await t('/v1/keys', 'GET');
+      const meta = keys.body.keysets.find(k => k.id === m.keysetId);
+      const ppk = Number(meta?.input_fee_ppk ?? 0);
+      const inputFee = Math.ceil(ppk / 1000);
+      const outSum = 8 - inputFee;
+      // outputs must be power-of-2 denominations summing to outSum (7 = 4+2+1);
+      // a single non-denomination output gets nutshell's opaque code-0
+      // detail:"7" error (catalogued in README findings)
+      const outs = [];
+      let rem = outSum;
+      for (let d = 1; rem > 0; d *= 2) { if (rem & d) { outs.push(d); rem -= d; } }
+      const Y = bytesToHex(hashToCurve(new TextEncoder().encode(m.proof.secret)).toBytes(true));
+      const sw = await t('/v1/swap', 'POST', {
+        inputs: [m.proof],
+        outputs: outs.map(amount => ({ amount, B_: bytesToHex(secp256k1.getPublicKey(randomBytes(32), true)), id: m.keysetId }))
+      });
+      const cs = await t('/v1/checkstate', 'POST', { Ys: [Y] });
+      const state = cs.body?.states?.[0]?.state;
+      return { swap: sw, state, ppk, inputFee, outSum };
+    };
+    const cfA = await swapAndCheck(cfT);
+    const nsA = await swapAndCheck(ns);
+    record('A7 fee-aware swap then checkstate-burned-Y',
+      { status: cfA.swap.status, body: { code: `ppk:${cfA.ppk} fee:${cfA.inputFee} out:${cfA.outSum} swap:${cfA.swap.status} state:${cfA.state}` } },
+      { status: nsA.swap.status, body: { code: `ppk:${nsA.ppk} fee:${nsA.inputFee} out:${nsA.outSum} swap:${nsA.swap.status} state:${nsA.state}` } },
+      'both: swap 200 with NUT-02 fee deducted, burned Y reads SPENT');
+  }
+
   // ── write report ──
   const ts = new Date().toISOString().replace(/[:.]/g, '-');
   writeFileSync(join(OUT, `study-${ts}.json`), JSON.stringify({ rows, shadowDiffs: shadowDiffs.length }, null, 2));
