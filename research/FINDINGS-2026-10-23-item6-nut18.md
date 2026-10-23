@@ -82,6 +82,11 @@ Adjacent source facts:
   (text-`i`, text-`c`) lost their wrapped CTSError messages — raw
   `expected Uint8Array, got type=string` surfaces instead
   (error-identity regression; verdicts unchanged).
+- Nutshell 0.20.3 full-pool run (17 runnable V4 vectors, 2026-10-23):
+  verdict parity 17/17 with 0.21.0 — the lenient-parse/silent-coercion
+  class (text-`i` → 16 garbage bytes; empty-`t`; mixed-unit accepted)
+  predates 0.21.0 and is not a new regression. `pe` on 0.20.3 decodes
+  as an ignored unknown field (predates NUT-28 capture).
 
 ## 6c. NUT-07 startup cost (cdk#2631) — sequential saga recovery, unfixed in 0.18.2
 
