@@ -95,3 +95,10 @@ Probe-bug log (per method): melt route name (cf-alias assumption) → the
 404s in run 1 were the ROUTE finding, not mint behavior; DLEQ arg order
 (dleq first, hex→bytes) → run-3 `true` on both; R5 prediction corrected
 by evidence.
+
+## Post-study action (2026-10-23)
+
+F3 resolved cashu-cf-side: branch `fix/keys-unknown-id-400-alignment`
+(e99a11e) — /v1/keys/{unknown} now 400, characterization-locked. The
+divergence closes on merge+deploy; re-run this study to confirm
+three-way 400 alignment (ns / cdk / cf).
