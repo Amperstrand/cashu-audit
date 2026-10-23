@@ -72,7 +72,11 @@ and OpenTollGate/tollgate#30).
 
 - **Coverage**: the offline surface — corpus self-validation, the
   consumer-conformance decode lanes (cdk-cli v0.18.1 cargo-cached,
-  nutshell 0.21.0 with `marshmallow<4` pinned after the first run caught
+  nutshell **0.20.0** with `marshmallow<4` — 2026-10-23 supply-chain
+  fallback: PyPI fully deleted breez-sdk-spark <0.18, making cashu 0.20.3+
+  uninstallable; 0.20.0 is the newest spark-free release (issue #54;
+  docker-image reference is the owner-optional follow-up). Pre-event pin
+  was 0.21.0 after the first run caught
   the environs breakage), and the portal's vendored-corpus suite (9
   tests). GH runners cannot reach the lab rig/fakewallet, so the
   http/checkstate legs SKIP — those stay on the in-lab runner.
