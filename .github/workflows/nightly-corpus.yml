@@ -55,10 +55,17 @@ jobs:
           mkdir -p "$HOME/.local/bin" && ln -sf "$GITHUB_WORKSPACE/cdk-target/release/cdk-cli" "$HOME/.local/bin/cdk-cli"
 
       - name: Install nutshell (secondary reference wallet)
-        # marshmallow<4: cashu 0.21.0's environs 9.5.0 is incompatible with
-        # marshmallow 4.x (`ma.__version_info__` removed) — unpinned installs
-        # broke the first nightly run; this pin matches the verified venv.
-        run: pip install "cashu==0.21.0" "marshmallow<4"
+        # 2026-10-23 supply-chain event (issue #54): cashu 0.20.3+ requires
+        # breez-sdk-spark 0.15/0.17.x, which PyPI has FULLY DELETED (not
+        # yanked — no exact-pin fallback); 0.21.0 was the latest release, so
+        # there is nothing newer to re-pin to. 0.20.0 is the newest version
+        # without the spark dep. Decode-lane risk assessed low (V3/V4 token
+        # parsing stable across 0.20.x; the 0.20.2→0.20.3 churn was SIG_ALL
+        # witness behavior, not token parse) — and the divergence gate flags
+        # any verdict drift tomorrow. marshmallow<4 pin unchanged (environs).
+        # Follow-up (owner-optional): docker-based 0.21.0 reference via the
+        # cashubtc/nutshell image, sidestepping PyPI entirely.
+        run: pip install "cashu==0.20.0" "marshmallow<4"
 
       - name: Install runner dependencies
         run: pip install -r conformance/requirements.txt
