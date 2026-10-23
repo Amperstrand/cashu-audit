@@ -132,3 +132,19 @@ code-0 paths we catalogued in F2 were fixed upstream in 0.21.0, confirming
 they were defects, not semantics. cashu-cf R4 on this run = 400 (the
 alignment branch bundle) — the unknown-keyset fork is closed on the wire;
 three-way 400 alignment achieved modulo wording.
+
+## Run 5 (2026-10-23): corpus-wide proxy faithfulness + happy melt (A8)
+
+- **Proxy-faithfulness: 4/4** — R4/R5/A1/A2 sent through
+  cashu-cf-as-proxy AND direct to nutshell: byte-identical status+body on
+  every wrapped scenario. The "cashu-cf is the proxy for nutshell" claim
+  is now corpus-backed, not single-endpoint sanity.
+- **A8 (locked)**: happy melt on both — cashu-cf PAID, fee_reserve 1,
+  change 3 (= inputs−amount−reserve, exactly); nutshell PAID, change 2.
+- **F7 (catalogue)**: nutshell quoted `fee_reserve: 0` yet charged 2 sats
+  (fakewallet policy: 1% + 2000 msat min) — actual fee EXCEEDED the
+  quoted reserve, and the change output was imprinted down to the
+  post-fee value. cashu-cf clamps the effective fee to the quoted
+  reserve (`min(actual, feeReserve)`, settle.ts). Durable datum: the
+  reserve-clamp semantic differs; ns fee_reserve is a lower bound, cf's
+  is a bound. Wallets cannot rely on fee_reserve as a hard cap on ns.

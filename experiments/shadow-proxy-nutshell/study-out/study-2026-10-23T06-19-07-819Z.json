@@ -1,0 +1,228 @@
+{
+  "rows": [
+    {
+      "name": "R4 keys/{bogus}",
+      "cf": {
+        "status": 404,
+        "code": 10000,
+        "error": "not_found",
+        "detail": "Resource not found"
+      },
+      "ns": {
+        "status": 400,
+        "code": 12001,
+        "error": "keyset not found: decafbaddecafbad",
+        "detail": "keyset not found: decafbaddecafbad"
+      },
+      "prediction": "both 400 family",
+      "note": ""
+    },
+    {
+      "name": "R5 checkstate malformed-Y",
+      "cf": {
+        "status": 200,
+        "code": "UNSPENT",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "UNSPENT",
+        "error": null
+      },
+      "prediction": "both 200 — states captured",
+      "note": ""
+    },
+    {
+      "name": "H1 mint+DLEQ verify",
+      "cf": {
+        "status": 200,
+        "code": "true",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "true",
+        "error": null
+      },
+      "prediction": "both true (DLEQ-verified blind signatures)",
+      "note": ""
+    },
+    {
+      "name": "A1 swap forged off-curve C",
+      "cf": {
+        "status": 400,
+        "code": 14005,
+        "error": "invalid_request",
+        "detail": "Proof verification failed at index 0: Invalid proof signature at index 0"
+      },
+      "ns": {
+        "status": 400,
+        "code": 10001,
+        "error": "proofs could not be verified",
+        "detail": "proofs could not be verified"
+      },
+      "prediction": "cf 400/14005; ns Token-not-verified family",
+      "note": ""
+    },
+    {
+      "name": "A2 swap duplicate proof",
+      "cf": {
+        "status": 400,
+        "code": 14008,
+        "error": "duplicate_proof",
+        "detail": "Duplicate proof secret: cf-real-aba7e567…"
+      },
+      "ns": {
+        "status": 400,
+        "code": 11007,
+        "error": "Duplicate inputs provided",
+        "detail": "Duplicate inputs provided"
+      },
+      "prediction": "cf 400/14008 (ISSUE-126); ns 11007",
+      "note": ""
+    },
+    {
+      "name": "A3 swap P2PK witness-less",
+      "cf": {
+        "status": 403,
+        "code": 30006,
+        "error": "spending_condition_not_met",
+        "detail": "No witness in proof"
+      },
+      "ns": {
+        "status": 400,
+        "code": 11000,
+        "error": "no signatures in proof.",
+        "detail": "no signatures in proof."
+      },
+      "prediction": "both reject; identities compared",
+      "note": ""
+    },
+    {
+      "name": "A4 melt SIG_ALL wrong-message",
+      "cf": {
+        "status": 403,
+        "code": "30006",
+        "error": "spending_condition_not_met",
+        "detail": "No witness provided for SIG_ALL"
+      },
+      "ns": {
+        "status": 400,
+        "code": 11000,
+        "error": "no signatures in proof.",
+        "detail": "no signatures in proof."
+      },
+      "prediction": "cf 403/30006; ns 11000-family",
+      "note": ""
+    },
+    {
+      "name": "A5 melt HTLC no-witness",
+      "cf": {
+        "status": 403,
+        "code": "30006",
+        "error": "spending_condition_not_met",
+        "detail": "No witness in proof"
+      },
+      "ns": {
+        "status": 400,
+        "code": 11000,
+        "error": "no HTLC preimage provided",
+        "detail": "no HTLC preimage provided"
+      },
+      "prediction": "cf 403/30006; ns 11000-family",
+      "note": ""
+    },
+    {
+      "name": "A6a mint replay same-outputs (1st)",
+      "cf": {
+        "status": 200,
+        "code": "first",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "first",
+        "error": null
+      },
+      "prediction": "both 200 first time",
+      "note": ""
+    },
+    {
+      "name": "A6b mint replay same-outputs (2nd)",
+      "cf": {
+        "status": 200,
+        "code": null,
+        "error": null
+      },
+      "ns": {
+        "status": 400,
+        "code": 11003,
+        "error": "outputs already signed",
+        "detail": "outputs already signed"
+      },
+      "prediction": "cf 200 identical sig; ns characterize",
+      "note": "cf-identical=true, ns-identical=false"
+    },
+    {
+      "name": "A7 fee-aware swap then checkstate-burned-Y",
+      "cf": {
+        "status": 200,
+        "code": "ppk:0 fee:0 out:8 swap:200 state:SPENT",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "ppk:100 fee:1 out:7 swap:200 state:SPENT",
+        "error": null
+      },
+      "prediction": "both: swap 200 with NUT-02 fee deducted, burned Y reads SPENT",
+      "note": ""
+    },
+    {
+      "name": "A8 happy melt (PAID + change never-red)",
+      "cf": {
+        "status": 200,
+        "code": "state:PAID feeRes:1 change:3",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "state:PAID feeRes:0 change:2",
+        "error": null
+      },
+      "prediction": "both PAID, change within bounds; cf detail if failed",
+      "note": "cf-raw=200/{\"quote\":\"01a16769-c3eb-714f-87bd-204ac5f1eff5\",\"amount\":4,\"unit\":\"sat\",\"method\" ns-raw=200/{\"quote\":\"01a16769-c660-78b8-aea7-a4fd78d8c3da\",\"amount\":4,\"unit\":\"sat\",\"method\""
+    }
+  ],
+  "proxyFaithful": [
+    {
+      "label": "R4",
+      "path": "/v1/keys/decafbaddecafbad",
+      "faithful": true,
+      "proxyStatus": 400,
+      "nsStatus": 400
+    },
+    {
+      "label": "R5",
+      "path": "/v1/checkstate",
+      "faithful": true,
+      "proxyStatus": 200,
+      "nsStatus": 200
+    },
+    {
+      "label": "A1",
+      "path": "/v1/swap",
+      "faithful": true,
+      "proxyStatus": 400,
+      "nsStatus": 400
+    },
+    {
+      "label": "A2",
+      "path": "/v1/swap",
+      "faithful": true,
+      "proxyStatus": 400,
+      "nsStatus": 400
+    }
+  ],
+  "shadowDiffs": 2
+}

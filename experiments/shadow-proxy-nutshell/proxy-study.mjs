@@ -125,10 +125,24 @@ async function meltQuote(t, sats) {
 
 // ── report ─────────────────────────────────────────────────────────────
 const rows = [];
+const proxyFaithful = [];
 function record(name, cf, nsRes, prediction, note = '') {
   const row = { name, cf: identity(cf), ns: identity(nsRes), prediction, note };
   rows.push(row);
   console.log(`${name}\n  cf: ${JSON.stringify(row.cf)}\n  ns: ${JSON.stringify(row.ns)}${note ? '\n  note: ' + note : ''}`);
+}
+
+// proxy-faithfulness: same request through cashu-cf-as-proxy must equal
+// direct nutshell (status + body) — the "cashu-cf is the proxy" lock.
+async function assertProxy(path, method, body, label) {
+  const viaNs = await ns(path, method, body);
+  const viaProxy = await proxyT(path, method, body);
+  const faithful = viaProxy.status === viaNs.status && JSON.stringify(viaProxy.body) === JSON.stringify(viaNs.body);
+  proxyFaithful.push({ label, path, faithful, proxyStatus: viaProxy.status, nsStatus: viaNs.status });
+  if (!faithful) {
+    console.log(`PROXY-DIVERGENT ${label} ${path}: proxy=${viaProxy.status} ns=${viaNs.status}`);
+  }
+  return viaNs;
 }
 
 // ── boot ───────────────────────────────────────────────────────────────
@@ -151,16 +165,16 @@ try {
   if (!String(proxyInfo.text).match(/Nutshell\/0\.[0-9]+/)) throw new Error('proxy not passing through nutshell: ' + proxyInfo.text.slice(0, 120));
   console.log('SANITY: proxy serves nutshell-authoritative /v1/info ✓ (ns direct: ' + (nsInfo.text.match(/Nutshell\/0\.[0-9]+/) ? 'ok' : 'MISMATCH') + ')\n');
 
-  // R4: bogus keyset id
+  // R4: bogus keyset id — via proxy-faithfulness wrapper
   record('R4 keys/{bogus}',
     await cfT('/v1/keys/decafbaddecafbad', 'GET'),
-    await ns('/v1/keys/decafbaddecafbad', 'GET'),
+    await assertProxy('/v1/keys/decafbaddecafbad', 'GET', undefined, 'R4'),
     'both 400 family');
 
   // R5: checkstate malformed Y — record returned states too (both 200 here)
   const badY = { Ys: ['02' + 'zz'.repeat(32)] };
   const cfR5 = await cfT('/v1/checkstate', 'POST', badY);
-  const nsR5 = await ns('/v1/checkstate', 'POST', badY);
+  const nsR5 = await assertProxy('/v1/checkstate', 'POST', badY, 'R5');
   record('R5 checkstate malformed-Y',
     { ...cfR5, body: { code: cfR5.status === 200 ? (cfR5.body?.states?.[0]?.state ?? 'no-states') : cfR5.body } },
     { ...nsR5, body: { code: nsR5.status === 200 ? (nsR5.body?.states?.[0]?.state ?? 'no-states') : nsR5.body } },
@@ -173,12 +187,12 @@ try {
     { status: 200, body: { code: String(nsMint.dleqOk) } },
     'both true (DLEQ-verified blind signatures)');
 
-  // A1: forged off-curve C swap
+  // A1: forged off-curve C swap (ns leg via the proxy — proxy-faithfulness lock)
   {
-    const mk = (m, kid) => ({ inputs: [{ amount: 8, secret: 'forged-' + bytesToHex(randomBytes(6)), C: '02' + 'ab'.repeat(32), id: kid }], outputs: [{ amount: 8, B_: bytesToHex(secp256k1.getPublicKey(randomBytes(32), true)), id: kid }] });
+    const mk = (kid) => ({ inputs: [{ amount: 8, secret: 'forged-' + bytesToHex(randomBytes(6)), C: '02' + 'ab'.repeat(32), id: kid }], outputs: [{ amount: 8, B_: bytesToHex(secp256k1.getPublicKey(randomBytes(32), true)), id: kid }] });
     record('A1 swap forged off-curve C',
-      await cfT('/v1/swap', 'POST', mk(null, cfMint.keysetId)),
-      await ns('/v1/swap', 'POST', mk(null, nsMint.keysetId)),
+      await cfT('/v1/swap', 'POST', mk(cfMint.keysetId)),
+      await assertProxy('/v1/swap', 'POST', mk(nsMint.keysetId), 'A1'),
       'cf 400/14005; ns Token-not-verified family');
   }
 
@@ -187,8 +201,8 @@ try {
     const dup = (p, kid) => ({ inputs: [p, p], outputs: [{ amount: 8, B_: bytesToHex(secp256k1.getPublicKey(randomBytes(32), true)), id: kid }, { amount: 8, B_: bytesToHex(secp256k1.getPublicKey(randomBytes(32), true)), id: kid }] });
     record('A2 swap duplicate proof',
       await cfT('/v1/swap', 'POST', dup(cfMint.proof, cfMint.keysetId)),
-      await ns('/v1/swap', 'POST', dup(nsMint.proof, nsMint.keysetId)),
-      'cf 400/14008 (ISSUE-126); ns UNKNOWN — characterize');
+      await assertProxy('/v1/swap', 'POST', dup(nsMint.proof, nsMint.keysetId), 'A2'),
+      'cf 400/14008 (ISSUE-126); ns 11007');
   }
 
   // A3: witness-less P2PK swap (swap-path conditions)
@@ -299,14 +313,44 @@ try {
       'both: swap 200 with NUT-02 fee deducted, burned Y reads SPENT');
   }
 
+  // A8: HAPPY melt — real proofs, melt quote 4, exact-balance change blanks
+  // sized to fee_reserve; locks PAID + change + never-red comparatively.
+  {
+    const happyMelt = async (t) => {
+      const m = await mintWithSecret(t, 8, 'melt-happy-' + bytesToHex(randomBytes(6)));
+      const q = await meltQuote(t, 4);
+      const feeReserve = Number(q.body?.fee_reserve ?? 0);
+      const refund = 8 - 4 - feeReserve;
+      const blanks = [];
+      let rem = refund;
+      for (let d = 1; rem > 0; d *= 2) { if (rem & d) { blanks.push(d); rem -= d; } }
+      const melt = await t('/v1/melt/bolt11', 'POST', {
+        quote: q.body.quote,
+        inputs: [m.proof],
+        outputs: blanks.map(amount => ({ amount, B_: bytesToHex(secp256k1.getPublicKey(randomBytes(32), true)), id: m.keysetId }))
+      });
+      const changeSum = (melt.body?.change ?? []).reduce((a, c) => a + Number(c.amount), 0);
+      return { melt, feeReserve, refund, changeSum };
+    };
+    const cfM = await happyMelt(cfT);
+    const nsM = await happyMelt(ns);
+    const ok = (x) => x.melt.status === 200 && x.melt.body?.state === 'PAID' && x.changeSum >= 0 && x.changeSum <= 8 - 4;
+    record('A8 happy melt (PAID + change never-red)',
+      { status: ok(cfM) ? 200 : 500, body: { code: `state:${cfM.melt.body?.state} feeRes:${cfM.feeReserve} change:${cfM.changeSum}` } },
+      { status: ok(nsM) ? 200 : 500, body: { code: `state:${nsM.melt.body?.state} feeRes:${nsM.feeReserve} change:${nsM.changeSum}` } },
+      'both PAID, change within bounds; cf detail if failed',
+      `cf-raw=${cfM.melt.status}/${String(cfM.melt.text).slice(0, 80)} ns-raw=${nsM.melt.status}/${String(nsM.melt.text).slice(0, 80)}`);
+  }
+
   // ── write report ──
   const ts = new Date().toISOString().replace(/[:.]/g, '-');
-  writeFileSync(join(OUT, `study-${ts}.json`), JSON.stringify({ rows, shadowDiffs: shadowDiffs.length }, null, 2));
+  writeFileSync(join(OUT, `study-${ts}.json`), JSON.stringify({ rows, proxyFaithful, shadowDiffs: shadowDiffs.length }, null, 2));
   writeFileSync(join(OUT, `study-${ts}.md`), '# shadow-proxy-nutshell study run\n\n' +
     '| # | cashu-cf | nutshell 0.20.3 |\n|---|---|---|\n' +
     rows.map(r => `| ${r.name} | ${r.cf.status} ${JSON.stringify(r.cf.code ?? r.cf.detail ?? r.cf.error)} | ${r.ns.status} ${JSON.stringify(r.ns.code ?? r.ns.detail ?? r.ns.error)} |`).join('\n') +
-    `\n\nSHADOW_DIFF telemetry events captured: ${shadowDiffs.length}\n`);
-  console.log(`\nreport: ${OUT}/study-${ts}.{json,md}; SHADOW_DIFF events: ${shadowDiffs.length}`);
+    `\n\nProxy-faithfulness (cashu-cf-as-proxy ≡ direct ns): ${proxyFaithful.filter(p => p.faithful).length}/${proxyFaithful.length} faithful\n` +
+    `SHADOW_DIFF telemetry events captured: ${shadowDiffs.length}\n`);
+  console.log(`\nreport: ${OUT}/study-${ts}.{json,md}; proxy-faithful: ${proxyFaithful.filter(p => p.faithful).length}/${proxyFaithful.length}; SHADOW_DIFF events: ${shadowDiffs.length}`);
 } finally {
   await local.dispose(); await proxy.dispose();
   rmSync(persistLocal, { recursive: true, force: true });
