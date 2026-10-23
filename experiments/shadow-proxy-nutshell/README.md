@@ -117,3 +117,18 @@ three-way 400 alignment (ns / cdk / cf).
   open-question class ("reject and log? what error?"), now measured on
   the plain-swap path too. cashu-cf splits refund amounts across
   available blank outputs (imprintSplitAmounts) instead.
+
+## Version matrix: nutshell 0.20.3 vs 0.21.0 (2026-10-23, same corpus)
+
+| # | ns 0.20.3 | ns 0.21.0 | drift |
+|---|---|---|---|
+| A3 swap P2PK witness-less | 400/**code 0** `Witness is missing for p2pk signature` | 400/**11000** `no signatures in proof.` | opaque code-0 → proper NUT code (#1008 error-wave) |
+| A5 melt HTLC no-witness | 400/**code 0** `Witness is missing for htlc preimage` | 400/**11000** `no HTLC preimage provided` | same fix |
+| A1, A2, A4, A6b, A7, R4, R5, H1 | — | — | **unchanged** (identities stable across the release) |
+
+Corollary: the retry fork (A6b) and all shared-rejection identity forks
+persist on 0.21.0 — the F1 registry row is version-stable. The 0.20.3
+code-0 paths we catalogued in F2 were fixed upstream in 0.21.0, confirming
+they were defects, not semantics. cashu-cf R4 on this run = 400 (the
+alignment branch bundle) — the unknown-keyset fork is closed on the wire;
+three-way 400 alignment achieved modulo wording.
