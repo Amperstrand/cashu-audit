@@ -13,6 +13,15 @@ posts, or publishes upstream on its own.
 - `experiments/must-gap-vectors/` — the 17-vector enforcement probe,
   wallet-emission capture scripts, `verify.sh` (clean-VM one-command
   repro), nightly cron on ai-legion (03:17, drift-diffed).
+- **CI lanes** (ops details in `conformance/README.md`):
+  `nightly-corpus` — nightly 03:17 UTC, offline decode/portal corpus
+  lanes, divergence-gated, docker-based nutshell reference
+  (PyPI-immune); `conformance-v2` — Mondays 06:00 UTC, deterministic
+  live-verdict lane on 4 local docker arms (nutshell 0.20.3/0.21.0, cdk
+  0.18.1/0.18.2) + invoice-oracle, expected-fail seeds,
+  v2_diff divergence gate. `experiments/miniflare-spend-matrix/` —
+  the adversarial spend battery (canonical driver lives in cashu-cf
+  `scripts/validation/spend-matrix.mjs`, a battery step there).
 - `research/DIVERGENCE-REGISTRY.md` — the map of our findings ↔
   upstream venues ↔ what upstream already knows. **Read before any
   upstream-contribution work; update after any venue research.**
