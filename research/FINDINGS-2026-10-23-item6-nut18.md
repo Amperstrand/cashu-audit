@@ -1,5 +1,7 @@
 # FINDINGS 2026-10-23 — agenda #43 item 6: multi-mint V3, DLEQ handling, NUT-18 crossover
 
+Tracking: DLEQ bypass = audit #55 (fund-safety, owner-gated filing).
+
 Night sessions 2026-10-22/23; companion to
 FINDINGS-2026-10-22-keyset-ids-nut02-v4pool.md (items 1–4). Evidence
 classes: `live` (local docker nutshell 0.21.0 arms, deterministic
