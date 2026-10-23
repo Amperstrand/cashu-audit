@@ -1,0 +1,168 @@
+{
+  "rows": [
+    {
+      "name": "R4 keys/{bogus}",
+      "cf": {
+        "status": 404,
+        "code": 10000,
+        "error": "not_found",
+        "detail": "Resource not found"
+      },
+      "ns": {
+        "status": 400,
+        "code": 12001,
+        "error": "keyset not found: decafbaddecafbad",
+        "detail": "keyset not found: decafbaddecafbad"
+      },
+      "prediction": "both 400 family",
+      "note": ""
+    },
+    {
+      "name": "R5 checkstate malformed-Y",
+      "cf": {
+        "status": 200,
+        "code": "UNSPENT",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "UNSPENT",
+        "error": null
+      },
+      "prediction": "both 200 — states captured",
+      "note": ""
+    },
+    {
+      "name": "H1 mint+DLEQ verify",
+      "cf": {
+        "status": 200,
+        "code": "true",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "true",
+        "error": null
+      },
+      "prediction": "both true (DLEQ-verified blind signatures)",
+      "note": ""
+    },
+    {
+      "name": "A1 swap forged off-curve C",
+      "cf": {
+        "status": 400,
+        "code": 14005,
+        "error": "invalid_request",
+        "detail": "Proof verification failed at index 0: Invalid proof signature at index 0"
+      },
+      "ns": {
+        "status": 400,
+        "code": 10001,
+        "error": "proofs could not be verified",
+        "detail": "proofs could not be verified"
+      },
+      "prediction": "cf 400/14005; ns Token-not-verified family",
+      "note": ""
+    },
+    {
+      "name": "A2 swap duplicate proof",
+      "cf": {
+        "status": 400,
+        "code": 14008,
+        "error": "duplicate_proof",
+        "detail": "Duplicate proof secret: cf-real-62c51860…"
+      },
+      "ns": {
+        "status": 400,
+        "code": 11007,
+        "error": "Duplicate inputs provided",
+        "detail": "Duplicate inputs provided"
+      },
+      "prediction": "cf 400/14008 (ISSUE-126); ns UNKNOWN — characterize",
+      "note": ""
+    },
+    {
+      "name": "A3 swap P2PK witness-less",
+      "cf": {
+        "status": 403,
+        "code": 30006,
+        "error": "spending_condition_not_met",
+        "detail": "No witness in proof"
+      },
+      "ns": {
+        "status": 400,
+        "code": 0,
+        "error": "Witness is missing for p2pk signature",
+        "detail": "Witness is missing for p2pk signature"
+      },
+      "prediction": "both reject; identities compared",
+      "note": ""
+    },
+    {
+      "name": "A4 melt SIG_ALL wrong-message",
+      "cf": {
+        "status": 403,
+        "code": "30006",
+        "error": "spending_condition_not_met",
+        "detail": "No witness provided for SIG_ALL"
+      },
+      "ns": {
+        "status": 400,
+        "code": 11000,
+        "error": "no witness in proof.",
+        "detail": "no witness in proof."
+      },
+      "prediction": "cf 403/30006; ns 11000-family",
+      "note": ""
+    },
+    {
+      "name": "A5 melt HTLC no-witness",
+      "cf": {
+        "status": 403,
+        "code": "30006",
+        "error": "spending_condition_not_met",
+        "detail": "No witness in proof"
+      },
+      "ns": {
+        "status": 400,
+        "code": 0,
+        "error": "Witness is missing for htlc preimage",
+        "detail": "Witness is missing for htlc preimage"
+      },
+      "prediction": "cf 403/30006; ns 11000-family",
+      "note": ""
+    },
+    {
+      "name": "A6a mint replay same-outputs (1st)",
+      "cf": {
+        "status": 200,
+        "code": "first",
+        "error": null
+      },
+      "ns": {
+        "status": 200,
+        "code": "first",
+        "error": null
+      },
+      "prediction": "both 200 first time",
+      "note": ""
+    },
+    {
+      "name": "A6b mint replay same-outputs (2nd)",
+      "cf": {
+        "status": 200,
+        "code": null,
+        "error": null
+      },
+      "ns": {
+        "status": 400,
+        "code": 11003,
+        "error": "outputs already signed",
+        "detail": "outputs already signed"
+      },
+      "prediction": "cf 200 identical sig; ns characterize",
+      "note": "cf-identical=true, ns-identical=false"
+    }
+  ],
+  "shadowDiffs": 1
+}
