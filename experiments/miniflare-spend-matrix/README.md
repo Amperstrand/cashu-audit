@@ -120,3 +120,10 @@ variants); the stale outcome manifested 2/2 earlier in the session under
 different machine load, with log-ordering proof (listing answered before
 the boot rotation fired). Timing-dependent — use under load or with
 artificial first-request concurrency to widen the window.
+
+## Canonical home (2026-10-23)
+
+The driver now lives in cashu-cf as `scripts/validation/spend-matrix.mjs`
+(native battery step `test:spend-matrix`, in `battery:full` after
+`test:unit`). This copy is the analysis record — divergence changes land
+there first.
