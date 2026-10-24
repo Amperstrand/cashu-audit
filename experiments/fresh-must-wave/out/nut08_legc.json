@@ -1,0 +1,49 @@
+{
+ "testnut_c": {
+  "slots": 3,
+  "status": 200,
+  "fee_reserve": 1,
+  "ppk": 10,
+  "change": [
+   32,
+   16,
+   2
+  ],
+  "total": 50
+ },
+ "ns-0.21.0_2slots": {
+  "slots": 2,
+  "status": 200,
+  "fee_reserve": 2,
+  "ppk": 100,
+  "change": [
+   32,
+   16
+  ],
+  "total": 48
+ },
+ "ns-0.21.0_3slots": {
+  "slots": 3,
+  "status": 200,
+  "fee_reserve": 2,
+  "ppk": 100,
+  "change": [
+   32,
+   16,
+   2
+  ],
+  "total": 50
+ },
+ "ns-0.21.0_4slots": {
+  "slots": 4,
+  "status": 200,
+  "fee_reserve": 2,
+  "ppk": 100,
+  "change": [
+   32,
+   16,
+   2
+  ],
+  "total": 50
+ }
+}

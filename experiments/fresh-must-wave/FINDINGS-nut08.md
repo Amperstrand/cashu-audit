@@ -44,6 +44,36 @@ preimage; control checkstate on a melted input = SPENT on all arms.
    inputs/invoice-size is unexplained — input-fee arithmetic per family
    is the follow-up (same inputs both legs; only slot count differs).
 
+## Leg C (2026-10-24 ~07:40): slot-count truncation CONFIRMED
+
+`out/nut08_legc.json` — same inputs {64,32,16,16}=128, invoice 60,
+blank outputs only, varying slot count:
+
+| Arm | ppk (keyset) | 2 slots | 3 slots | 4 slots |
+|---|---|---|---|---|
+| ns-0.21.0 | 100 | [32,16] = **48** | [32,16,2] = **50** | [32,16,2] = 50 |
+| testnut (cf) | 10 | — | [32,16,2] = **50** | — |
+
+- Change total is capped by what fits the offered slots: true change
+  (50 = 32+16+2, three denominations) cannot be expressed in 2 power-of-2
+  slots, and the mint **keeps the un-fittable remainder** (2 sat) —
+  silently. Offering too few change outputs shortchanges the wallet by
+  construction. Wallet-compat class: any wallet hardcoding N change
+  outputs loses the tail remainder on every melt with an unlucky
+  decomposition.
+- Decomposition is stable once slots suffice (3 slots == 4 slots).
+
+## Open arithmetic (updated, honest)
+
+128 − 60 − fee_reserve(1–2) = 65–66 expected change; observed 50.
+~16 sat unaccounted on BOTH families with identical inputs. Candidate
+explanations not yet separated: (a) input-fee ledger beyond ppk
+(ns earlier error said "Provided: 112" for 128 sent — one 16-sat input
+uncounted?), (b) melt output fees, (c) FakeWallet payment fee on the
+target side. The slot-truncation result stands regardless; the ledger
+question is the queued follow-up (fee arithmetic probe, varying input
+COUNT and denominations at fixed invoice).
+
 ## Probe bugs found (and fixed) per the mismatch discipline
 
 - First run melted a 1000-sat oracle invoice (mints derive the amount

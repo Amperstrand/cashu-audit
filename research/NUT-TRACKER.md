@@ -215,11 +215,13 @@ change amounts ignored (outputs=[1,1,1] melt PAID everywhere; #426
 amount-0 unenforced mint-side), mint re-decomposes change over the
 offered output slots ([32,16] for 2 slots, [32,16,2] for 3), response
 field `change` spec-conformant everywhere. Explains the Amethyst #3847
-class directly.
-Gap: change-total arithmetic vs quoted fee_reserve (48/50 vs 66
-expected) unexplained — actual-fee-vs-reserve follow-up.
-Next: fee arithmetic probe (same melt, varying input counts) to pin the
-input-fee ledger per family.
+class directly. **Leg C: slot-count truncation CONFIRMED** — 2 blank
+slots return [32,16]=48 while ≥3 return [32,16,2]=50 on both families:
+the mint silently KEEPS the remainder that doesn't fit the offered
+power-of-2 slots. Wallet-compat class of its own.
+Gap: change-total ledger (128−60−reserve=65-66 vs observed 50; ~16 sat
+unaccounted both families; "Provided: 112" hint) — fee arithmetic probe
+queued (vary input count/denominations at fixed invoice).
 
 ### NUT-09 — partial (suite-only)
 Hold: 1 restore scenario. Gap: restore semantics listed "not started"
