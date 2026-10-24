@@ -33,11 +33,11 @@ Axes per NUT:
 | 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
 | 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 4 | 6 | partial |
-| 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 5 | 2 | partial |
-| 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 3 | 6 | partial |
+| 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 6 | 2 | partial |
+| 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 5 | 6 | partial |
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
 | 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 14 | 0 | deep |
-| 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 24 | 20 | deep |
+| 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 25 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
 | 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 0 | 3 | none |
 | 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 12 | 10 | deep |
@@ -208,9 +208,18 @@ arm unmeasured. Next: pending-state probe (in-flight melt → checkstate
 → verdicts).
 
 ### NUT-08 — partial
-Hold: fee-return scenarios, blank-change-outputs (index-pairing)
-issue. Gap: amount-0-on-blank MUST (#426, 2026-08-23) — fresh;
-no arm measured. Next: non-zero-amount blank-output acceptance probe.
+Hold: fee-return scenarios, blank-change-outputs issue (index-pairing);
+fresh-must melt probes 2026-10-24 (experiments/fresh-must-wave/
+FINDINGS-nut08.md): **perfect three-family convergence** — declared
+change amounts ignored (outputs=[1,1,1] melt PAID everywhere; #426
+amount-0 unenforced mint-side), mint re-decomposes change over the
+offered output slots ([32,16] for 2 slots, [32,16,2] for 3), response
+field `change` spec-conformant everywhere. Explains the Amethyst #3847
+class directly.
+Gap: change-total arithmetic vs quoted fee_reserve (48/50 vs 66
+expected) unexplained — actual-fee-vs-reserve follow-up.
+Next: fee arithmetic probe (same melt, varying input counts) to pin the
+input-fee ledger per family.
 
 ### NUT-09 — partial (suite-only)
 Hold: 1 restore scenario. Gap: restore semantics listed "not started"

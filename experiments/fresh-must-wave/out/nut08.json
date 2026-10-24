@@ -1,0 +1,77 @@
+{
+ "testnut(cashu-cf)": {
+  "A_blank": {
+   "fee_reserve": 1,
+   "melt_status": 200,
+   "melt_body": "{\"quote\":\"01a16ccc-e435-722a-8957-a2a33cf3780d\",\"amount\":60,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\":\"lnbc600n1p4dcht89qypqqqdqqxqrrsssp57amnv92r7cz7ah03mjnn7vemxw8hax9808ztfanze5vqc2qehuaqpp5snglfnpqwjwmceznkhr3ya2pacdc43keyp3fd4ut0zj8cxl5xzwqasjymnf8flykqdm7d8yprht6gegum7m8l5nr52x6844tj696hkrsqempq5jvdu3eva5ktlrpjkkwtt3t45pyumaq02566c7vq7x2w6cpfjqcuq\",\"fee_reserve\":1,\"state\":\"PAID\",\"expiry\":1792830327,\"paid\":true,\"preimage\":\"dummy-preimage-f4f2a1ed\",\"payment_preimage\":\"dummy-preimage-f4f2a1ed\",\"change\":[{\"amount\":32,\"id\":\"008e808b89acc141\",\"C_\":\"030380a9dba27e173a10129ce4e560d4ef2b885613e6a7c1c0ffab2bd6ab673a05\",\"dleq\":{\"e\":\"b22d5e16a602fb4bd3e6b0d195cb2a127ee8a1c12b15ac2c96db1116365f9e73\",\"s\":\"ecebf0c4b57e963ec76dca759422a16aecff3d1d917e28325592e8af4c914981\"}},{\"amount\":16,\"id\":\"008e808b89acc141\",\"C_\":\"02066189ac1d37f4368a293679eb445da8ba62fa2f6d53b641d946192f1be16f23\",\"dleq\":{\"e\":\"8f18b7906a953d1993d3d59b7b89684633c27304ac440660f58d61715cd288e3\",\"s\":\"2f99d62209bc9402a275b45e6d403df082ccbfb695ea71dcb48075021fe955cb\"}}]}",
+   "change_sig_count": 0,
+   "change_sig_amounts_echoed": [],
+   "state": [
+    "PAID",
+    true
+   ]
+  },
+  "control_checkstate_spent": "SPENT",
+  "B_declared": {
+   "fee_reserve": 1,
+   "melt_status": 200,
+   "melt_body": "{\"quote\":\"01a16ccc-e93a-778a-8aee-3c0734e47c27\",\"amount\":60,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\":\"lnbc600n1p4dcht89qypqqqdqqxqrrsssp524vp7jyz30wml72azw6t63clqtlygw93s5kaxrn64e7e6w3r6ecspp5f0mdtxknn54jpjqnuvndggt73myvaq43yx5xxnjslflck39jp36q3r733xhhd7ukn4u43lx83lgkw4sdg67xvx3vtkuhs8dmrwes40qz9fmen0a9kgwrn9mazt6nwetsp64zc9w79zus72ff7h4u7sla4dqq7qt3ru\",\"fee_reserve\":1,\"state\":\"PAID\",\"expiry\":1792830327,\"paid\":true,\"preimage\":\"dummy-preimage-4c6fdaf7\",\"payment_preimage\":\"dummy-preimage-4c6fdaf7\",\"change\":[{\"amount\":32,\"id\":\"008e808b89acc141\",\"C_\":\"03706bf9b1495f0d8a75712f657d3128c88ce737797165f7d82cf1a2d7b786211d\",\"dleq\":{\"e\":\"561c9a770ee76542adb4cceb5eceb0d572d9e7550bffd968ba5671e4454b9d35\",\"s\":\"3f44543202f323d2831c0d8cfa07a52ca65e5800211bc7479dd835d1d565a52e\"}},{\"amount\":16,\"id\":\"008e808b89acc141\",\"C_\":\"03e377b1abc4e9e8a1a3ee92ae6e1c119f2bf32481323a6993c3c5d418731ae492\",\"dleq\":{\"e\":\"5b512b63ba42fae01328da672b6f8f86b736612c5d0815a092f3e1a974f9d676\",\"s\":\"da5947554f6bc04669e8bff3f0384fbd67fc27ee0d60ef28f8c9aeb39abf651a\"}},{\"amount\":2,\"id\":\"008e808b89acc141\",\"C_\":\"035dcdc4b27e4af0649ac7f37e6895a8f2e1bb64edab196b34f976b306b7572725\",\"dleq\":{\"e\":\"3af1c4e99f1b50513826ddebd4dbaa30a90bf6e1f12634c8aa4f39a5e2237306\",\"s\":\"3612719874bd38cc2600bd46d0ff2ce3a01c5bc84571e90ea2eed768e177ef19\"}}]}",
+   "change_sig_count": 0,
+   "change_sig_amounts_echoed": [],
+   "state": [
+    "PAID",
+    true
+   ]
+  }
+ },
+ "ns-0.21.0": {
+  "A_blank": {
+   "fee_reserve": 2,
+   "melt_status": 200,
+   "melt_body": "{\"quote\":\"01a16ccd-1626-7852-b695-b9a5598821a6\",\"amount\":60,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\":\"lnbc600n1p4dcht89qypqqqdqqxqrrsssp57amnv92r7cz7ah03mjnn7vemxw8hax9808ztfanze5vqc2qehuaqpp5snglfnpqwjwmceznkhr3ya2pacdc43keyp3fd4ut0zj8cxl5xzwqasjymnf8flykqdm7d8yprht6gegum7m8l5nr52x6844tj696hkrsqempq5jvdu3eva5ktlrpjkkwtt3t45pyumaq02566c7vq7x2w6cpfjqcuq\",\"fee_reserve\":2,\"state\":\"PAID\",\"expiry\":1792830327,\"payment_preimage\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"change\":[{\"id\":\"0128ed97dddca557247715fcd24992fcf973f1f227a6f2e18d8f14fcdba5b0b461\",\"amount\":32,\"C_\":\"02206ca7707c5fe0a1514692993172c7f6894a62d52057d70f93b1c967b26f7bdf\",\"dleq\":{\"e\":\"e1c4edba9d22fc1d0735a080777471a9adccb0983b3b6a8b2d3c9b04fae26edb\",\"s\":\"2b1af78984379ba90efb3bb502b5d104865244f5c5a1afb08054800ab81b3f66\"}},{\"id\":\"0128ed97dddca557247715fcd24992fcf973f1f227a6f2e18d8f14fcdba5b0b461\",\"amount\":16,\"C_\":\"02e2144b5409f0112458705d88cdf638f81507ea20396ee711837de3aea0f2a4d0\",\"dleq\":{\"e\":\"eee62e59315f3d6f5eb75fa55820d689346228d516418cfbeb754e23fd0a01d9\",\"s\":\"5c5e756954ea02e9b88387ebf2c285715ff618eb40f029aae63d69294f4e8c0e\"}}]}",
+   "change_sig_count": 0,
+   "change_sig_amounts_echoed": [],
+   "state": [
+    "PAID",
+    null
+   ]
+  },
+  "control_checkstate_spent": "SPENT",
+  "B_declared": {
+   "fee_reserve": 2,
+   "melt_status": 200,
+   "melt_body": "{\"quote\":\"01a16ccd-23d4-78dc-82a0-89e4686b2068\",\"amount\":60,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\":\"lnbc600n1p4dcht89qypqqqdqqxqrrsssp524vp7jyz30wml72azw6t63clqtlygw93s5kaxrn64e7e6w3r6ecspp5f0mdtxknn54jpjqnuvndggt73myvaq43yx5xxnjslflck39jp36q3r733xhhd7ukn4u43lx83lgkw4sdg67xvx3vtkuhs8dmrwes40qz9fmen0a9kgwrn9mazt6nwetsp64zc9w79zus72ff7h4u7sla4dqq7qt3ru\",\"fee_reserve\":2,\"state\":\"PAID\",\"expiry\":1792830327,\"payment_preimage\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"change\":[{\"id\":\"0128ed97dddca557247715fcd24992fcf973f1f227a6f2e18d8f14fcdba5b0b461\",\"amount\":32,\"C_\":\"030272c82db00542dc0011038366a4bf33f4374a23d11b8b956b84a257397cfaac\",\"dleq\":{\"e\":\"5fb04d7766d35217ecd4379ed37728443e78c10aa57b70c1b43a1296c249ccab\",\"s\":\"b5f75caeaaf24b4da3320d7bbdf39002d976913e0bafeda3ca482ffabffcb393\"}},{\"id\":\"0128ed97dddca557247715fcd24992fcf973f1f227a6f2e18d8f14fcdba5b0b461\",\"amount\":16,\"C_\":\"039a3b7c2421694809a28237bf1c8a26759efcfd8a96d777a968bc3f20fe82f05f\",\"dleq\":{\"e\":\"93ae126071ee1b532d2ed98ed32149eb5a5c48e30a5bf42cd9361e2167da1862\",\"s\":\"c2376d42ecc040a26ae75092c83702d5a4bc0b06a79a04f0e5eba7e1059e56d8\"}},{\"id\":\"0128ed97dddca557247715fcd24992fcf973f1f227a6f2e18d8f14fcdba5b0b461\",\"amount\":2,\"C_\":\"035dc6c386de67a32d7bcd16a99632175818c753619a494c679e16e80e27ccac7d\",\"dleq\":{\"e\":\"87d43cc020556d517661e55beb09d9234726aba129c390ec286c0246bd9d2a5f\",\"s\":\"51fe190c7b3d0a578a47171df21fa3fe3fdda8f2af8aa4ae9b3ea67f92a52f57\"}}]}",
+   "change_sig_count": 0,
+   "change_sig_amounts_echoed": [],
+   "state": [
+    "PAID",
+    null
+   ]
+  }
+ },
+ "cdk-0.18.2": {
+  "A_blank": {
+   "fee_reserve": 2,
+   "melt_status": 200,
+   "melt_body": "{\"quote\":\"01a16ccd-5ded-75c7-b971-a790314424cc\",\"amount\":60,\"fee_reserve\":2,\"state\":\"PAID\",\"expiry\":1792826820,\"payment_preimage\":\"\",\"change\":[{\"amount\":32,\"id\":\"016113b546a4ea92557fd74e9d8d348d4e3365060a7de507e1b18700dcabfdbf67\",\"C_\":\"03b34165dd621b662c50de6bc479d91ac0ecec6ecb1dcca3ecf2c57b1645a566d9\",\"dleq\":{\"e\":\"87747c067277d9ed7e7cc3b504737f718e83f9c5facd6901f0c8c7f447127f13\",\"s\":\"908f7c418b32dafa005438dff5395fea1bfa127a1a281b4f690baa5514d0b1ae\"}},{\"amount\":16,\"id\":\"016113b546a4ea92557fd74e9d8d348d4e3365060a7de507e1b18700dcabfdbf67\",\"C_\":\"02b6429fc45b5b17b13caec2ed15d9a82d3db66694a972ad0b9e39e453510531b2\",\"dleq\":{\"e\":\"4e972e2fad439be0be4d3317d41f916b87133f07ed73fe4494ae424940ca1dad\",\"s\":\"e4350bf732305f8b207c91212819ae5f15b6de7a3db356eb397eaf132c61fe72\"}}],\"request\":\"lnbc600n1p4dcht89qypqqqdqqxqrrsssp57amnv92r7cz7ah03mjnn7vemxw8hax9808ztfanze5vqc2qehuaqpp5snglfnpqwjwmceznkhr3ya2pacdc43keyp3fd4ut0zj8cxl5xzwqasjymnf8flykqdm7d8yprht6gegum7m8l5nr52x6844tj696hkrsqempq5jvdu3eva5ktlrpjkkwtt3t45pyumaq02566c7vq7x2w6cpfjqcuq\",\"unit\":\"sat\",\"method\":\"bolt11\"}",
+   "change_sig_count": 0,
+   "change_sig_amounts_echoed": [],
+   "state": [
+    "PAID",
+    null
+   ]
+  },
+  "control_checkstate_spent": "SPENT",
+  "B_declared": {
+   "fee_reserve": 2,
+   "melt_status": 200,
+   "melt_body": "{\"quote\":\"01a16ccd-75c4-73cf-8a20-453d9a593b43\",\"amount\":60,\"fee_reserve\":2,\"state\":\"PAID\",\"expiry\":1792826826,\"payment_preimage\":\"\",\"change\":[{\"amount\":32,\"id\":\"016113b546a4ea92557fd74e9d8d348d4e3365060a7de507e1b18700dcabfdbf67\",\"C_\":\"025b86757cf5ed2875feb058d51d1d266b5ae020d8f28c0250e433476b7593a9f7\",\"dleq\":{\"e\":\"9b408ca485afb44dfd1b13e9189ba654da4ed37540e2e92d25511038809ef5a0\",\"s\":\"c2f6cb49ef312ac94b974c5187508b74b718f80eb02b0df52d6c6e807a78123f\"}},{\"amount\":16,\"id\":\"016113b546a4ea92557fd74e9d8d348d4e3365060a7de507e1b18700dcabfdbf67\",\"C_\":\"03b0d43259f6c9a5d5ee4b9acf674bdbbf8d0e05ea2cafcbc0b037735b46070b61\",\"dleq\":{\"e\":\"0d3b157e6ec52d6864bbd108f90e6ba5d5a7e70d1b34916b0bb41bb1005b8147\",\"s\":\"b4ebca2c568d0c8502aa97e17aff01575d3f37ea2217716212a0daa705e56a1e\"}},{\"amount\":2,\"id\":\"016113b546a4ea92557fd74e9d8d348d4e3365060a7de507e1b18700dcabfdbf67\",\"C_\":\"02d724159e086658ae6dc5c28b86a7521b6efb99ab8200b4a668b7252066e7dfee\",\"dleq\":{\"e\":\"87b72ffe1c5b2d73f53cb38a33a8dc4d79c2b1187d320ee9dd39da30c4440334\",\"s\":\"5887127e31025bf78c61fa2e8f7029a1e511e983dd60414faa59b197fae2ea0a\"}}],\"request\":\"lnbc600n1p4dcht89qypqqqdqqxqrrsssp524vp7jyz30wml72azw6t63clqtlygw93s5kaxrn64e7e6w3r6ecspp5f0mdtxknn54jpjqnuvndggt73myvaq43yx5xxnjslflck39jp36q3r733xhhd7ukn4u43lx83lgkw4sdg67xvx3vtkuhs8dmrwes40qz9fmen0a9kgwrn9mazt6nwetsp64zc9w79zus72ff7h4u7sla4dqq7qt3ru\",\"unit\":\"sat\",\"method\":\"bolt11\"}",
+   "change_sig_count": 0,
+   "change_sig_amounts_echoed": [],
+   "state": [
+    "PAID",
+    null
+   ]
+  }
+ }
+}
