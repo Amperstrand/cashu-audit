@@ -1,0 +1,856 @@
+{
+ "generated": "2026-10-24 03:47 UTC (re-rendered)",
+ "arms": {
+  "testnut(cashu-cf)": {
+   "kind": "url",
+   "url": "https://testnut.cashu.exchange",
+   "fetched": {
+    "name": "Testnut mint",
+    "pubkey": "03f3935ee1890b997728d71054ee2f6e321e20d7f48de9525fa8c981461ecf007f",
+    "version": "Nutshell-CF/0.0.1",
+    "description": "Mint for testing Cashu wallets",
+    "description_long": "This mint usually runs the latest main branch of the nutshell repository. It uses a FakeWallet, all your Lightning invoices will always be marked paid so that you can test minting and melting ecash via Lightning.",
+    "contact": [
+     {
+      "method": "email",
+      "info": "contact@me.com"
+     },
+     {
+      "method": "twitter",
+      "info": "@me"
+     },
+     {
+      "method": "nostr",
+      "info": "npub1337"
+     },
+     {
+      "method": "telegram",
+      "info": "uncle_rick"
+     },
+     {
+      "method": "vk",
+      "info": "pavol"
+     }
+    ],
+    "motd": "This is a message of the day field. You should display this field to your users if the content changes!",
+    "icon_url": "https://image.nostr.build/46ee47763c345d2cfa3317f042d332003f498ee281fb42808d47a7d3b9585911.png",
+    "max_array_length": 50,
+    "time": 1792813582,
+    "nuts": {
+     "4": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "options": {
+         "description": true
+        },
+        "min_amount": 1,
+        "max_amount": 100000000
+       },
+       {
+        "method": "bolt11",
+        "unit": "usd",
+        "options": {
+         "description": true
+        },
+        "min_amount": 1,
+        "max_amount": 100000000
+       }
+      ],
+      "disabled": false
+     },
+     "5": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "min_amount": 1,
+        "max_amount": 2100
+       },
+       {
+        "method": "bolt11",
+        "unit": "usd",
+        "min_amount": 1,
+        "max_amount": 2100
+       }
+      ],
+      "disabled": false
+     },
+     "7": {
+      "supported": true
+     },
+     "8": {
+      "supported": true
+     },
+     "9": {
+      "supported": true
+     },
+     "10": {
+      "supported": true
+     },
+     "11": {
+      "supported": true
+     },
+     "12": {
+      "supported": true
+     },
+     "14": {
+      "supported": true
+     },
+     "19": {
+      "ttl": 300,
+      "cached_endpoints": [
+       {
+        "method": "POST",
+        "path": "/v1/mint/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/swap"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt"
+       }
+      ]
+     },
+     "20": {
+      "supported": true
+     },
+     "29": {
+      "max_batch_size": 50,
+      "methods": [
+       "bolt11"
+      ]
+     }
+    }
+   }
+  },
+  "rugs(cashu-cf)": {
+   "kind": "url",
+   "url": "https://rugs.cashu.exchange",
+   "fetched": {
+    "name": "Rugs Monthly",
+    "pubkey": "02f1b0746c0c5d9075cbf6df17559f816fc395f7a0e89f2c01d2dc6cc2ce84c2d2",
+    "version": "Nutshell-CF/0.0.1",
+    "description": "DEVELOPMENT MINT - All sats will be rugged and donated to charity",
+    "description_long": "This is a development/testing mint. DO NOT deposit real funds! Maximum 210 sats per operation. All funds will be periodically swept and donated to charity. Use testnut.cashu.exchange for unlimited fake sats testing.",
+    "contact": [
+     {
+      "method": "email",
+      "info": "contact@me.com"
+     },
+     {
+      "method": "twitter",
+      "info": "@me"
+     },
+     {
+      "method": "nostr",
+      "info": "npub1337"
+     },
+     {
+      "method": "telegram",
+      "info": "uncle_rick"
+     },
+     {
+      "method": "vk",
+      "info": "pavol"
+     }
+    ],
+    "motd": "don't use this mint",
+    "icon_url": "https://rugs.cashu.exchange/logo.png",
+    "max_array_length": 50,
+    "time": 1792813582,
+    "nuts": {
+     "4": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "options": {
+         "description": true
+        },
+        "min_amount": 1,
+        "max_amount": 210
+       },
+       {
+        "method": "bolt11",
+        "unit": "usd",
+        "options": {
+         "description": true
+        },
+        "min_amount": 1,
+        "max_amount": 210
+       }
+      ],
+      "disabled": false
+     },
+     "5": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "min_amount": 1,
+        "max_amount": 210
+       },
+       {
+        "method": "bolt11",
+        "unit": "usd",
+        "min_amount": 1,
+        "max_amount": 210
+       }
+      ],
+      "disabled": false
+     },
+     "7": {
+      "supported": true
+     },
+     "8": {
+      "supported": true
+     },
+     "9": {
+      "supported": true
+     },
+     "10": {
+      "supported": true
+     },
+     "11": {
+      "supported": true
+     },
+     "12": {
+      "supported": true
+     },
+     "14": {
+      "supported": true
+     },
+     "19": {
+      "ttl": 300,
+      "cached_endpoints": [
+       {
+        "method": "POST",
+        "path": "/v1/mint/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/swap"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt"
+       }
+      ]
+     },
+     "20": {
+      "supported": true
+     },
+     "29": {
+      "max_batch_size": 50,
+      "methods": [
+       "bolt11"
+      ]
+     }
+    }
+   }
+  },
+  "ns-0.20.3": {
+   "kind": "docker",
+   "image": "cashubtc/nutshell:0.20.3",
+   "url": "http://127.0.0.1:60351",
+   "identity_version": "Nutshell/0.20.3",
+   "fetched": {
+    "name": "Cashu mint",
+    "pubkey": "039b3894412c8f60505964ab7b6e4be84119238d43438e88c8161a8ee5c20e5cd4",
+    "version": "Nutshell/0.20.3",
+    "contact": [],
+    "time": 1792813593,
+    "nuts": {
+     "4": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "bolt11",
+        "options": {
+         "description": true
+        }
+       }
+      ],
+      "disabled": false
+     },
+     "5": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "bolt11"
+       }
+      ],
+      "disabled": false
+     },
+     "7": {
+      "supported": true
+     },
+     "8": {
+      "supported": true
+     },
+     "9": {
+      "supported": true
+     },
+     "10": {
+      "supported": true
+     },
+     "11": {
+      "supported": true
+     },
+     "12": {
+      "supported": true
+     },
+     "14": {
+      "supported": true
+     },
+     "20": {
+      "supported": true
+     },
+     "17": {
+      "supported": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "commands": [
+         "bolt11_melt_quote",
+         "proof_state",
+         "bolt11_mint_quote"
+        ]
+       }
+      ]
+     },
+     "29": {
+      "supported": true,
+      "max_batch_size": 1000,
+      "methods": [
+       "bolt11"
+      ]
+     }
+    }
+   }
+  },
+  "ns-0.21.0": {
+   "kind": "docker",
+   "image": "cashubtc/nutshell:0.21.0",
+   "url": "http://127.0.0.1:41397",
+   "identity_version": "Nutshell/0.21.0",
+   "fetched": {
+    "name": "Cashu mint",
+    "pubkey": "02bd9176f195c34b5fd3d8094bd03fa56c159d97bf8c0698652b37fe28e2205f0a",
+    "version": "Nutshell/0.21.0",
+    "contact": [],
+    "time": 1792813604,
+    "max_array_length": 1000,
+    "nuts": {
+     "4": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "bolt11",
+        "options": {
+         "description": true
+        }
+       }
+      ],
+      "disabled": false
+     },
+     "5": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "bolt11"
+       }
+      ],
+      "disabled": false
+     },
+     "7": {
+      "supported": true
+     },
+     "8": {
+      "supported": true
+     },
+     "9": {
+      "supported": true
+     },
+     "10": {
+      "supported": true
+     },
+     "11": {
+      "supported": true
+     },
+     "12": {
+      "supported": true
+     },
+     "14": {
+      "supported": true
+     },
+     "20": {
+      "supported": true
+     },
+     "17": {
+      "supported": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "commands": [
+         "bolt11_melt_quote",
+         "proof_state",
+         "bolt11_mint_quote"
+        ]
+       }
+      ]
+     },
+     "29": {
+      "supported": true,
+      "max_batch_size": 1000,
+      "methods": [
+       "bolt11"
+      ]
+     }
+    }
+   }
+  },
+  "cdk-0.18.1": {
+   "kind": "docker",
+   "image": "cashubtc/mintd:0.18.1",
+   "url": "http://127.0.0.1:38359",
+   "identity_version": "cdk-mintd/0.18.1",
+   "fetched": {
+    "pubkey": "0264b193bc3359617a54df9842d1a4a3eb8cbb6a0b9056b8096fb88880a3e58667",
+    "version": "cdk-mintd/0.18.1",
+    "nuts": {
+     "4": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "Bolt11",
+        "min_amount": 1,
+        "max_amount": 500000,
+        "options": {
+         "description": true
+        }
+       },
+       {
+        "method": "bolt12",
+        "unit": "sat",
+        "method_name": "Bolt12",
+        "min_amount": 1,
+        "max_amount": 500000,
+        "options": {
+         "description": true
+        }
+       },
+       {
+        "method": "onchain",
+        "unit": "sat",
+        "method_name": "Onchain",
+        "min_amount": 1,
+        "max_amount": 500000,
+        "options": {
+         "confirmations": 1
+        }
+       },
+       {
+        "method": "paypal",
+        "unit": "sat",
+        "min_amount": 1,
+        "max_amount": 500000
+       }
+      ],
+      "disabled": false
+     },
+     "5": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "Bolt11",
+        "min_amount": 1,
+        "max_amount": 500000
+       },
+       {
+        "method": "bolt12",
+        "unit": "sat",
+        "method_name": "Bolt12",
+        "min_amount": 1,
+        "max_amount": 500000
+       },
+       {
+        "method": "onchain",
+        "unit": "sat",
+        "method_name": "Onchain",
+        "min_amount": 1,
+        "max_amount": 500000
+       },
+       {
+        "method": "paypal",
+        "unit": "sat",
+        "min_amount": 1,
+        "max_amount": 500000
+       }
+      ],
+      "disabled": false
+     },
+     "7": {
+      "supported": true
+     },
+     "8": {
+      "supported": true
+     },
+     "9": {
+      "supported": true
+     },
+     "10": {
+      "supported": true
+     },
+     "11": {
+      "supported": true
+     },
+     "12": {
+      "supported": true
+     },
+     "14": {
+      "supported": true
+     },
+     "15": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat"
+       }
+      ]
+     },
+     "17": {
+      "supported": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "commands": [
+         "bolt11_mint_quote",
+         "bolt11_melt_quote",
+         "proof_state"
+        ]
+       },
+       {
+        "method": "bolt12",
+        "unit": "sat",
+        "commands": [
+         "bolt12_mint_quote",
+         "bolt12_melt_quote",
+         "proof_state"
+        ]
+       },
+       {
+        "method": "onchain",
+        "unit": "sat",
+        "commands": [
+         "onchain_mint_quote",
+         "onchain_melt_quote",
+         "proof_state"
+        ]
+       },
+       {
+        "method": "paypal",
+        "unit": "sat",
+        "commands": [
+         "paypal_mint_quote",
+         "paypal_melt_quote",
+         "proof_state"
+        ]
+       }
+      ]
+     },
+     "19": {
+      "ttl": 60,
+      "cached_endpoints": [
+       {
+        "method": "POST",
+        "path": "/v1/swap"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/bolt12"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/bolt12"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/onchain"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/onchain"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/paypal"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/paypal"
+       }
+      ]
+     },
+     "20": {
+      "supported": true
+     },
+     "29": {
+      "max_batch_size": 100,
+      "methods": [
+       "bolt11",
+       "bolt12",
+       "onchain",
+       "paypal"
+      ]
+     }
+    },
+    "time": 1792813613,
+    "max_array_length": 1000
+   }
+  },
+  "cdk-0.18.2": {
+   "kind": "docker",
+   "image": "cashubtc/mintd:0.18.2",
+   "url": "http://127.0.0.1:33773",
+   "identity_version": "cdk-mintd/0.18.2",
+   "fetched": {
+    "pubkey": "038c8f14be9b9e211a0c8795deac78e1e85a0edd51ebf62fa91c1b6bf7265c1569",
+    "version": "cdk-mintd/0.18.2",
+    "nuts": {
+     "4": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "Bolt11",
+        "min_amount": 1,
+        "max_amount": 500000,
+        "options": {
+         "description": true
+        }
+       },
+       {
+        "method": "bolt12",
+        "unit": "sat",
+        "method_name": "Bolt12",
+        "min_amount": 1,
+        "max_amount": 500000,
+        "options": {
+         "description": true
+        }
+       },
+       {
+        "method": "onchain",
+        "unit": "sat",
+        "method_name": "Onchain",
+        "min_amount": 1,
+        "max_amount": 500000,
+        "options": {
+         "confirmations": 1
+        }
+       },
+       {
+        "method": "paypal",
+        "unit": "sat",
+        "min_amount": 1,
+        "max_amount": 500000
+       }
+      ],
+      "disabled": false
+     },
+     "5": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "method_name": "Bolt11",
+        "min_amount": 1,
+        "max_amount": 500000
+       },
+       {
+        "method": "bolt12",
+        "unit": "sat",
+        "method_name": "Bolt12",
+        "min_amount": 1,
+        "max_amount": 500000
+       },
+       {
+        "method": "onchain",
+        "unit": "sat",
+        "method_name": "Onchain",
+        "min_amount": 1,
+        "max_amount": 500000
+       },
+       {
+        "method": "paypal",
+        "unit": "sat",
+        "min_amount": 1,
+        "max_amount": 500000
+       }
+      ],
+      "disabled": false
+     },
+     "7": {
+      "supported": true
+     },
+     "8": {
+      "supported": true
+     },
+     "9": {
+      "supported": true
+     },
+     "10": {
+      "supported": true
+     },
+     "11": {
+      "supported": true
+     },
+     "12": {
+      "supported": true
+     },
+     "14": {
+      "supported": true
+     },
+     "15": {
+      "methods": [
+       {
+        "method": "bolt11",
+        "unit": "sat"
+       }
+      ]
+     },
+     "17": {
+      "supported": [
+       {
+        "method": "bolt11",
+        "unit": "sat",
+        "commands": [
+         "bolt11_mint_quote",
+         "bolt11_melt_quote",
+         "proof_state"
+        ]
+       },
+       {
+        "method": "bolt12",
+        "unit": "sat",
+        "commands": [
+         "bolt12_mint_quote",
+         "bolt12_melt_quote",
+         "proof_state"
+        ]
+       },
+       {
+        "method": "onchain",
+        "unit": "sat",
+        "commands": [
+         "onchain_mint_quote",
+         "onchain_melt_quote",
+         "proof_state"
+        ]
+       },
+       {
+        "method": "paypal",
+        "unit": "sat",
+        "commands": [
+         "paypal_mint_quote",
+         "paypal_melt_quote",
+         "proof_state"
+        ]
+       }
+      ]
+     },
+     "19": {
+      "ttl": 60,
+      "cached_endpoints": [
+       {
+        "method": "POST",
+        "path": "/v1/swap"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/bolt11"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/bolt12"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/bolt12"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/onchain"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/onchain"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/mint/paypal"
+       },
+       {
+        "method": "POST",
+        "path": "/v1/melt/paypal"
+       }
+      ]
+     },
+     "20": {
+      "supported": true
+     },
+     "29": {
+      "max_batch_size": 100,
+      "methods": [
+       "bolt11",
+       "bolt12",
+       "onchain",
+       "paypal"
+      ]
+     }
+    },
+    "time": 1792813620,
+    "max_array_length": 1000
+   }
+  }
+ }
+}
