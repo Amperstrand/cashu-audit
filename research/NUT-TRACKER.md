@@ -26,21 +26,21 @@ Axes per NUT:
 
 | NUT | Title | Spec status | First→last change | Cmts | Research | Suite | Status |
 |---|---|---|---|---|---|---|---|
-| 00 | Notation, Utilization, Terminology (+token formats) | mandatory | 2023-01-27→2026-10-23 | 31 | 16 | 0 | deep |
+| 00 | Notation, Utilization, Terminology (+token formats) | mandatory | 2023-01-27→2026-10-23 | 31 | 19 | 0 | deep |
 | 01 | Mint public key exchange | mandatory | 2023-01-27→2026-10-20 | 12 | 0 | 6 | partial |
 | 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 4 | 6 | deep |
 | 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 0 | 3 | partial |
-| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 2 | 5 | partial |
-| 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 3 | 3 | partial |
+| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
+| 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
 | 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 0 | 6 | partial |
-| 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 2 | 2 | partial |
-| 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 2 | 6 | partial |
-| 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 1 | 1 | partial |
-| 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 12 | 0 | deep |
-| 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 16 | 20 | deep |
+| 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 4 | 2 | partial |
+| 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 3 | 6 | partial |
+| 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
+| 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 13 | 0 | deep |
+| 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 23 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
 | 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 0 | 3 | none |
-| 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 9 | 10 | deep |
+| 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 11 | 10 | deep |
 | 15 | Partial multi-path payments | optional | 2024-04-24→2026-10-20 | 11 | 0 | 0 | none |
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
 | 17 | WebSockets | optional | 2024-06-26→2026-10-20 | 7 | 0 | 0 | none |
@@ -66,12 +66,14 @@ suite 0" = unaudited.)
 
 From `research/MINT-NUT-SUPPORT.md` / raw `mint-nut-support.json`:
 
-- **Spec-vs-wire (all families): `nuts` is an OBJECT with bare numeric
-  keys** (`{"4": {...}}`) on every arm — cashu-cf, nutshell 0.20.3/0.21.0,
-  cdk 0.18.1/0.18.2. NUT-06's example shows an ARRAY of `["NUT-XX",
-  {...}]` pairs. Nobody ships the documented shape (client parsers keying
-  on "NUT-04" strings or expecting an array fork against every live
-  mint). Candidate issue draft — see card NUT-06.
+- **NUT-06 `nuts` shape**: spec example and ALL 6 arms agree on an object
+  with bare numeric keys (`{"4": {...}}`) — the older array-of-`"NUT-XX"`
+  form is gone from the spec (last seen pre-#205/#425 era). No divergence.
+- **Field-level forks inside `methods[]`** (the real declaration
+  divergences): `method_name` — ns `"bolt11"`, cdk `"Bolt11"` (case
+  fork), cashu-cf omits the field entirely; `min_amount`/`max_amount`
+  present in cf + cdk, absent in ns. Spec example shows min/max but no
+  `method_name` — extra fields are the fork, not omissions.
 - **NUT-17 websocket commands**: ns declares 3, cdk declares 9, cashu-cf
   declares none (no NUT-17 entry at all).
 - **NUT-19 caching**: cashu-cf + cdk declare `{}`; nutshell has no entry.
@@ -82,6 +84,9 @@ From `research/MINT-NUT-SUPPORT.md` / raw `mint-nut-support.json`:
 - **Method-entry fields** (NUT-04 `methods[]` objects): `method_name`
   casing forks — ns `"bolt11"`, cdk `"Bolt11"`, cashu-cf omits the field;
   `min_amount`/`max_amount` present in cf + cdk, absent in ns.
+- Retracted on verification: an earlier draft of this section claimed the
+  spec documents `nuts` as an array — wrong; current NUT-06 example is
+  the object form all arms ship (checked 06.md directly, 2026-10-24).
 
 ## Spec epochs — when behavior-defining changes landed
 
@@ -170,12 +175,11 @@ Gap: prefer_async (#339, 2026-02) — no arm measured; state-enum vs
 deprecated `paid` field. Next: async-melt fork probe (ns vs cdk vs cf).
 
 ### NUT-06 — partial (suite-only)
-Hold: info scenarios; wire matrix (all-arm `nuts` shape + field forks,
-2026-10-24 — see "Wire declarations"). Gap: max-request-length (#425,
-2026-08-15) — nothing measures whether arms enforce or even advertise
-it; the `nuts` object-vs-array spec example mismatch is unfiled.
-Next: `max_request_length` presence + enforcement probe; issue draft
-for the nuts-shape mismatch (owner-gated like all filings).
+Hold: info scenarios; wire matrix field forks (`method_name` casing,
+min/max presence, 2026-10-24 — see "Wire declarations"). Gap:
+max-request-length (#425, 2026-08-15) — nothing measures whether arms
+enforce or even advertise it.
+Next: `max_request_length` presence + enforcement probe.
 
 ### NUT-07 — partial
 Hold: checkstate shape issue, witness-field violations (cashu-cf).
@@ -199,7 +203,7 @@ alignment docs). Gap: tag-clarification #320 (2025-12-16) wording
 vs measured leniency. Next: registry item-6 draft v3.1 staged — owner.
 
 ### NUT-11 — deep
-Hold: 16 docs + 20 scenarios + registry rows (SIG_ALL family,
+Hold: 23 docs + 20 scenarios + registry rows (SIG_ALL family,
 #1008/#1009/#1100/#1126 thread history).
 Gap: locktime==now #440 (2026-09-14) — boundary-exact vectors
 deliberately avoided (nuts#431 row: "no boundary-exact data").

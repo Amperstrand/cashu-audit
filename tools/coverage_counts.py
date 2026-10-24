@@ -34,7 +34,7 @@ def research_counts() -> dict[str, list[str]]:
 def suite_counts() -> dict[str, int]:
     out: dict[str, int] = defaultdict(int)
     readme = (REPO / "conformance" / "README.md").read_text()
-    for m in re.finditer(r"^\|\s*(NUT-[\d/]+)\s*\|\s*(\d+)\s*\|", readme, re.M):
+    for m in re.finditer(r"^\|\s*(NUT-[\d/]+)\s*\|\s*(\d+)\+?\s*\|", readme, re.M):
         count = int(m.group(2))
         for part in re.findall(r"\d{2}", m.group(1)):
             out[part] += count

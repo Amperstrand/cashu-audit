@@ -104,11 +104,26 @@ mints:
     type: cashu-cf  # or nutshell, cdk, nutmix
 ```
 
-## Reports
+## The audit spine (start here)
 
-Reports are generated in `reports/`:
-- `matrix.md` — Cross-mint comparison matrix
-- `FINDINGS-*.md` — Detailed findings per mint
+The systematic map of the whole audit — every NUT, its spec-change
+history, what each mint implementation declares on the wire, and what we
+have or haven't audited:
+
+- `research/NUT-TRACKER.md` — **the spine**: per-NUT cards
+  (hold/gap/next probe), master coverage table, spec-epoch timeline,
+  priority queue
+- `research/SPEC-HISTORY/` — per-NUT change timelines from cashubtc/NUTs
+  git history (`tools/spec_history.py --refresh`)
+- `research/MINT-NUT-SUPPORT.md` — `/v1/info` NUT declarations measured
+  on 6 arms: testnut+rugs (cashu-cf), nutshell 0.20.3/0.21.0, cdk
+  0.18.1/0.18.2 (`tools/nut_support.py`)
+- `research/DIVERGENCE-REGISTRY.md` — findings ↔ upstream venues (read
+  before any upstream work)
+- `issues/00-INDEX.md` — internal tracking issues
+
+New findings state their NUT row in the doc header and link back into
+the tracker.
 
 ## Divergence Reports
 
