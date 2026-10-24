@@ -106,6 +106,28 @@ POSTs could drain all pending proofs). We stay silent upstream (no
 new fact beyond the issue text); folded a recovery-under-load shape
 into the staged 07-test.md proposal.
 
+### 6d. DLEQ cross-cells complete + cdk#1331's class persists (2026-10-24)
+
+The 6b wallet×token matrix is now fully live:
+- **cdk-cli 0.18.2 × dleq-less (Nutshell-minted) V3**: RECEIVED
+  ("Received: 3", --allow-untrusted) — the CLI receive saga is
+  verify-if-present; the requiring `verify_token_dleq` API has NO CLI
+  caller (library-only trap, source-verified).
+- **Nutshell 0.21.0 × valid-dleq (cdk-minted) V4**: RECEIVED
+  ("Received 4 sat") — present-and-valid dleq verifies against the
+  keyset pubkey.
+- **Malformed dleq subfield (`d.e` as CBOR text — the cdk#1331
+  shape)**: three-way split — **cdk 0.18.2 REJECTS THE WHOLE TOKEN**
+  (`invalid type: string, expected bytes`) — #1331's reported class
+  persists 11 months after the issue was closed silently (2025-11-26,
+  zero comments, no linked fix); **Nutshell DECODES via pydantic's
+  lax str→bytes coercion** (e becomes garbage UTF-8 bytes — the same
+  lenient family as text-`i`); **cashu-ts rejects cleanly**
+  (`dleq e must be a non-empty byte string`). Vector:
+  `v4_mal_dleq_text.cashu` (pool #19). Candidate cdk venue
+  (owner-gated): closed-without-explanation + reproduced-on-0.18.2
+  clears the new-facts bar.
+
 ## NUT-18 crossover — payloads inherit the V3 id ambiguity and the 6b bypass
 
 - Payment REQUESTs (creqA CBOR / NUT-26 bech32m) carry no token; the
