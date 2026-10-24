@@ -163,7 +163,7 @@ instrument: proxy-faithful **4/4 against CDK as well**.
 | A2 duplicate swap | 400/14008 `duplicate_proof` | 400/11007 | 400/**11007** `Duplicate Inputs` (cdk≡ns code) |
 | A3 P2PK witness-less | 403/30006 | 400/11000 | 400/**20008** witness-required |
 | A4 SIG_ALL wrong-msg | 403/30006 | 400/11000 | 400/**20008** |
-| A5 HTLC no-witness | 403/30006 | 400/11000 (recognized as HTLC) | 400/**50000 `Secret is not a HTLC secret`** — SAME secret shape not recognized as HTLC by cdk (NUT-14 secret-parsing divergence; cf+ns both parse it) |
+| A5 HTLC no-witness | 403/30006 `No witness in proof` | 400/11000 `no HTLC preimage provided` | 400/**50000 `Secret is not a HTLC secret`** — MISATTRIBUTED LABEL: cdk source (nut14/mod.rs:158-164) reuses IncorrectSecretKind for the NO-WITNESS branch; the secret WAS parsed as HTLC (kind check passed at :141). All three reject; cdk's message points at the wrong thing (the #1008 'what error?' class) |
 | A6b mint replay | **200 + identical sig** | 400/11003 | **200 + identical sig** |
 | A7 fee-aware swap | 200 SPENT | 200 SPENT | 200 SPENT (ppk 0) |
 | A8 happy melt | PAID, reserve 1, change 3 (clamp) | PAID (reserve 0, charged 2) | PAID, reserve 1, **change 4** (refunds actual: fee 0 → 4 back) |
