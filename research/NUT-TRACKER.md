@@ -34,12 +34,12 @@ Axes per NUT:
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
 | 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 4 | 6 | partial |
 | 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 6 | 2 | partial |
-| 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 5 | 6 | partial |
+| 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 6 | 6 | partial |
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
 | 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 14 | 0 | deep |
 | 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 25 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
-| 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 0 | 3 | none |
+| 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 1 | 3 | none |
 | 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 12 | 10 | deep |
 | 15 | Partial multi-path payments | optional | 2024-04-24→2026-10-20 | 11 | 0 | 0 | none |
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
@@ -249,11 +249,15 @@ deterministic-nonce #368 + completeness MUST (2026-09-11) unmapped to
 arms. Gap: cdk dual-gate divergence (registry D3) unfiled.
 Next: nonce-derivation + all-or-nothing acceptance matrix.
 
-### NUT-13 — none (suite 3 only)
-Framework's own "not started" (2026-09) still true. 2026 churn:
-HMAC-SHA256-only for v2 recovery (2026-03-24), P2PK standard
-derivation (2026-01-19). Next: derivation-path fork probe
-(ns vs cdk vs cf restore of the same mnemonic-derived secrets).
+### NUT-13 — partial (source-read)
+Hold: derivation source-read 2026-10-24
+(research/NUT13-DERIVATION-SOURCE-READ-2026-10-24.md): **0x01 slot
+contested** — nutshell uses it for blinding factor (spec table),
+cdk for P2PK keys (spec says BIP32 129373 path); nutshell 0.21.0 has
+NO deterministic P2PK derivation (restore of P2PK-locked proofs
+fails — fund-loss class). Not yet wire/vector-verified.
+Next: cross-implementation derivation vectors (cdk vs ns vs 13.md
+test vectors vs cashu-ts as third vote).
 
 ### NUT-14 — deep
 Hold: d5/d6 issues, refund vectors, NUT14-REFUND-VECTORS results,
