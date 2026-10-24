@@ -32,7 +32,7 @@ Axes per NUT:
 | 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 0 | 3 | partial |
 | 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
-| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 0 | 6 | partial |
+| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 1 | 6 | partial |
 | 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 4 | 2 | partial |
 | 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 3 | 6 | partial |
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
@@ -74,6 +74,10 @@ From `research/MINT-NUT-SUPPORT.md` / raw `mint-nut-support.json`:
   fork), cashu-cf omits the field entirely; `min_amount`/`max_amount`
   present in cf + cdk, absent in ns. Spec example shows min/max but no
   `method_name` — extra fields are the fork, not omissions.
+- **max_array_length** (#425): ns 0.20.3 ABSENT; ns 0.21.0 + cdk 1000;
+  cashu-cf **50** (20× tighter) — and testnut does NOT enforce its
+  advertised limit (60 Ys → 200; see divergences/
+  NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md).
 - **NUT-17 websocket commands**: ns declares 3, cdk declares 9, cashu-cf
   declares none (no NUT-17 entry at all).
 - **NUT-19 caching**: cashu-cf + cdk declare `{}`; nutshell has no entry.
@@ -174,12 +178,15 @@ Hold: UUIDv7/method violations, blank-change-outputs issue (with NUT-08).
 Gap: prefer_async (#339, 2026-02) — no arm measured; state-enum vs
 deprecated `paid` field. Next: async-melt fork probe (ns vs cdk vs cf).
 
-### NUT-06 — partial (suite-only)
+### NUT-06 — partial
 Hold: info scenarios; wire matrix field forks (`method_name` casing,
-min/max presence, 2026-10-24 — see "Wire declarations"). Gap:
-max-request-length (#425, 2026-08-15) — nothing measures whether arms
-enforce or even advertise it.
-Next: `max_request_length` presence + enforcement probe.
+min/max presence, 2026-10-24 — see "Wire declarations"); max_array_length
+advertisement + non-enforcement finding (divergences/
+NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md: cf advertises 50 vs references'
+1000, ns-0.20.3 absent; testnut accepts 60 Ys over the advertised 50).
+Gap: enforcement on ns/cdk arms unmeasured; swap/melt array paths
+unmeasured. Next: same probe on the 4 docker arms (enforced or not?),
+then swap-path array limit (fund-relevant).
 
 ### NUT-07 — partial
 Hold: checkstate shape issue, witness-field violations (cashu-cf).
