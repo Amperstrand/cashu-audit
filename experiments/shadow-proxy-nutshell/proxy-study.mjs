@@ -162,8 +162,8 @@ try {
   // sanity: proxy passthrough actually serving nutshell
   const proxyInfo = await proxyT('/v1/info', 'GET');
   const nsInfo = await ns('/v1/info', 'GET');
-  if (!String(proxyInfo.text).match(/Nutshell\/0\.[0-9]+/)) throw new Error('proxy not passing through nutshell: ' + proxyInfo.text.slice(0, 120));
-  console.log('SANITY: proxy serves nutshell-authoritative /v1/info ✓ (ns direct: ' + (nsInfo.text.match(/Nutshell\/0\.[0-9]+/) ? 'ok' : 'MISMATCH') + ')\n');
+  if (!String(proxyInfo.text).match(/(Nutshell\/0\.[0-9]+|cdk-mintd\/0\.[0-9]+)/)) throw new Error('proxy not passing through reference mint: ' + proxyInfo.text.slice(0, 120));
+  console.log('SANITY: proxy serves reference-mint-authoritative /v1/info ✓ (ref direct: ' + (nsInfo.text.match(/(Nutshell\/0\.[0-9]+|cdk-mintd\/0\.[0-9]+)/) ? 'ok' : 'MISMATCH') + ')\n');
 
   // R4: bogus keyset id — via proxy-faithfulness wrapper
   record('R4 keys/{bogus}',

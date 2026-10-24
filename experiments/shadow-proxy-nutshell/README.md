@@ -148,3 +148,32 @@ three-way 400 alignment achieved modulo wording.
   reserve (`min(actual, feeReserve)`, settle.ts). Durable datum: the
   reserve-clamp semantic differs; ns fee_reserve is a lower bound, cf's
   is a bound. Wallets cannot rely on fee_reserve as a hard cap on ns.
+
+## Three-way run (2026-10-24): CDK 0.18.1 as the third leg
+
+cdk-mintd 0.18.1 (fakewallet, :8739, binary at /root/.cargo-target/release/
+cdk-mintd — 3-min build via CARGO_TARGET_DIR) behind the SAME proxy
+instrument: proxy-faithful **4/4 against CDK as well**.
+
+| # | cashu-cf | nutshell 0.20.3 | CDK 0.18.1 |
+|---|---|---|---|
+| R4 keys/{bogus} | 404/10000 (→400 branch queued) | 400/12001 | **400** |
+| R5 malformed-Y | 200 UNSPENT | 200 UNSPENT | **422** (strict outlier) |
+| A1 forged-C swap | 400/14005 | 400/10001 | 400/10001 `Token not verified` |
+| A2 duplicate swap | 400/14008 `duplicate_proof` | 400/11007 | 400/**11007** `Duplicate Inputs` (cdk≡ns code) |
+| A3 P2PK witness-less | 403/30006 | 400/11000 | 400/**20008** witness-required |
+| A4 SIG_ALL wrong-msg | 403/30006 | 400/11000 | 400/**20008** |
+| A5 HTLC no-witness | 403/30006 | 400/11000 (recognized as HTLC) | 400/**50000 `Secret is not a HTLC secret`** — SAME secret shape not recognized as HTLC by cdk (NUT-14 secret-parsing divergence; cf+ns both parse it) |
+| A6b mint replay | **200 + identical sig** | 400/11003 | **200 + identical sig** |
+| A7 fee-aware swap | 200 SPENT | 200 SPENT | 200 SPENT (ppk 0) |
+| A8 happy melt | PAID, reserve 1, change 3 (clamp) | PAID (reserve 0, charged 2) | PAID, reserve 1, **change 4** (refunds actual: fee 0 → 4 back) |
+
+**F1 RESHARPENED**: the mint-retry idempotency fork is **nutshell vs
+{cashu-cf, CDK}** — both 200-with-identical-signature; nutshell alone
+rejects (400/11003). cashu-cf is ecosystem-majority; the registry row's
+owner-venue calculus shifts (nutshell-side observation, not a cf gap).
+**Fee semantics triad**: cf clamps effective fee to the quoted reserve;
+cdk refunds per actual (reserve 1, actual 0 → full 4 back); ns charged
+above its own quote (0→2). Three legitimately different NUT-05
+fee-refund policies — wallets see three different change amounts for
+identical melts.
