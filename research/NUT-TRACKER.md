@@ -304,9 +304,14 @@ Next: replay probe on cached endpoints via the must-gap driver.
 
 ### NUT-20 — deep
 Hold: quote-sig violations, NUT20-MINT-AUTH divergence, deterministic
-locking (#373). Gap: the #370/#384 breaking hardening (2026-06-07) —
-version matrix of who signs what message; registry has no row.
-Next: quote-signature message-derivation matrix across arms/versions.
+locking (#373). Wire datum 2026-10-24 (fresh-must artifacts): all 5
+arms DECLARE NUT-20 `supported: true` yet no quote response carries a
+`sig` field in default config — declaration is capability-speak;
+signing presumably needs the lock/auth path exercised.
+Gap: the #370/#384 breaking hardening (2026-06-07) — version matrix of
+who signs what message; lock-path behavior unmeasured on any arm.
+Next: quote-lock request path per arm (20.md request shape), then the
+signature-message derivation matrix across arms/versions.
 
 ### NUT-21/22 — none
 Auth NUTs; matching rules #334 (2026-02), NUT-22 DLEQ-mandatory #222.
