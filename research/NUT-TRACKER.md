@@ -39,7 +39,7 @@ Axes per NUT:
 | 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 14 | 0 | deep |
 | 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 25 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
-| 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 1 | 3 | none |
+| 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 1 | 3 | partial |
 | 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 12 | 10 | deep |
 | 15 | Partial multi-path payments | optional | 2024-04-24→2026-10-20 | 11 | 0 | 0 | none |
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
