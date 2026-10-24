@@ -177,3 +177,13 @@ cdk refunds per actual (reserve 1, actual 0 → full 4 back); ns charged
 above its own quote (0→2). Three legitimately different NUT-05
 fee-refund policies — wallets see three different change amounts for
 identical melts.
+
+## NUT-14 positive path (2026-10-24): three-way HTLC unlock
+
+Complement to the A5 rejection locks — melt WITH the correct preimage
+witness: **PAID on all three** (cashu-cf, nutshell 0.20.3, CDK 0.18.1).
+Wire-shape datum en route: nutshell REQUIRES the witness as a JSON
+STRING (object form → 422 pydantic `inputs.0.witness` validation error);
+cashu-cf accepts both forms (stringifies objects itself); cdk verified
+with the string form. HTLC secret shape: hash-in-data
+(cashu-ts-canonical) recognized by all three (cf. corrected A5).
