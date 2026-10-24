@@ -44,35 +44,51 @@ preimage; control checkstate on a melted input = SPENT on all arms.
    inputs/invoice-size is unexplained — input-fee arithmetic per family
    is the follow-up (same inputs both legs; only slot count differs).
 
-## Leg C (2026-10-24 ~07:40): slot-count truncation CONFIRMED
+## Leg C (2026-10-24 ~07:40): slot-count truncation CONFIRMED — inputs were 112, not 128 (probe bug, see Leg D)
 
-`out/nut08_legc.json` — same inputs {64,32,16,16}=128, invoice 60,
-blank outputs only, varying slot count:
+`out/nut08_legc.json` + correction from `out/nut08_legd.json`:
 
-| Arm | ppk (keyset) | 2 slots | 3 slots | 4 slots |
-|---|---|---|---|---|
-| ns-0.21.0 | 100 | [32,16] = **48** | [32,16,2] = **50** | [32,16,2] = 50 |
-| testnut (cf) | 10 | — | [32,16,2] = **50** | — |
+| Arm | 2 slots | 3 slots | 4 slots |
+|---|---|---|---|
+| ns-0.21.0 | [32,16] = **48** | [32,16,2] = **50** | [32,16,2] = 50 |
+| testnut (cf) | — | [32,16,2] = **50** | — |
 
-- Change total is capped by what fits the offered slots: true change
-  (50 = 32+16+2, three denominations) cannot be expressed in 2 power-of-2
-  slots, and the mint **keeps the un-fittable remainder** (2 sat) —
-  silently. Offering too few change outputs shortchanges the wallet by
-  construction. Wallet-compat class: any wallet hardcoding N change
-  outputs loses the tail remainder on every melt with an unlucky
-  decomposition.
+CORRECTION (leg D): legs A/B/C minted **112 sat, not 128** — the probe's
+dict literal `{64:..,32:..,16:..,16:..}` collapsed the duplicate `16`
+key, so one 16-sat output was never minted (this also explains ns's
+"Provided: 112" in the first failed run). With inputs=112: 112 − 60 −
+reserve(2) = 50 exactly — the "unaccounted ~16 sat" of the first
+findings draft was this probe bug, nothing more. All structural results
+survive (they were measured against the same 112-sat inputs on every
+arm):
+
+- True change 50 = 32+16+2 needs three power-of-2 denominations; in 2
+  slots the mint returns [32,16]=48 and **silently keeps the 2-sat
+  remainder**. Offering too few change outputs shortchanges the wallet
+  by construction (wallet-compat class; Amethyst-#3847 adjacent).
 - Decomposition is stable once slots suffice (3 slots == 4 slots).
 
-## Open arithmetic (updated, honest)
+## Leg D (2026-10-24 ~07:45): fee ledger is EXACT — no hidden fees
 
-128 − 60 − fee_reserve(1–2) = 65–66 expected change; observed 50.
-~16 sat unaccounted on BOTH families with identical inputs. Candidate
-explanations not yet separated: (a) input-fee ledger beyond ppk
-(ns earlier error said "Provided: 112" for 128 sent — one 16-sat input
-uncounted?), (b) melt output fees, (c) FakeWallet payment fee on the
-target side. The slot-truncation result stands regardless; the ledger
-question is the queued follow-up (fee arithmetic probe, varying input
-COUNT and denominations at fixed invoice).
+Frozen predictions: `PREDICTIONS-nut08d.md` (all three hypotheses
+refuted/refined by measurement). Inputs {64,64} / {64,32,16,16} /
+{16×8} = 128 sat each (dict-collision fixed), invoice 60, **4 blank
+slots**, `out/nut08_legd.json`:
+
+| Arm | every input count (2/4/8) | gap vs 128−60−reserve |
+|---|---|---|
+| ns-0.21.0 | change=[64,2]=66 | **0** (exact) |
+| testnut (cf) | change=[64,2]=66 | 1 (charged 2 vs reserve 1 — F7 class: actual vs quoted reserve, cf rounds) |
+
+- No per-input hidden fee, no fixed payment-side fee. NUT-08/NUT-02
+  fee arithmetic is exact and input-count-independent on both families
+  at these sizes (ppk 10/100 is sub-sat and rounds away).
+- testnut charged 2 while quoting fee_reserve 1 — consistent with the
+  registry's F7 (ns actual fee exceeds quoted reserve) / cf-clamps
+  catalogue row; ns was exact here.
+- Notable: with true change 66 = 64+2, TWO slots suffice — the leg-C
+  truncation only bites when the decomposition needs more denominations
+  than slots offered.
 
 ## Probe bugs found (and fixed) per the mismatch discipline
 
@@ -81,3 +97,6 @@ COUNT and denominations at fixed invoice).
   melt-quote `amount` request field is advisory at best on all arms).
 - melt_body truncated at 400 chars cut the `change` array on the first
   successful run; raised to 2500.
+- Legs A–C minted 112 not 128 sat: dict literal with a duplicate `16:`
+  key collapsed one output (caught by leg D's clean arithmetic; fixed
+  in `mint_128`).

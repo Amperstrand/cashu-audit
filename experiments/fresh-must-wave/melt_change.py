@@ -45,8 +45,14 @@ def out_with_r(amount: int, keyset_id: str) -> dict:
 
 def mint_128(base: str, keyset: dict, tag: str) -> list[dict]:
     def s(i): return f"{tag}-{i}-{secrets.token_hex(8)}"
-    proofs, err = mg.mint_proofs(base, keyset,
-                                 {64: [s(1)], 32: [s(2)], 16: [s(3)], 16: [s(4)]})
+    # NB: dict keys are unique — build amounts→secrets without literal
+    # duplicate keys (the original {16:[a],16:[b]} literal collapsed to
+    # one 16-sat output; legs A-C of FINDINGS-nut08 ran on 112 sat).
+    plans = [(64, s(1)), (32, s(2)), (16, s(3)), (16, s(4))]
+    by_amt: dict[int, list[str]] = {}
+    for amt, sec in plans:
+        by_amt.setdefault(amt, []).append(sec)
+    proofs, err = mg.mint_proofs(base, keyset, by_amt)
     assert not err, f"mint failed: {err}"
     return proofs
 

@@ -1,0 +1,92 @@
+{
+ "testnut_A_2in": {
+  "inputs": 2,
+  "total_in": 128,
+  "status": 200,
+  "fee_reserve": 1,
+  "change": [
+   64,
+   2
+  ],
+  "change_total": 66,
+  "gap": 1,
+  "resp_fee_fields": {
+   "fee_reserve": 1
+  }
+ },
+ "testnut_B_4in": {
+  "inputs": 4,
+  "total_in": 128,
+  "status": 200,
+  "fee_reserve": 1,
+  "change": [
+   64,
+   2
+  ],
+  "change_total": 66,
+  "gap": 1,
+  "resp_fee_fields": {
+   "fee_reserve": 1
+  }
+ },
+ "testnut_C_8in": {
+  "inputs": 8,
+  "total_in": 128,
+  "status": 200,
+  "fee_reserve": 1,
+  "change": [
+   64,
+   2
+  ],
+  "change_total": 66,
+  "gap": 1,
+  "resp_fee_fields": {
+   "fee_reserve": 1
+  }
+ },
+ "ns_A_2in": {
+  "inputs": 2,
+  "total_in": 128,
+  "status": 200,
+  "fee_reserve": 2,
+  "change": [
+   64,
+   2
+  ],
+  "change_total": 66,
+  "gap": 0,
+  "resp_fee_fields": {
+   "fee_reserve": 2
+  }
+ },
+ "ns_B_4in": {
+  "inputs": 4,
+  "total_in": 128,
+  "status": 200,
+  "fee_reserve": 2,
+  "change": [
+   64,
+   2
+  ],
+  "change_total": 66,
+  "gap": 0,
+  "resp_fee_fields": {
+   "fee_reserve": 2
+  }
+ },
+ "ns_C_8in": {
+  "inputs": 8,
+  "total_in": 128,
+  "status": 200,
+  "fee_reserve": 2,
+  "change": [
+   64,
+   2
+  ],
+  "change_total": 66,
+  "gap": 0,
+  "resp_fee_fields": {
+   "fee_reserve": 2
+  }
+ }
+}
