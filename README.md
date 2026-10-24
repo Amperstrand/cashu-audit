@@ -120,6 +120,11 @@ have or haven't audited:
   0.18.1/0.18.2 (`tools/nut_support.py`)
 - `research/DIVERGENCE-REGISTRY.md` — findings ↔ upstream venues (read
   before any upstream work)
+- `research/UPSTREAM-WATCH.md` — daily drift log (cron 05:47:
+  `tools/upstream-watch-cron.sh`): NUTs spec movement + every cdk/nutshell
+  release, each new release digested to NUT impact in
+  `research/releases/` (`tools/release_digest.py`, runnable by hand for
+  any version)
 - `issues/00-INDEX.md` — internal tracking issues
 
 New findings state their NUT row in the doc header and link back into

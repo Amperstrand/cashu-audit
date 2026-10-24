@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Daily upstream watch: NUTs spec drift + cdk/nutshell releases.
+
+One run answers: "did the spec move, and did a reference mint ship a
+release since yesterday?" New events produce a release digest
+(tools/release_digest.py), regenerate the spec timelines
+(tools/spec_history.py), append to research/UPSTREAM-WATCH.md, and print
+`CHANGE:` lines (house watch convention — a wrapper cron script logs
+them and commits the repo).
+
+State: research/upstream-state.json (committed — the baseline travels
+with the repo; a fresh clone adopts current upstream as baseline).
+
+Usage: /usr/bin/python3 tools/upstream_watch.py [--rebaseline]
+  --rebaseline  adopt current upstream state without digesting (used on
+                first install or after an intentional reset)
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parent.parent
+STATE = REPO / "research/upstream-state.json"
+WATCH = REPO / "research/UPSTREAM-WATCH.md"
+NUTS_CLONE = Path("/root/src/NUTs")
+
+WATCH_TARGETS = {
+    "cdk": {"kind": "release", "repo": "cashubtc/cdk"},
+    "nutshell": {"kind": "release", "repo": "cashubtc/nutshell"},
+}
+
+
+def sh(cmd: list[str], **kw) -> subprocess.CompletedProcess:
+    return subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO), **kw)
+
+
+def latest_release(repo: str) -> tuple[str, str]:
+    r = sh(["gh", "api", f"repos/{repo}/releases/latest",
+            "--jq", ".tag_name + \" \" + .published_at"])
+    if r.returncode != 0:
+        raise RuntimeError(f"gh api {repo}: {r.stderr.strip()[:120]}")
+    tag, published = r.stdout.strip().split(" ", 1)
+    return tag, published
+
+
+def nuts_head() -> str:
+    r = sh(["git", "-C", str(NUTS_CLONE), "fetch", "--quiet", "origin"])
+    if r.returncode != 0:
+        raise RuntimeError(f"git fetch NUTs: {r.stderr[:120]}")
+    return sh(["git", "-C", str(NUTS_CLONE), "rev-parse",
+               "origin/HEAD"]).stdout.strip()
+
+
+def new_spec_commits(old: str, new: str) -> list[str]:
+    r = sh(["git", "-C", str(NUTS_CLONE), "log", "--format=%cs %h %s",
+            f"{old}..{new}"])
+    return [l for l in r.stdout.splitlines() if l.strip()]
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--rebaseline", action="store_true")
+    args = ap.parse_args()
+
+    state = {"nuts_head": "", "releases": {}}
+    if STATE.exists():
+        state = json.loads(STATE.read_text())
+    events: list[str] = []  # CHANGE: lines
+    sections: list[str] = []
+
+    # --- 1. NUTs spec drift ---
+    try:
+        head = nuts_head()
+        old = state.get("nuts_head")
+        if args.rebaseline or not old:
+            state["nuts_head"] = head
+            if not args.rebaseline:
+                events.append(f"CHANGE: nuts baseline set at {head[:10]}")
+        elif head != old:
+            commits = new_spec_commits(old, head)
+            r = sh(["python3", "tools/spec_history.py", "--refresh"])
+            if r.returncode != 0:
+                events.append(f"CHANGE: nuts moved {old[:10]}->{head[:10]} "
+                              f"but spec_history FAILED: {r.stderr[-150:]}")
+            else:
+                state["nuts_head"] = head
+                events.append(f"CHANGE: NUTs {old[:10]}->{head[:10]} "
+                              f"({len(commits)} commits, timelines regenerated)")
+                sections.append("### NUTs spec moved\n\n```\n" +
+                                "\n".join(commits[:25]) + "\n```\n")
+    except Exception as e:  # never die before writing state/log
+        events.append(f"CHANGE: nuts check errored: {e}")
+
+    # --- 2. releases ---
+    for name, cfg in WATCH_TARGETS.items():
+        try:
+            tag, published = latest_release(cfg["repo"])
+            seen = state.get("releases", {}).get(name)
+            if args.rebaseline or not seen:
+                state.setdefault("releases", {})[name] = tag
+                if not args.rebaseline:
+                    events.append(f"CHANGE: {name} baseline set at {tag}")
+                continue
+            if tag == seen:
+                continue
+            proj = "cdk" if name == "cdk" else "nutshell"
+            r = sh(["python3", "tools/release_digest.py",
+                    "--project", proj, "--version", tag])
+            if r.returncode != 0:
+                events.append(f"CHANGE: {name} {seen}->{tag} but digest "
+                              f"FAILED: {r.stderr[-150:]}")
+                continue
+            state["releases"][name] = tag
+            events.append(f"CHANGE: {name} release {seen} -> {tag} "
+                          f"(published {published[:10]}) — {r.stdout.strip()}")
+            sections.append(f"### {name} {tag}\n\n```\n{r.stdout.strip()}\n```\n"
+                            f"Read the digest, then the tracker cards it names.\n")
+        except Exception as e:
+            events.append(f"CHANGE: {name} check errored: {e}")
+
+    STATE.write_text(json.dumps(state, indent=1) + "\n")
+
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    if not WATCH.exists():
+        WATCH.write_text("# UPSTREAM WATCH — daily spec/release drift log\n"
+                         f"(generated by tools/upstream_watch.py; first run {stamp})\n")
+    if events:
+        body = [f"\n## Run {stamp}\n"]
+        body += [f"- {e}" for e in events]
+        if sections:
+            body.append("")
+            body.extend(sections)
+        with WATCH.open("a") as f:
+            f.write("\n".join(body) + "\n")
+
+    for e in events:
+        print(e)
+    if not events:
+        print(f"OK: no upstream movement ({stamp})")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

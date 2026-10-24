@@ -322,12 +322,20 @@ Ranked by (mandatory/fresh-MUST × unmeasured × fund-loss class):
 
 ## Maintenance
 
-- After any spec epoch lands upstream: `python3
-  tools/spec_history.py --refresh` → diff `research/SPEC-HISTORY/` →
-  update epochs section + affected cards + priority queue.
-- After any arm release: `python3 tools/nut_support.py --host-network`
-  → diff `research/MINT-NUT-SUPPORT.md`.
-- Research/suite counts: `python3 tools/coverage_counts.py` (prints the
-  table columns; paste-worthy). Re-count after adding findings.
-- New findings must state their NUT row in the doc header — the tracker
-  row links back.
+The watch runs it for you: cron `47 5 * * *` (this host)
+`tools/upstream-watch-cron.sh` → `tools/upstream_watch.py` checks NUTs
+HEAD + latest cdk/nutshell releases against `research/upstream-state.json`.
+On movement it regenerates timelines, emits a release digest
+(`research/releases/<project>-<version>.md`), appends
+`research/UPSTREAM-WATCH.md`, commits + pushes. A `CHANGE:` line in
+`/root/upstream-watch.log` means: read the digest, then update the
+tracker epoch/card rows it names. Manual digest for a version the watch
+hasn't seen (e.g. adding a new pinned arm):
+
+    python3 tools/release_digest.py --project cdk --version v0.18.2
+
+After any arm release: `python3 tools/nut_support.py --host-network`
+→ diff `research/MINT-NUT-SUPPORT.md`. Research/suite counts:
+`python3 tools/coverage_counts.py` (prints the table columns;
+paste-worthy). Re-count after adding findings. New findings must state
+their NUT row in the doc header — the tracker row links back.
