@@ -1,0 +1,80 @@
+{
+ "testnut(cashu-cf)": {
+  "valid_pts_60": 200,
+  "valid_pts_1001": [
+   400,
+   "{\"error\":\"invalid_request\",\"detail\":\"Too many Y values (max 1000)\",\"code\":14005}"
+  ],
+  "replay": {
+   "first": [
+    200,
+    "01a16cc5-7711-718f-be9d-2ee9a86080cd"
+   ],
+   "second": [
+    200,
+    "01a16cc5-7886-7788-9004-5e19c7d61dc2"
+   ],
+   "same_quote_id": false
+  }
+ },
+ "ns-0.20.3": {
+  "replay": {
+   "first": [
+    200,
+    "01a16cc5-a4d7-77e1-9ccd-c154df29fe55"
+   ],
+   "second": [
+    200,
+    "01a16cc5-a558-7e5c-a832-eed955f45b53"
+   ],
+   "same_quote_id": false
+  }
+ },
+ "ns-0.21.0": {
+  "replay": {
+   "first": [
+    200,
+    "01a16cc5-e728-77ab-9315-4a783b8c2c82"
+   ],
+   "second": [
+    200,
+    "01a16cc5-e7a7-706d-997e-6f896bf4db99"
+   ],
+   "same_quote_id": false
+  }
+ },
+ "cdk-0.18.1": {
+  "replay": {
+   "first": [
+    200,
+    "01a16cc6-0f29-76cc-b433-8453e485cd6a"
+   ],
+   "second": [
+    200,
+    "01a16cc6-0f44-74e3-a944-a7ec4cb8bffa"
+   ],
+   "same_quote_id": false
+  },
+  "valid_pts_1001": [
+   400,
+   "{\"code\":11014,\"detail\":\"Maximum inputs exceeded: 1001 provided, max 1000\"}"
+  ]
+ },
+ "cdk-0.18.2": {
+  "replay": {
+   "first": [
+    200,
+    "01a16cc6-33d7-7471-99cd-26972fe583aa"
+   ],
+   "second": [
+    200,
+    "01a16cc6-33ec-73ac-a3a8-e87655547469"
+   ],
+   "same_quote_id": false
+  },
+  "valid_pts_1001": [
+   400,
+   "{\"code\":11014,\"detail\":\"Maximum inputs exceeded: 1001 provided, max 1000\"}"
+  ]
+ }
+}

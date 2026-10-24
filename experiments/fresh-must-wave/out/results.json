@@ -1,0 +1,255 @@
+{
+ "generated": "2026-10-24T07:14:50.984374+00:00",
+ "oracle_invoice": "lnbc10u1p4dckhf9qypqqqdqqxqrrsssp5lweaw7...",
+ "arms": {
+  "testnut(cashu-cf)": {
+   "identity": "{\"name\": \"Testnut mint\", \"pubkey\": \"03f3935ee1890b997728d71054ee2f6e321e20d7f48de9525fa8c981461ecf007f\", \"version\": \"Nut",
+   "P1_nut06_max_array": {
+    "shape_Ys_60": {
+     "status": 200,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"states\": [{\"Y\": \"020000000000000000000000000000000000000000000000000000000000000000\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000000000000000000000000000001\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000000000000000000000000000002\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000"
+    },
+    "shape_outputs_60": {
+     "status": 400,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"error\": \"invalid_request\", \"detail\": \"Missing Ys, proofs, or secrets\"}"
+    },
+    "accepted_shape": "Ys",
+    "limit_1001": {
+     "status": 400,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"error\": \"invalid_request\", \"detail\": \"Too many Y values (max 1000)\", \"code\": 14005}"
+    }
+   },
+   "P2_nut19_cache": {
+    "get1": {
+     "etag": null,
+     "cache_control": "public, max-age=600"
+    },
+    "etag_stable_across_gets": true,
+    "if_none_match": {
+     "status": null,
+     "error": "no etag"
+    }
+   },
+   "P3_nut05_prefer_async": {
+    "status": 200,
+    "body": "{\"quote\": \"01a16cc3-3a05-77a6-a9d8-a2b89d3698cc\", \"amount\": 1000, \"fee_reserve\": 10, \"state\": \"UNPAID\", \"expiry\": 1792829689, \"request\": \"lnbc10u1p4dckhf9qypqqqdqqxqrrsssp5lweaw7yhf2q5gle9gd4w7r6cmu6wz7lyvg7gw6tf8p45dvlkmu7qpp5lsfer6jw208zja9809xume5980q57k77jrrqe8fcg7qrjgyykpps3lndhkc9r8jr2h69qh6ef4xudlh6xk0tpje25ppvqxkjrs2ennxrlzr727njp3dldspulnuxnsxcurskw4j9z88zuwtpjqzghfkzeqqqakszp7\", \"unit\": "
+   },
+   "P4_nut03_unit": {
+    "unit_usd": {
+     "status": 200,
+     "body": "{\"quote\": \"01a16cc3-3b12-767a-92c2-83038ddad94c\", \"request\": \"lnbc1000n1qyqqqqry7trdv6u0dfswsmqc40e2l9mnp5yn4r35t20tnqvr49ntk2uua2yx4hz67qv3etd6\", \"state\": \"UNPAID\", \"amount\": 100, \"unit\": \"usd\", \"amount_paid\": 0, \"amount_issued\": 0, \"updated_at\": 1792826096, \"expiry\": 1792829696, \"method\": \"bolt11\""
+    },
+    "unit_eur": {
+     "status": 400,
+     "body": "{\"error\": \"unsupported_unit\", \"detail\": \"Only sat and usd units are supported\", \"code\": 11005}"
+    }
+   }
+  },
+  "ns-0.20.3": {
+   "identity": "Nutshell/0.20.3",
+   "image": "cashubtc/nutshell:0.20.3",
+   "P1_nut06_max_array": {
+    "shape_Ys_60": {
+     "status": 200,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"states\": [{\"Y\": \"020000000000000000000000000000000000000000000000000000000000000000\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000000000000000000000000000001\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000000000000000000000000000002\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000"
+    },
+    "shape_outputs_60": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"detail\": [{\"type\": \"missing\", \"loc\": [\"body\", \"Ys\"], \"msg\": \"Field required\", \"input\": {\"outputs\": [{\"id\": \"020000000000000000000000000000000000000000000000000000000000000000\", \"amount\": 1}, {\"id\": \"020000000000000000000000000000000000000000000000000000000000000001\", \"amount\": 1}, {\"id\": \"020000000000000000000000000000000000000000000000000000000000000002\", \"amount\": 1}, {\"id\": \"02000000000000000"
+    },
+    "accepted_shape": "Ys",
+    "limit_1001": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"detail\": [{\"type\": \"too_long\", \"loc\": [\"body\", \"Ys\"], \"msg\": \"List should have at most 1000 items after validation, not 1001\", \"input\": [\"020000000000000000000000000000000000000000000000000000000000000000\", \"020000000000000000000000000000000000000000000000000000000000000001\", \"020000000000000000000000000000000000000000000000000000000000000002\", \"02000000000000000000000000000000000000000000000000"
+    }
+   },
+   "P2_nut19_cache": {
+    "get1": {
+     "etag": null,
+     "cache_control": null
+    },
+    "etag_stable_across_gets": true,
+    "if_none_match": {
+     "status": null,
+     "error": "no etag"
+    }
+   },
+   "P3_nut05_prefer_async": {
+    "status": 200,
+    "body": "{\"quote\": \"01a16cc3-67b4-7cf8-b004-1c8dbb6bd727\", \"amount\": 1000, \"unit\": \"sat\", \"method\": \"bolt11\", \"request\": \"lnbc10u1p4dckhf9qypqqqdqqxqrrsssp5lweaw7yhf2q5gle9gd4w7r6cmu6wz7lyvg7gw6tf8p45dvlkmu7qpp5lsfer6jw208zja9809xume5980q57k77jrrqe8fcg7qrjgyykpps3lndhkc9r8jr2h69qh6ef4xudlh6xk0tpje25ppvqxkjrs2ennxrlzr727njp3dldspulnuxnsxcurskw4j9z88zuwtpjqzghfkzeqqqakszp7\", \"fee_reserve\": 10, \"state\": \"UNPA"
+   },
+   "P4_nut03_unit": {
+    "unit_usd": {
+     "status": 400,
+     "body": "{\"detail\": \"unit 'usd' not supported in any keyset.\", \"code\": 10000}"
+    },
+    "unit_eur": {
+     "status": 400,
+     "body": "{\"detail\": \"unit 'eur' not supported in any keyset.\", \"code\": 10000}"
+    }
+   }
+  },
+  "ns-0.21.0": {
+   "identity": "Nutshell/0.21.0",
+   "image": "cashubtc/nutshell:0.21.0",
+   "P1_nut06_max_array": {
+    "shape_Ys_60": {
+     "status": 200,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"states\": [{\"Y\": \"020000000000000000000000000000000000000000000000000000000000000000\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000000000000000000000000000001\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000000000000000000000000000002\", \"state\": \"UNSPENT\", \"witness\": null}, {\"Y\": \"020000000000000000000000000000000000000"
+    },
+    "shape_outputs_60": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"detail\": [{\"type\": \"missing\", \"loc\": [\"body\", \"Ys\"], \"msg\": \"Field required\", \"input\": {\"outputs\": [{\"id\": \"020000000000000000000000000000000000000000000000000000000000000000\", \"amount\": 1}, {\"id\": \"020000000000000000000000000000000000000000000000000000000000000001\", \"amount\": 1}, {\"id\": \"020000000000000000000000000000000000000000000000000000000000000002\", \"amount\": 1}, {\"id\": \"02000000000000000"
+    },
+    "accepted_shape": "Ys",
+    "limit_1001": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "{\"detail\": [{\"type\": \"too_long\", \"loc\": [\"body\", \"Ys\"], \"msg\": \"List should have at most 1000 items after validation, not 1001\", \"input\": [\"020000000000000000000000000000000000000000000000000000000000000000\", \"020000000000000000000000000000000000000000000000000000000000000001\", \"020000000000000000000000000000000000000000000000000000000000000002\", \"02000000000000000000000000000000000000000000000000"
+    }
+   },
+   "P2_nut19_cache": {
+    "get1": {
+     "etag": null,
+     "cache_control": null
+    },
+    "etag_stable_across_gets": true,
+    "if_none_match": {
+     "status": null,
+     "error": "no etag"
+    }
+   },
+   "P3_nut05_prefer_async": {
+    "status": 200,
+    "body": "{\"quote\": \"01a16cc3-9635-70b9-85bf-e62543535b38\", \"amount\": 1000, \"unit\": \"sat\", \"method\": \"bolt11\", \"request\": \"lnbc10u1p4dckhf9qypqqqdqqxqrrsssp5lweaw7yhf2q5gle9gd4w7r6cmu6wz7lyvg7gw6tf8p45dvlkmu7qpp5lsfer6jw208zja9809xume5980q57k77jrrqe8fcg7qrjgyykpps3lndhkc9r8jr2h69qh6ef4xudlh6xk0tpje25ppvqxkjrs2ennxrlzr727njp3dldspulnuxnsxcurskw4j9z88zuwtpjqzghfkzeqqqakszp7\", \"fee_reserve\": 10, \"state\": \"UNPA"
+   },
+   "P4_nut03_unit": {
+    "unit_usd": {
+     "status": 400,
+     "body": "{\"detail\": \"unit 'usd' not supported in any keyset.\", \"code\": 11013}"
+    },
+    "unit_eur": {
+     "status": 400,
+     "body": "{\"detail\": \"unit 'eur' not supported in any keyset.\", \"code\": 11013}"
+    }
+   }
+  },
+  "cdk-0.18.1": {
+   "identity": "cdk-mintd/0.18.1",
+   "image": "cashubtc/mintd:0.18.1",
+   "P1_nut06_max_array": {
+    "shape_Ys_60": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "Failed to deserialize the JSON body into the target type: Ys[0]: malformed public key at line 1 column 78"
+    },
+    "shape_outputs_60": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "Failed to deserialize the JSON body into the target type: missing field `Ys` at line 1 column 5473"
+    },
+    "accepted_shape": "Ys",
+    "limit_1001": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "Failed to deserialize the JSON body into the target type: Ys[0]: malformed public key at line 1 column 78"
+    }
+   },
+   "P2_nut19_cache": {
+    "get1": {
+     "etag": null,
+     "cache_control": null
+    },
+    "etag_stable_across_gets": true,
+    "if_none_match": {
+     "status": null,
+     "error": "no etag"
+    }
+   },
+   "P3_nut05_prefer_async": {
+    "status": 200,
+    "body": "{\"quote\": \"01a16cc3-bacf-7106-b6f2-b23c04aee334\", \"amount\": 1000, \"fee_reserve\": 20, \"state\": \"UNPAID\", \"expiry\": 1792826189, \"request\": \"lnbc10u1p4dckhf9qypqqqdqqxqrrsssp5lweaw7yhf2q5gle9gd4w7r6cmu6wz7lyvg7gw6tf8p45dvlkmu7qpp5lsfer6jw208zja9809xume5980q57k77jrrqe8fcg7qrjgyykpps3lndhkc9r8jr2h69qh6ef4xudlh6xk0tpje25ppvqxkjrs2ennxrlzr727njp3dldspulnuxnsxcurskw4j9z88zuwtpjqzghfkzeqqqakszp7\", \"unit\": "
+   },
+   "P4_nut03_unit": {
+    "unit_usd": {
+     "status": 400,
+     "body": "{\"code\": 11013, \"detail\": \"Unit unsupported\"}"
+    },
+    "unit_eur": {
+     "status": 400,
+     "body": "{\"code\": 11013, \"detail\": \"Unit unsupported\"}"
+    }
+   }
+  },
+  "cdk-0.18.2": {
+   "identity": "cdk-mintd/0.18.2",
+   "image": "cashubtc/mintd:0.18.2",
+   "P1_nut06_max_array": {
+    "shape_Ys_60": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "Failed to deserialize the JSON body into the target type: Ys[0]: malformed public key at line 1 column 78"
+    },
+    "shape_outputs_60": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "Failed to deserialize the JSON body into the target type: missing field `Ys` at line 1 column 5473"
+    },
+    "accepted_shape": "Ys",
+    "limit_1001": {
+     "status": 422,
+     "etag": null,
+     "cache_control": null,
+     "body": "Failed to deserialize the JSON body into the target type: Ys[0]: malformed public key at line 1 column 78"
+    }
+   },
+   "P2_nut19_cache": {
+    "get1": {
+     "etag": null,
+     "cache_control": null
+    },
+    "etag_stable_across_gets": true,
+    "if_none_match": {
+     "status": null,
+     "error": "no etag"
+    }
+   },
+   "P3_nut05_prefer_async": {
+    "status": 200,
+    "body": "{\"quote\": \"01a16cc3-e045-7163-8415-668dd95df0fc\", \"amount\": 1000, \"fee_reserve\": 20, \"state\": \"UNPAID\", \"expiry\": 1792826198, \"request\": \"lnbc10u1p4dckhf9qypqqqdqqxqrrsssp5lweaw7yhf2q5gle9gd4w7r6cmu6wz7lyvg7gw6tf8p45dvlkmu7qpp5lsfer6jw208zja9809xume5980q57k77jrrqe8fcg7qrjgyykpps3lndhkc9r8jr2h69qh6ef4xudlh6xk0tpje25ppvqxkjrs2ennxrlzr727njp3dldspulnuxnsxcurskw4j9z88zuwtpjqzghfkzeqqqakszp7\", \"unit\": "
+   },
+   "P4_nut03_unit": {
+    "unit_usd": {
+     "status": 400,
+     "body": "{\"code\": 11013, \"detail\": \"Unit unsupported\"}"
+    },
+    "unit_eur": {
+     "status": 400,
+     "body": "{\"code\": 11013, \"detail\": \"Unit unsupported\"}"
+    }
+   }
+  }
+ }
+}

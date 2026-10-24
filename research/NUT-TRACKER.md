@@ -28,34 +28,34 @@ Axes per NUT:
 |---|---|---|---|---|---|---|---|
 | 00 | Notation, Utilization, Terminology (+token formats) | mandatory | 2023-01-27→2026-10-23 | 31 | 19 | 0 | deep |
 | 01 | Mint public key exchange | mandatory | 2023-01-27→2026-10-20 | 12 | 0 | 6 | partial |
-| 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 4 | 6 | deep |
-| 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 0 | 3 | partial |
+| 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 5 | 6 | deep |
+| 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 1 | 3 | partial |
 | 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
-| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 1 | 6 | partial |
-| 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 4 | 2 | partial |
+| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 4 | 6 | partial |
+| 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 5 | 2 | partial |
 | 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 3 | 6 | partial |
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
-| 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 13 | 0 | deep |
-| 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 23 | 20 | deep |
+| 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 14 | 0 | deep |
+| 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 24 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
 | 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 0 | 3 | none |
-| 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 11 | 10 | deep |
+| 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 12 | 10 | deep |
 | 15 | Partial multi-path payments | optional | 2024-04-24→2026-10-20 | 11 | 0 | 0 | none |
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
 | 17 | WebSockets | optional | 2024-06-26→2026-10-20 | 7 | 0 | 0 | none |
 | 18 | Payment requests | optional | 2024-10-18→2026-10-20 | 10 | 1 | 2 | partial |
-| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 0 | 1 | none |
-| 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 5 | 4 | deep |
+| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 1 | 1 | none |
+| 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 6 | 4 | deep |
 | 21 | Clear auth | optional | 2025-01-29→2026-10-20 | 3 | 0 | 0 | none |
 | 22 | Blind auth | optional | 2025-01-29→2026-10-20 | 6 | 0 | 0 | none |
 | 23 | BOLT11 method abstraction | optional | 2025-06-01→2026-10-20 | 6 | 0 | 0 | none |
 | 24 | HTTP 402 | optional | 2025-06-26→2026-10-20 | 5 | 0 | 0 | none |
 | 25 | BOLT12 | optional | 2025-08-28→2026-10-20 | 6 | 0 | 0 | none |
-| 26 | Payment req Bech32m | optional | 2026-01-11→2026-10-20 | 5 | 0 | 2 | none |
+| 26 | Payment req Bech32m | optional | 2026-01-11→2026-10-20 | 5 | 1 | 2 | none |
 | 27 | Nostr mint backup | optional | 2026-01-11→2026-10-20 | 3 | 0 | 0 | none |
 | 28 | Pay-to-Blinded-Key (P2BK) | optional | 2026-02-16→2026-06-28 | 2 | 2 | 0 | partial |
-| 29 | Batched minting | optional | 2026-03-09→2026-10-20 | 13 | 0 | 3 | none |
+| 29 | Batched minting | optional | 2026-03-09→2026-10-20 | 13 | 1 | 3 | none |
 | 30 | Onchain payments | optional | 2026-05-20→2026-10-20 | 6 | 0 | 0 | none |
 
 (Suite counts from `conformance/README.md`; research counts from the
@@ -75,9 +75,10 @@ From `research/MINT-NUT-SUPPORT.md` / raw `mint-nut-support.json`:
   present in cf + cdk, absent in ns. Spec example shows min/max but no
   `method_name` — extra fields are the fork, not omissions.
 - **max_array_length** (#425): ns 0.20.3 ABSENT; ns 0.21.0 + cdk 1000;
-  cashu-cf **50** (20× tighter) — and testnut does NOT enforce its
-  advertised limit (60 Ys → 200; see divergences/
-  NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md).
+  cashu-cf **50** — but ALL arms enforce **1000** on checkstate (cf's
+  advertisement wrong by 20x; corrected same-day after the 60-Y probe
+  was shown to be under the real limit; see divergences/
+  NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md + fresh-must-wave FINDINGS).
 - **NUT-17 websocket commands**: ns declares 3, cdk declares 9, cashu-cf
   declares none (no NUT-17 entry at all).
 - **NUT-19 caching**: cashu-cf + cdk declare `{}`; nutshell has no entry.
@@ -160,11 +161,15 @@ registry rows), FINDINGS-2026-10-22 (rotation identity, expiry).
 Gap: fees block (#126, 2024-06) interacts with NUT-08 — covered there.
 Next: expiry-enforcement registry row is owner-gated; nothing new.
 
-### NUT-03 — partial (suite-only)
-Hold: swap scenarios. Gap: **zero dedicated findings** for the mandatory
-core path — unit-consistency #406 (2026-09-15) is fresh normative text;
-no arm measured against it. Next: cross-unit swap rejection probe
-(sat-keyset proofs + msat outputs etc.), error-identity asserted.
+### NUT-03 — partial
+Hold: suite swap scenarios; fresh-must unit probe 2026-10-24
+(experiments/fresh-must-wave/): unsupported-unit quotes rejected by all
+arms — error identity forks cf 11005 (self-describing message) vs
+ns-0.20.3 10000 vs ns-0.21.0/cdk 11013, incl. **intra-ns code drift
+10000→11013** (silent, wallets keying codes fork across ns versions).
+Gap: cross-unit swap (sat inputs + usd outputs) unmeasured — needs
+two-unit lifecycle. Next: mixed-unit swap probe on testnut (only
+multi-unit arm).
 
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
@@ -174,25 +179,33 @@ solution, 2026-06-10) unmeasured; expiry-as-deadline (#427) unmeasured.
 Next: quote `method` round-trip + unknown-method error identity.
 
 ### NUT-05 — partial
-Hold: UUIDv7/method violations, blank-change-outputs issue (with NUT-08).
-Gap: prefer_async (#339, 2026-02) — no arm measured; state-enum vs
-deprecated `paid` field. Next: async-melt fork probe (ns vs cdk vs cf).
+Hold: UUIDv7/method violations, blank-change-outputs issue (with NUT-08);
+prefer_async probe 2026-10-24 (fresh-must-wave): accepted 200 by all 6
+arms, echoed by NONE; quote fee_reserve forks cf/ns 10 vs cdk 20 on the
+same invoice; quote ids UUIDv7-shaped everywhere (#383 adopted).
+Gap: async-melt BEHAVIOR (does a paid async melt return PENDING vs
+PAID) unmeasured — quote layer only. Next: async-melt lifecycle probe
+(invoice-oracle pattern).
 
 ### NUT-06 — partial
 Hold: info scenarios; wire matrix field forks (`method_name` casing,
 min/max presence, 2026-10-24 — see "Wire declarations"); max_array_length
-advertisement + non-enforcement finding (divergences/
-NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md: cf advertises 50 vs references'
-1000, ns-0.20.3 absent; testnut accepts 60 Ys over the advertised 50).
-Gap: enforcement on ns/cdk arms unmeasured; swap/melt array paths
-unmeasured. Next: same probe on the 4 docker arms (enforced or not?),
-then swap-path array limit (fund-relevant).
+finding COMPLETE 2026-10-24 (divergences/NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md,
+corrected same day): **all 5 arms enforce 1000** on checkstate — cf
+ADVERTISES 50 (wrong by 20x), ns-0.20.3 enforces without advertising;
+error identity 3-way fork (14005 / bare-422 / 11014).
+Gap: swap/melt array paths (same 1000? per-endpoint?) unmeasured.
+Next: array-limit probe on swap outputs (fund-relevant path).
 
 ### NUT-07 — partial
-Hold: checkstate shape issue, witness-field violations (cashu-cf).
-Gap: UNSPENT-definition #424 (2026-09-09) — PENDING-era semantics
-per arm unmeasured. Next: pending-state probe (in-flight melt/swap →
-checkstate → verdicts).
+Hold: checkstate shape issue, witness-field violations (cashu-cf);
+fresh-must-wave side finding 2026-10-24: **cdk curve-validates Ys at
+checkstate** (422 "malformed public key" on non-point hex) — cf/ns
+accept arbitrary hex; ns accepts ONLY the Ys shape (outputs-shape →
+422), cf accepts Ys/proofs/secrets.
+Gap: UNSPENT-definition #424 (2026-09-09) — PENDING-era semantics per
+arm unmeasured. Next: pending-state probe (in-flight melt → checkstate
+→ verdicts).
 
 ### NUT-08 — partial
 Hold: fee-return scenarios, blank-change-outputs (index-pairing)
@@ -257,10 +270,16 @@ consolidation #381 (2026-07-21) rewrote the NUT — our findings predate?
 Verify against current text; decode scenarios exist.
 Next: re-baseline item6 findings against post-#381 18.md.
 
-### NUT-19 — none (suite 1)
-ETag/caching. Scenario exists, no findings. Wire (2026-10-24): cashu-cf
-+ cdk declare NUT-19 (`{}`); nutshell has no entry.
-Next: cache-behavior divergence probe (conditional GET per arm).
+### NUT-19 — partial
+Hold: fresh-must-wave probe 2026-10-24: declaring arms (cf, cdk) carry
+**`{}` params — no cached_endpoints, no ttl advertised**; ns doesn't
+declare. Identical melt-quote POST twice → NEW quote id on every arm
+(quote-create non-idempotent everywhere; extends the registry's
+retry-fork row). Side observation: no arm sends ETag; cf sends
+Cache-Control max-age=600.
+Gap: true NUT-19 replay (byte-identical /v1/swap, /v1/mint/bolt11,
+/v1/melt/bolt11) — needs real blind outputs; queued.
+Next: replay probe on cached endpoints via the must-gap driver.
 
 ### NUT-20 — deep
 Hold: quote-sig violations, NUT20-MINT-AUTH divergence, deterministic
@@ -305,20 +324,25 @@ or partial signatures?).
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.
 
-## Priority queue (2026-10-24)
+## Priority queue (updated 2026-10-24 after the fresh-must wave)
 
 Ranked by (mandatory/fresh-MUST × unmeasured × fund-loss class):
 
-1. NUT-03 unit-consistency #406 — mandatory core, 5 weeks old, zero data
-2. NUT-06 max_request_length #425 + NUT-08 amount-0 #426 + NUT-07
-   UNSPENT #424 — the 2026-08/09 tightening wave, all unmeasured
-3. NUT-13 derivation fork — only "not started" with fund-loss potential
+1. NUT-08 amount-0-on-blank-outputs #426 + NUT-07 UNSPENT #424 — the
+   remaining unmeasured tightening-wave items (melt-lifecycle class,
+   invoice-oracle pattern)
+2. NUT-13 derivation fork — only "not started" with fund-loss potential
    (restore failures strand funds)
-4. NUT-20 post-hardening signature matrix — breaking change, our deep
+3. NUT-20 post-hardening signature matrix — breaking change, our deep
    area, no row
-5. NUT-29 batch atomicity — fund-loss class (partial batch states)
-6. NUT-17 websocket parity, NUT-04/05 method surface — medium
-7. NUT-01 V1/V2 keyset-id acceptance — pairs with registry expiry rows
+4. NUT-29 batch atomicity — fund-loss class (partial batch states)
+5. NUT-19 true replay on cached endpoints (swap/mint/melt byte-identical
+   re-POST) — extends 2026-10-24 quote-create data
+6. NUT-03 mixed-unit swap lifecycle on testnut (quote layer done
+   2026-10-24)
+7. NUT-06 array limit on swap/melt paths (checkstate done)
+8. NUT-17 websocket parity, NUT-04/05 method surface — medium
+9. NUT-01 V1/V2 keyset-id acceptance — pairs with registry expiry rows
 
 ## Maintenance
 
