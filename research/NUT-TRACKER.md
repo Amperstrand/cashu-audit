@@ -136,6 +136,22 @@ conform to it — the version matrices (ns 0.20.3/0.21.0, cdk 0.18.1/0.18.2
 the 2026-08/09 tightening wave, which is exactly where unenforced-fresh-
 MUST findings should concentrate. That is the standing hunting ground.
 
+### In flight upstream (unmerged — the next epoch, watch for it)
+
+- **nuts#443 "NUT-10: Nutroot secrets (v3 keysets)"** (open, cont. #421):
+  the v3 protocol — v3 keysets (NUT-02), taproot-style locking
+  (tweak/internal key/leaves, NUT-10 as the leaf registry), v3 secrets +
+  transaction transcript + key-path witness moved into NUT-00, v3 mint
+  quotes ALWAYS LOCKED (NUT-04), checkstate returns witnesses (NUT-07),
+  v3 derivation incl. NUMS/leaf/quote-lock keys (NUT-13), P2BK in
+  payment requests (NUT-18/24/26/28). cdk already builds against it
+  (cdk#2607 Nutroot, cdk#2674 v3 seed vectors). Adjacent: nuts#460
+  (NUT-09/13 restore lookup), nuts#371 (BLS12-381 in NUT-00).
+  When #443 merges the watch regenerates SPEC-HISTORY and this section
+  must be rewritten as an epoch; the v3 surface (locking, locked quotes,
+  new derivation) is the next big interop audit target — start the
+  coverage matrix the day it lands.
+
 ## Per-NUT audit cards
 
 ### NUT-00 — deep
