@@ -187,3 +187,18 @@ STRING (object form → 422 pydantic `inputs.0.witness` validation error);
 cashu-cf accepts both forms (stringifies objects itself); cdk verified
 with the string form. HTLC secret shape: hash-in-data
 (cashu-ts-canonical) recognized by all three (cf. corrected A5).
+
+## NUT-11 positive path (2026-10-24): three-way P2PK unlock
+
+Mint P2PK (SIG_INPUTS, n_sigs 1) conditioned proof on each mint, witness
+produced by **cashu-ts's own `signP2PKProof`** (the canonical wallet
+form): **PAID on all three** (cashu-cf, nutshell 0.20.3, CDK 0.18.1).
+Witness wire form: JSON-string `{signatures:[schnorr-hex]}` (same
+string-form rule as HTLC; ns requires string). Helper note: it returns
+the SIGNED PROOF — extract `.witness`.
+
+**Spending-condition matrix status (three-way):** P2PK ✓reject ✓unlock ·
+HTLC ✓reject ✓unlock · SIG_ALL ✓reject (A4) ✗unlock — the one open
+cell; positive SIG_ALL needs per-mint message-format handling (the
+documented 0.20.3 format flip + cdk divergence = the format minefield;
+highest-effort, deferred).
