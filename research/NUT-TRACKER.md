@@ -249,15 +249,18 @@ deterministic-nonce #368 + completeness MUST (2026-09-11) unmapped to
 arms. Gap: cdk dual-gate divergence (registry D3) unfiled.
 Next: nonce-derivation + all-or-nothing acceptance matrix.
 
-### NUT-13 — partial (source-read)
-Hold: derivation source-read 2026-10-24
-(research/NUT13-DERIVATION-SOURCE-READ-2026-10-24.md): **0x01 slot
-contested** — nutshell uses it for blinding factor (spec table),
-cdk for P2PK keys (spec says BIP32 129373 path); nutshell 0.21.0 has
-NO deterministic P2PK derivation (restore of P2PK-locked proofs
-fails — fund-loss class). Not yet wire/vector-verified.
-Next: cross-implementation derivation vectors (cdk vs ns vs 13.md
-test vectors vs cashu-ts as third vote).
+### NUT-13 — partial (verified 2-1)
+Hold: derivation source-read + third vote 2026-10-24 (research/
+NUT13-DERIVATION-SOURCE-READ-2026-10-24.md): **0x01 slot contested and
+adjudicated 2-1** — nutshell (r) + cashu-ts (blindingFactor:0x01, and
+the spec's exact m/129373'/10' P2PK path) + spec table vs cdk 0.18.2
+alone (P2PK keys from the HMAC 0x01 slot). nutshell 0.21.0 has NO
+deterministic P2PK derivation (restore of P2PK-locked proofs fails).
+Cross-family P2PK restore broken by construction (same seed →
+different locked keys per family). Slot collision numeric:
+experiments/fresh-must-wave/out/nut13_slot_collision.json. Spec gap:
+tests/13-tests.md has NO V2 HMAC vectors.
+Next: registry row / nuts vector issue draft (owner-gated).
 
 ### NUT-14 — deep
 Hold: d5/d6 issues, refund vectors, NUT14-REFUND-VECTORS results,

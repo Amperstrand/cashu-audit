@@ -1,0 +1,7 @@
+{
+ "mnemonic": "\u2026(NUTs 13-tests vector)",
+ "keyset_id": "01adc013fa9d85171586660abab27579888611659d357bc86bc09cb26eee8bc035",
+ "slot_0x00_secret_nutshell": "7b5be73a3ca3e30a0c9c3991a25589aa785ae002640569e294dfbda45aeebab6",
+ "slot_0x01_nutshell_r": "e490afe142741392e3a33ef2a57066c30da0705d658e46ad4bbca6571ed613e3",
+ "note": "slot_0x01 IS cdk v0.18.2 SecretKey::derive input (P2PK key material) \u2014 same HMAC as nutshell's blinding factor r"
+}

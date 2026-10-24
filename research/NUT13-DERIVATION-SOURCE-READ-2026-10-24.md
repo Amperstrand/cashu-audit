@@ -41,11 +41,42 @@ crates/cashu/src/nuts/nut13.rs; nutshell 0.21.0 cashu/wallet/secrets.py
    `Cashu_KDF_HMAC_SHA512` message (dead `_expected_prefix` var) —
    pre-#368 residue, spec-drift documentation debt.
 
+## Verification update (2026-10-24, ~08:05): cashu-ts is the third vote — 2-1 against cdk
+
+cashu-ts `src/crypto/NUT13.ts` (current main, shallow clone in
+/root/src/upstream-cache/cashu-ts):
+
+- **Implements the spec type table exactly**: `secretKey: 0x00,
+  blindingFactor: 0x01` (its DERIVATION_TYPE map; comment: "0x00-0x03
+  are components of one proof allocation" — it even extends the table).
+- **Implements the spec P2PK path exactly**: BIP32
+  `m/129373'/{purpose}'/0'/0'/{counter}` with `P2PK: 10` — matching
+  13.md's `m/129373'/10'/0'/0'/{counter}` verbatim (plus a QuoteLock
+  purpose at 20 the spec doesn't define).
+
+**Verdict: nutshell + cashu-ts + the spec table read 0x01 = blinding
+factor; cdk 0.18.2 alone reads it as P2PK key material.** Consequences:
+
+1. Cross-family P2PK restore is broken by construction: the same seed
+   yields cashu-ts P2PK keys from the BIP32 129373 path, cdk keys from
+   the HMAC 0x01 slot, nutshell none at all. A user restoring a wallet
+   in different software does not recover the same locked keys.
+2. The contested-slot collision is numeric, not hypothetical — same
+   mnemonic + keyset + counter, the 0x01 HMAC output IS both
+   nutshell's r and cdk's P2PK key material
+   (`experiments/fresh-must-wave/out/nut13_slot_collision.json`).
+3. The spec's own vectors (tests/13-tests.md) cover only V1 BIP32
+   derivation — **no V2 HMAC vectors exist**, which is exactly why two
+   reference readings could ship. Candidate registry row / nuts issue
+   draft (owner-gated): add 0x00/0x01 V2 vectors; note cashu-ts's
+   0x02/0x03 extension; cdk's P2PK slot choice needs an explicit
+   spec/cdk reconciliation.
+
 ## Verification queue (wire/derived-vector, next session)
 
+- ~~cashu-ts third vote~~ DONE (above).
 - Derive (seed, keyset, counter) with cdk 0.18.2 code vs nutshell 0.21.0
-  code vs the 13.md test vectors: confirm secret streams agree (both
-  0x00) and r/key streams disagree (0x01 consumer split).
-- Check cashu-ts's NUT-13 for which reading it implements (third vote).
-- If confirmed: candidate registry row (spec-ambiguity class: the type
-  table vs the P2PK-path paragraph invite both readings).
+  code vs 13.md test vectors: secret streams agree (both 0x00;
+  slot collision JSON demonstrates the 0x01 identity).
+- If filing: registry row (spec-ambiguity + missing V2 vectors +
+  cdk divergence).
