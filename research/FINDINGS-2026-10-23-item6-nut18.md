@@ -13,6 +13,8 @@ candidate filings are owner-gated; nothing posted.
 
 ## 6a. Multi-mint V3 tokens — unreceivable across the reference ecosystem; two implementation bugs
 
+*(Version span: the Nutshell dead fallback ships identically in 0.20.3 helpers.py:109-114 and 0.21.0 helpers.py:105-118 — verified 2026-10-23; registry row carries both.)*
+
 Token: two real 2-proof sends from two local arms merged into one
 spec-legal V3 shape (full 66-hex ids, memo, unit sat).
 
@@ -42,7 +44,9 @@ Impact: senders of multi-mint V3 (a shape Nutshell wallets can emit
 via multi-mint send flows) strand funds against every reference
 wallet. Registry row staged.
 
-## 6b. DLEQ handling — live mixed-proof verification bypass in Nutshell 0.21.0
+## 6b. DLEQ handling — live mixed-proof verification bypass in Nutshell
+
+*(Version span: the `return`-not-`continue` defect ships identically in 0.20.3 wallet.py:1030-1033 and 0.21.0 wallet.py:998-1002 — verified 2026-10-23; registry row and tracking #55 comment carry both.)*
 
 Setup: 3 real proofs, garbage DLEQ (constant 32-byte hex e/s/r) at
 designated positions.
