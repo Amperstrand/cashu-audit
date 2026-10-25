@@ -367,21 +367,20 @@ Spec is 2 commits old — youngest NUT. Gap: no acceptance matrix for
 P2BK tokens across the three families beyond the pe-vector.
 Next: extend v4-pool with P2BK lifecycle (mint→send→receive) per arm.
 
-### NUT-29 — partial (measured 2026-10-25)
+### NUT-29 — partial (measured 2026-10-25; caps + error-registry data)
 Hold: batch atomicity probes (experiments/fresh-must-wave/
 FINDINGS-nut29.md): **atomicity HOLDS on all three families** — no
 partial signatures on any failure leg; rejected batches do not burn
-paid quotes (cf same-quote retry after a 500 → 200). Error-code
-**11016 converged** on all arms (spec-fresh text adopted everywhere —
-counter-example to the drift pattern). Warts: cf 500-crash on
-malformed B_ (batch saga lacks point pre-validation — candidate cf fix,
-owner-gated, pairs with the max_array_length fix); cdk "Unknown quote"
-50000 for an EMPTY batch (misleading); check-order divergence
-(dup-outputs vs unknown-quote first); testnut leaves quote state PAID
-after successful batch issuance.
-Gap: bolt12/onchain batch legs unmeasured (bolt11-only here); NUT-20
-locked-batch signatures (the `signatures` array path) unmeasured —
-overlaps the NUT-20 lock probe.
+paid quotes (cf same-quote retry after a 500 → 200). Caps probe
+(FINDINGS-nut29-caps.md): **batch-quote caps are 50 (cf) / 100 (cdk) /
+1000 (ns)** — cdk ADVERTISES 1000 but enforces 100 (11017): the
+advertisement-vs-enforcement gap is cdk's, not cf's. Error-registry
+pattern: 11016/11017/20008 all spec-listed and converged on cf+cdk;
+ns's pydantic 422s bypass the registry (framework-vs-handler layer —
+sharpens the error-drift narrative). Warts: cf 500-crash on malformed
+B_ (candidate cf fix); cdk "Unknown quote" for empty batch; check-order
+divergence; testnut quote stays PAID after batch issuance.
+Gap: bolt12/onchain batch legs; NUT-20 locked-batch signatures array.
 
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.

@@ -1,0 +1,68 @@
+{
+ "testnut(cashu-cf)": {
+  "n50": {
+   "n": 50,
+   "status": 400,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"outputs array is required and must be non-empty\"}"
+  },
+  "n51": {
+   "n": 51,
+   "status": 400,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"outputs array is required and must be non-empty\"}"
+  },
+  "n100": {
+   "n": 100,
+   "status": 400,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"outputs array is required and must be non-empty\"}"
+  },
+  "n1001": {
+   "n": 1001,
+   "status": 400,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"outputs array is required and must be non-empty\"}"
+  }
+ },
+ "ns-0.21.0": {
+  "n50": {
+   "n": 50,
+   "status": 400,
+   "body": "{\"detail\":\"no outputs provided.\",\"code\":11000}"
+  },
+  "n51": {
+   "n": 51,
+   "status": 400,
+   "body": "{\"detail\":\"no outputs provided.\",\"code\":11000}"
+  },
+  "n100": {
+   "n": 100,
+   "status": 400,
+   "body": "{\"detail\":\"no outputs provided.\",\"code\":11000}"
+  },
+  "n1001": {
+   "n": 1001,
+   "status": 422,
+   "body": "{\"detail\":[{\"type\":\"too_long\",\"loc\":[\"body\",\"quotes\"],\"msg\":\"List should have at most 1000 items after validation, not 1001\",\"inpu"
+  }
+ },
+ "cdk-0.18.2": {
+  "n50": {
+   "n": 50,
+   "status": 400,
+   "body": "{\"code\":50000,\"detail\":\"Unknown quote\"}"
+  },
+  "n51": {
+   "n": 51,
+   "status": 400,
+   "body": "{\"code\":50000,\"detail\":\"Unknown quote\"}"
+  },
+  "n100": {
+   "n": 100,
+   "status": 400,
+   "body": "{\"code\":50000,\"detail\":\"Unknown quote\"}"
+  },
+  "n1001": {
+   "n": 1001,
+   "status": 400,
+   "body": "{\"code\":11017,\"detail\":\"Maximum batch size exceeded: 1001 provided, max 100\"}"
+  }
+ }
+}
