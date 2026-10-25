@@ -138,7 +138,11 @@ MUST findings should concentrate. That is the standing hunting ground.
 
 ### In flight upstream (unmerged — the next epoch, watch for it)
 
-- **nuts#443 "NUT-10: Nutroot secrets (v3 keysets)"** (open, cont. #421):
+**Pre-staged audit plan: `research/V3-READINESS.md`** (readiness doc
+with the merge-day sequence, probe battery, and pre-staged BLS12-381
+tooling — py_ecc installed and pairing-verified 2026-10-25).
+
+- **nuts#443 "NUT-10: Nutroot secrets (v3 keysets)"** (open, cont. #421,
   the v3 protocol — v3 keysets (NUT-02), taproot-style locking
   (tweak/internal key/leaves, NUT-10 as the leaf registry), v3 secrets +
   transaction transcript + key-path witness moved into NUT-00, v3 mint
