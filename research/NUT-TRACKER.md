@@ -181,17 +181,20 @@ registry rows), FINDINGS-2026-10-22 (rotation identity, expiry).
 Gap: fees block (#126, 2024-06) interacts with NUT-08 — covered there.
 Next: expiry-enforcement registry row is owner-gated; nothing new.
 
-### NUT-03 — partial (unit consistency measured on cf 2026-10-25)
-Hold: suite swap scenarios; unit probe (experiments/fresh-must-wave/
-FINDINGS-nut03-units.md): testnut (only multi-unit arm) enforces #406
-on the swap path — same-unit inputs, outputs under input keyset; all
-violation shapes rejected (14005); usd lifecycle works end-to-end.
-Mint-path identity for unit mismatch is 12001 (vs 14005 on swap) —
-same violation class, two identities. Mixed-input error message is
-the most self-describing in the program ("Found units: sat, usd").
-Gap: ns/cdk multi-unit arms (sat-only by config) — family matrix
-incomplete; keyset-rotation cross-unit swaps unmeasured.
-Next: a two-unit cdk arm (config change) to complete the matrix.
+### NUT-03 — partial (unit consistency + keyless-amount matrix 2026-10-25)
+Hold: suite swap scenarios; unit probe (FINDINGS-nut03-units.md):
+testnut enforces #406 on swap (all violation shapes rejected; usd
+lifecycle green; mint-vs-swap identities differ 12001/14005).
+**Keyless-amount family matrix** (FINDINGS-keyless.md +
+divergences/CASHU-CF-KEYLESS-AMOUNT-SIGNING-2026-10-25.md): **cf SIGNS
+outputs whose amount has no keyset key and then REFUSES its own proof
+at redemption ("No public key found for amount 63") — sign/verify path
+asymmetry, stranded funds on the issuing mint** (cf fix queued, item
+#3); cdk rejects 12001 "Unknown Keyset" (misleading, safe); ns
+crash-rejects `detail:"N"` (F5 class, third instance). Melt
+change-output caps: cf handles 1001 (melt path clean — the swap-path
+SQLite leak is swap-specific); cdk 11015/1000.
+Gap: ns/cdk multi-unit arms; cf balanced beyond-keyset-max leg.
 
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
