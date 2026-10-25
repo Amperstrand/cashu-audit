@@ -195,6 +195,10 @@ crash-rejects `detail:"N"` (F5 class, third instance). Melt
 change-output caps: cf handles 1001 (melt path clean — the swap-path
 SQLite leak is swap-specific); cdk 11015/1000.
 Gap: ns/cdk multi-unit arms; cf balanced beyond-keyset-max leg.
+NOTE 2026-10-25: two-unit cdk arm attempted (supported_units
+["sat","usd"] fake-wallet TOML): config-init OK but mintd exits
+silently at boot (no logs) — needs per-unit backend config research;
+not a one-line change.
 
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
