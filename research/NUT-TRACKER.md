@@ -46,7 +46,7 @@ Axes per NUT:
 | 17 | WebSockets | optional | 2024-06-26→2026-10-20 | 7 | 0 | 0 | none |
 | 18 | Payment requests | optional | 2024-10-18→2026-10-20 | 10 | 1 | 2 | partial |
 | 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 1 | 1 | none |
-| 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 6 | 4 | deep |
+| 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 8 | 4 | deep |
 | 21 | Clear auth | optional | 2025-01-29→2026-10-20 | 3 | 0 | 0 | none |
 | 22 | Blind auth | optional | 2025-01-29→2026-10-20 | 6 | 0 | 0 | none |
 | 23 | BOLT11 method abstraction | optional | 2025-06-01→2026-10-20 | 6 | 0 | 0 | none |
@@ -323,16 +323,21 @@ Gap: true NUT-19 replay (byte-identical /v1/swap, /v1/mint/bolt11,
 /v1/melt/bolt11) — needs real blind outputs; queued.
 Next: replay probe on cached endpoints via the must-gap driver.
 
-### NUT-20 — deep
+### NUT-20 — deep (lock path measured 2026-10-25)
 Hold: quote-sig violations, NUT20-MINT-AUTH divergence, deterministic
-locking (#373). Wire datum 2026-10-24 (fresh-must artifacts): all 5
-arms DECLARE NUT-20 `supported: true` yet no quote response carries a
-`sig` field in default config — declaration is capability-speak;
-signing presumably needs the lock/auth path exercised.
-Gap: the #370/#384 breaking hardening (2026-06-07) — version matrix of
-who signs what message; lock-path behavior unmeasured on any arm.
-Next: quote-lock request path per arm (20.md request shape), then the
-signature-message derivation matrix across arms/versions.
+locking (#373); **lock-path probes complete** (experiments/
+fresh-must-wave/FINDINGS-nut20.md): pubkey-locked quotes work on all
+three arms; spec code **20008 converged** everywhere; third-party
+x-only BIP340 signatures (post-#370 message) accepted by all — the
+format fork the hardening risked did not materialize; quotes survive
+sig rejections (no fund loss). **L5 fork: signature on an UNLOCKED
+quote — ns/cf accept-and-ignore, cdk rejects 20008** (spec silent for
+single-mint; wallet-compat trap). 20.md's own example signature
+verifies under NO live format (decorative; internal filing candidate).
+Earlier card note corrected: NUT-20 has no mint-signed-quote field —
+the "no arm signs quotes" observation measured nothing.
+Gap: batch locked-mint (29.md signatures array) unmeasured; cdk's
+legacy-format acceptance (source-read) unmeasured on the wire.
 
 ### NUT-21/22 — none
 Auth NUTs; matching rules #334 (2026-02), NUT-22 DLEQ-mandatory #222.

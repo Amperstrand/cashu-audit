@@ -1,0 +1,98 @@
+{
+ "testnut(cashu-cf)": {
+  "pubkey": "03e0e93744f3baa9\u2026",
+  "L1_echo_pubkey": [
+   true,
+   "03e0e93744f3baa9acab"
+  ],
+  "L2_no_sig": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"error\":\"quote_pubkey_no_signature\",\"detail\":\"Mint quote requires a valid signature\",\"code\":20008}"
+  },
+  "L3_valid_sig_after_reject": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"008e808b89acc141\",\"C_\":\"037c3a2c6127ef2e72dedb26f3f9227168febfb2a4b5b0a7567f8b0bc32a912117\",\"dleq\":{\"e\":\"7791fe42605340312313488f821b81c44d0a5a2c49ee7b96f8af1c104f705"
+  },
+  "L4_wrong_key": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"error\":\"quote_pubkey_no_signature\",\"detail\":\"Mint quote requires a valid signature\",\"code\":20008}"
+  },
+  "L4_retry_valid": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"amount\":32,\"id\":\"008e808b89acc141\",\"C_\":\"02e852680019f60b6da08eec8b4623d9f51a333139bf8f12f502160728a1075129\",\"dleq\":{\"e\":\"f9158a69d3d708a86c8eb3e5a40c3e057e2f53e2dcfc4114c6a73854c5087"
+  },
+  "L5_unlocked_plus_sig": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"amount\":16,\"id\":\"008e808b89acc141\",\"C_\":\"0273fef7136db7047baba43e190aabd95b05af55bc4c006f7b27c1e5c3f488a4d0\",\"dleq\":{\"e\":\"d4f572f39529423e75b7aaa8fafb7001de06ac0fb8c869aa8f2a7721ce3bb"
+  }
+ },
+ "ns-0.21.0": {
+  "pubkey": "032b07af2f3712e3\u2026",
+  "L1_echo_pubkey": [
+   true,
+   "032b07af2f3712e3fdd7"
+  ],
+  "L2_no_sig": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"detail\":\"Signature for mint request invalid\",\"code\":20008}"
+  },
+  "L3_valid_sig_after_reject": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"id\":\"016bf99ecf1071cb62ce9e8fd53985249e3c4dc951b3f710cda2115fb95f623243\",\"amount\":64,\"C_\":\"03f635b732769743ef1519ac718485e1267cdeedc51f382bacd550c484ff5f0368\",\"dleq\":{\"e\":\"34e45ca7602"
+  },
+  "L4_wrong_key": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"detail\":\"Signature for mint request invalid\",\"code\":20008}"
+  },
+  "L4_retry_valid": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"id\":\"016bf99ecf1071cb62ce9e8fd53985249e3c4dc951b3f710cda2115fb95f623243\",\"amount\":32,\"C_\":\"0269feaf3b72d0e0aacda6b3bfef7541b50026a14f90f552eb34db6fd5c17fbe80\",\"dleq\":{\"e\":\"3ca973d3670"
+  },
+  "L5_unlocked_plus_sig": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"id\":\"016bf99ecf1071cb62ce9e8fd53985249e3c4dc951b3f710cda2115fb95f623243\",\"amount\":16,\"C_\":\"02fb92653b2df98574fb1b74db1ec70d0c8fdad0821282a0ba1ef09165720c30b2\",\"dleq\":{\"e\":\"2db74b18e10"
+  }
+ },
+ "cdk-0.18.2": {
+  "pubkey": "03d5f302925e4f7d\u2026",
+  "L1_echo_pubkey": [
+   true,
+   "03d5f302925e4f7d560c"
+  ],
+  "L2_no_sig": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"code\":20008,\"detail\":\"Signature missing or invalid\"}"
+  },
+  "L3_valid_sig_after_reject": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"017026b9e004bd34dc448b3bef9652696af559ff62bb33480554eb83ca7b282c0d\",\"C_\":\"038f33a8ca3de5e4a096db976f1b18240926ca387318f9ae19fe5c32d8bdc6b5a1\",\"dleq\":{\"e\":\"051a4e40267"
+  },
+  "L4_wrong_key": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"code\":20008,\"detail\":\"Signature missing or invalid\"}"
+  },
+  "L4_retry_valid": {
+   "status": 200,
+   "sigs": 1,
+   "body": "{\"signatures\":[{\"amount\":32,\"id\":\"017026b9e004bd34dc448b3bef9652696af559ff62bb33480554eb83ca7b282c0d\",\"C_\":\"02b450680299f32a060d2e2d37736a38e31689d550169f81001f30985b3c68d941\",\"dleq\":{\"e\":\"444bc4d5820"
+  },
+  "L5_unlocked_plus_sig": {
+   "status": 400,
+   "sigs": 0,
+   "body": "{\"code\":20008,\"detail\":\"Signature missing or invalid\"}"
+  }
+ }
+}
