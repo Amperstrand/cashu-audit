@@ -1,4 +1,6 @@
 {
-  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body — error-identity class (wire shape), version fact",
-  "mint_info_nut19_supported": "VERSION FACT: nutshell 0.21.0 does not advertise NUT-19 in nuts list"
+  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
+  "mint_info_nut19_supported": "VERSION FACT: nutshell 0.21.0 does not advertise NUT-19 in nuts list",
+  "swap_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching \u2014 nutshell rejects replays (11001 proofs already spent) while cf+cdk return cached byte-identical 200s; measured 2026-10-25, FINDINGS-nut19.md; spec-position scenario until nutshell adopts caching",
+  "melt_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching \u2014 nutshell rejects melt replays (20006) while cf+cdk cache; measured 2026-10-25, FINDINGS-nut19.md"
 }

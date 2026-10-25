@@ -483,3 +483,180 @@ def _(mint: MintClient) -> ScenarioResult:
         "mint_info_returns_required_fields", "NUT-06 Mint Info Basics",
         Result.FAIL, f"missing fields: {missing}",
     )
+
+
+# ─── NUT-03 Keyless Amounts (fund-safety) — added 2026-10-25 ─────────────
+
+def _keyless_output(builder: "ProofBuilder", amount: int):
+    """One output with an arbitrary (possibly keyless) amount."""
+    from conformance.builder import OutputResult
+    from conformance.crypto import generate_secret, step1_alice
+    secret_str = generate_secret()
+    B_, r = step1_alice(secret_str)
+    return OutputResult(B_=B_.format().hex(), r_hex=r.to_hex(),
+                        amount=amount, secret=secret_str)
+
+
+def _keyset_amounts(mint: MintClient) -> list[int] | None:
+    keys = mint.get_keys()
+    sat = [k for k in keys.get("keysets", []) if k.get("unit") == "sat"]
+    if not sat:
+        return None
+    return [int(a) for a in sat[0]["keys"]]
+
+
+def _keyless_pair(amounts: list[int], total: int) -> list[int] | None:
+    """Two keyless amounts summing to total (denominations are powers of 2)."""
+    for a in range(1, total):
+        b = total - a
+        if a not in amounts and b not in amounts:
+            return [a, b]
+    return None
+
+
+@scenario("swap_never_signs_keyless_amount", "NUT-03 Keyless Amounts")
+def _(mint: MintClient) -> ScenarioResult:
+    """Fund-safety: a swap whose outputs use amounts with no keyset key
+    must never return signatures (signing them strands the ecash — the
+    2026-10-25 cashu-cf finding). Any rejection (balance or keyset) is
+    safe; 200-with-signatures is the fund-loss bug."""
+    amounts = _keyset_amounts(mint)
+    if not amounts:
+        return ScenarioResult("swap_never_signs_keyless_amount",
+                              "NUT-03 Keyless Amounts", Result.SKIP,
+                              "no sat keyset")
+    builder = ProofBuilder(mint)
+    proofs = builder.mint_proofs(16)
+    fee = builder.calc_fee(len(proofs))
+    pair = _keyless_pair(amounts, 16 - fee)
+    if pair is None:
+        return ScenarioResult("swap_never_signs_keyless_amount",
+                              "NUT-03 Keyless Amounts", Result.SKIP,
+                              "no keyless pair available")
+    outs = [_keyless_output(builder, a) for a in pair]
+    status, body = mint.try_swap([p.to_dict() for p in proofs],
+                                 builder.outputs_to_api(outs))
+    if status != 200:
+        return ScenarioResult(
+            "swap_never_signs_keyless_amount", "NUT-03 Keyless Amounts",
+            Result.PASS, f"rejected ({status}): {fmt_body(body)[:90]}",
+        )
+    sigs = body.get("signatures", []) if isinstance(body, dict) else []
+    if sigs:
+        return ScenarioResult(
+            "swap_never_signs_keyless_amount", "NUT-03 Keyless Amounts",
+            Result.FAIL,
+            f"FUNDS-LOSS: signed keyless amounts {pair} — redemption will refuse these proofs",
+        )
+    return ScenarioResult(
+        "swap_never_signs_keyless_amount", "NUT-03 Keyless Amounts",
+        Result.PASS, "200 with no signatures (odd but not fund-loss)",
+    )
+
+
+@scenario("mint_never_signs_keyless_amount", "NUT-03 Keyless Amounts")
+def _(mint: MintClient) -> ScenarioResult:
+    """Fund-safety: minting outputs with keyless amounts must not return
+    signatures (same class as the swap variant)."""
+    amounts = _keyset_amounts(mint)
+    if not amounts:
+        return ScenarioResult("mint_never_signs_keyless_amount",
+                              "NUT-03 Keyless Amounts", Result.SKIP,
+                              "no sat keyset")
+    builder = ProofBuilder(mint)
+    pair = _keyless_pair(amounts, 16)
+    if pair is None:
+        return ScenarioResult("mint_never_signs_keyless_amount",
+                              "NUT-03 Keyless Amounts", Result.SKIP,
+                              "no keyless pair available")
+    quote = mint.mint_quote(16)
+    for _ in range(20):
+        st = mint.check_mint_quote(quote["quote"])
+        if st.get("state") == "PAID":
+            break
+        time.sleep(1)
+    outs = [_keyless_output(builder, a) for a in pair]
+    status, body = mint.try_mint(quote["quote"], builder.outputs_to_api(outs))
+    if status != 200:
+        return ScenarioResult(
+            "mint_never_signs_keyless_amount", "NUT-03 Keyless Amounts",
+            Result.PASS, f"rejected ({status}): {fmt_body(body)[:90]}",
+        )
+    sigs = body.get("signatures", []) if isinstance(body, dict) else []
+    if sigs:
+        return ScenarioResult(
+            "mint_never_signs_keyless_amount", "NUT-03 Keyless Amounts",
+            Result.FAIL,
+            f"FUNDS-LOSS: signed keyless amounts {pair} at mint time",
+        )
+    return ScenarioResult(
+        "mint_never_signs_keyless_amount", "NUT-03 Keyless Amounts",
+        Result.PASS, "200 with no signatures (odd but not fund-loss)",
+    )
+
+
+# ─── NUT-19 Replay Caching (fund paths) — added 2026-10-25 ───────────────
+
+
+@scenario("swap_replay_returns_cached_response", "NUT-19 Replay Caching")
+def _(mint: MintClient) -> ScenarioResult:
+    """NUT-19: a byte-identical successful swap re-POST returns the
+    cached response (200, identical body). Measured 2026-10-25: cf+cdk
+    cache; nutshell rejects (11001) — positioned divergence."""
+    builder = ProofBuilder(mint)
+    proofs = builder.mint_proofs(8)
+    fee = builder.calc_fee(len(proofs))
+    outs = builder.create_outputs(8 - fee, lambda: generate_secret())
+    inputs = [p.to_dict() for p in proofs]
+    outputs = builder.outputs_to_api(outs)
+    s1, b1 = mint.try_swap(inputs, outputs)
+    if s1 != 200:
+        return ScenarioResult(
+            "swap_replay_returns_cached_response", "NUT-19 Replay Caching",
+            Result.FAIL, f"first swap failed ({s1}): {fmt_body(b1)[:90]}",
+        )
+    s2, b2 = mint.try_swap(inputs, outputs)
+    if s2 == 200 and b2 == b1:
+        return ScenarioResult(
+            "swap_replay_returns_cached_response", "NUT-19 Replay Caching",
+            Result.PASS, "cached: byte-identical 200",
+        )
+    return ScenarioResult(
+        "swap_replay_returns_cached_response", "NUT-19 Replay Caching",
+        Result.FAIL,
+        f"not cached: replay -> {s2}: {fmt_body(b2)[:90]} (cf/cdk cache; ns 11001)",
+    )
+
+
+@scenario("melt_replay_returns_cached_response", "NUT-19 Replay Caching")
+def _(mint: MintClient) -> ScenarioResult:
+    """NUT-19: byte-identical successful melt re-POST returns the cached
+    response. Measured 2026-10-25: cf+cdk cache; ns rejects 20006."""
+    builder = ProofBuilder(mint)
+    quote = mint.create_fresh_melt_quote(amount=4)
+    proofs = builder.mint_proofs(8)
+    fee = builder.calc_fee(len(proofs))
+    inputs = [p.to_dict() for p in proofs]
+    change_amt = 8 - 4 - fee
+    outputs = []
+    if change_amt > 0:
+        outs = builder.create_outputs(change_amt, lambda: generate_secret())
+        outputs = builder.outputs_to_api(outs)
+    s1, b1 = mint.melt(quote["quote"], inputs, outputs)
+    if s1 != 200:
+        return ScenarioResult(
+            "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
+            Result.FAIL, f"first melt failed ({s1}): {fmt_body(b1)[:90]}",
+        )
+    s2, b2 = mint.melt(quote["quote"], inputs, outputs)
+    if s2 == 200:
+        return ScenarioResult(
+            "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
+            Result.PASS,
+            "cached 200" + (" (identical)" if b2 == b1 else " (non-identical body)"),
+        )
+    return ScenarioResult(
+        "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
+        Result.FAIL,
+        f"not cached: replay -> {s2}: {fmt_body(b2)[:90]} (cf/cdk cache; ns 20006)",
+    )

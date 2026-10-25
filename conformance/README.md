@@ -13,7 +13,7 @@ python3 run_matrix.py --mint https://testnut.cashu.exchange
 |-----|-----------|-------------|
 | NUT-01/06 | 6 | Info endpoint, keysets, mint metadata |
 | NUT-02 | 6 | Keyset validation, fees, units |
-| NUT-03 | 3 | Swap (split tokens) |
+| NUT-03 | 5 | Swap (split tokens) + keyless-amount fund-safety (2026-10-25) |
 | NUT-04 | 5 | Mint quote accounting (amount_paid, amount_issued, updated_at) |
 | NUT-05 | 3 | Melt quote lifecycle |
 | NUT-07 | 2 | Checkstate (UNSPENT/PENDING/SPENT) |
@@ -23,7 +23,7 @@ python3 run_matrix.py --mint https://testnut.cashu.exchange
 | NUT-13 | 3 | Deterministic secrets (BIP32 derivation, restore) |
 | NUT-14 | 10+ | HTLC spending conditions (swap + melt) |
 | NUT-18 | 2 | Payment request CBOR decode |
-| NUT-19 | 1 | Cache headers |
+| NUT-19 | 3 | Cache headers + swap/melt replay caching (2026-10-25) |
 | NUT-20 | 4 | Quote signature validation |
 | NUT-26 | 2 | Bech32m payment request encoding |
 | NUT-29 | 3 | Batch mint/check operations |

@@ -1,10 +1,12 @@
 {
- "p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend": "POSITIONED: ns 0.20.3 uniquely requires a witness post-expiry; 0.21.0 + all zoo cdk accept as anyone-can-spend (DIVERGENCE-REGISTRY 'settled by convergence'; re-check on 0.21.x arms)",
- "htlc_sigall_preimage_only_no_pubkeys_succeeds": "POSITIONED: SIG_ALL/HTLC witness semantics \u2014 nutshell requires preimage+signature, suite's frozen prediction encodes the cdk-side reading (registry: cdk#2252 item 6 territory)",
- "htlc_sigall_requires_preimage_and_transaction_signature": "POSITIONED: same SIG_ALL/HTLC witness split as above",
- "htlc_sigall_locktime_after_expiry_refund_succeeds": "POSITIONED: same SIG_ALL/HTLC witness split as above",
- "htlc_sigall_multisig_2of3": "POSITIONED: same SIG_ALL/HTLC witness split as above",
- "htlc_sigall_receiver_path_after_locktime": "POSITIONED: same SIG_ALL/HTLC witness split as above",
- "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
- "mint_info_nut19_supported": "VERSION FACT: nutshell 0.20.3 does not advertise NUT-19 in nuts list"
+  "p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend": "POSITIONED: ns 0.20.3 uniquely requires a witness post-expiry; 0.21.0 + all zoo cdk accept as anyone-can-spend (DIVERGENCE-REGISTRY 'settled by convergence'; re-check on 0.21.x arms)",
+  "htlc_sigall_preimage_only_no_pubkeys_succeeds": "POSITIONED: SIG_ALL/HTLC witness semantics \u2014 nutshell requires preimage+signature, suite's frozen prediction encodes the cdk-side reading (registry: cdk#2252 item 6 territory)",
+  "htlc_sigall_requires_preimage_and_transaction_signature": "POSITIONED: same SIG_ALL/HTLC witness split as above",
+  "htlc_sigall_locktime_after_expiry_refund_succeeds": "POSITIONED: same SIG_ALL/HTLC witness split as above",
+  "htlc_sigall_multisig_2of3": "POSITIONED: same SIG_ALL/HTLC witness split as above",
+  "htlc_sigall_receiver_path_after_locktime": "POSITIONED: same SIG_ALL/HTLC witness split as above",
+  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
+  "mint_info_nut19_supported": "VERSION FACT: nutshell 0.20.3 does not advertise NUT-19 in nuts list",
+  "swap_replay_returns_cached_response": "POSITIONED: same as 0.21.0 \u2014 no NUT-19 caching in nutshell (11001)",
+  "melt_replay_returns_cached_response": "POSITIONED: same as 0.21.0 \u2014 no NUT-19 caching (20006)"
 }
