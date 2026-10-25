@@ -55,7 +55,7 @@ Axes per NUT:
 | 26 | Payment req Bech32m | optional | 2026-01-11→2026-10-20 | 5 | 1 | 2 | none |
 | 27 | Nostr mint backup | optional | 2026-01-11→2026-10-20 | 3 | 0 | 0 | none |
 | 28 | Pay-to-Blinded-Key (P2BK) | optional | 2026-02-16→2026-06-28 | 2 | 2 | 0 | partial |
-| 29 | Batched minting | optional | 2026-03-09→2026-10-20 | 13 | 3 | 3 | none |
+| 29 | Batched minting | optional | 2026-03-09→2026-10-20 | 13 | 3 | 3 | partial |
 | 30 | Onchain payments | optional | 2026-05-20→2026-10-20 | 6 | 0 | 0 | none |
 
 (Suite counts from `conformance/README.md`; research counts from the
