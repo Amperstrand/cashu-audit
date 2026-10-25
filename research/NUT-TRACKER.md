@@ -333,21 +333,18 @@ max vs ns 2^63 — wallet splitting must consult the keyset).
 Gap: ttl behavior (does the cache expire?); replay of PARTIALLY
 failed requests.
 
-### NUT-20 — deep (lock path measured 2026-10-25)
+### NUT-20 — deep (lock path + batch locked-mint COMPLETE 2026-10-25)
 Hold: quote-sig violations, NUT20-MINT-AUTH divergence, deterministic
-locking (#373); **lock-path probes complete** (experiments/
-fresh-must-wave/FINDINGS-nut20.md): pubkey-locked quotes work on all
-three arms; spec code **20008 converged** everywhere; third-party
-x-only BIP340 signatures (post-#370 message) accepted by all — the
-format fork the hardening risked did not materialize; quotes survive
-sig rejections (no fund loss). **L5 fork: signature on an UNLOCKED
-quote — ns/cf accept-and-ignore, cdk rejects 20008** (spec silent for
-single-mint; wallet-compat trap). 20.md's own example signature
-verifies under NO live format (decorative; internal filing candidate).
-Earlier card note corrected: NUT-20 has no mint-signed-quote field —
-the "no arm signs quotes" observation measured nothing.
-Gap: batch locked-mint (29.md signatures array) unmeasured; cdk's
-legacy-format acceptance (source-read) unmeasured on the wire.
+locking (#373); lock-path probes (FINDINGS-nut20.md): pubkey-locked
+quotes work on all arms; **20008 converged**; third-party post-#370
+x-only BIP340 signatures accepted everywhere; quotes survive sig
+rejections. **Batch locked-mint (FINDINGS-nut20batch.md): converged**
+— signatures [sig, null] array → 200 on all arms; omitted → 20008 on
+all arms. L5 fork (spurious sig on UNLOCKED quote: ns/cf ignore, cdk
+rejects). 20.md's example signature decorative (verifies under no
+format). Version-stable: 0.20.3/0.18.1 identical identities on lock +
+keyless paths.
+Gap: none on the lock path — audit complete.
 
 ### NUT-21/22 — none
 Auth NUTs; matching rules #334 (2026-02), NUT-22 DLEQ-mandatory #222.
