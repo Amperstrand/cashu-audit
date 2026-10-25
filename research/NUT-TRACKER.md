@@ -26,17 +26,17 @@ Axes per NUT:
 
 | NUT | Title | Spec status | First→last change | Cmts | Research | Suite | Status |
 |---|---|---|---|---|---|---|---|
-| 00 | Notation, Utilization, Terminology (+token formats) | mandatory | 2023-01-27→2026-10-23 | 31 | 19 | 0 | deep |
+| 00 | Notation, Utilization, Terminology (+token formats) | mandatory | 2023-01-27→2026-10-23 | 31 | 20 | 0 | deep |
 | 01 | Mint public key exchange | mandatory | 2023-01-27→2026-10-20 | 12 | 0 | 6 | partial |
-| 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 5 | 6 | deep |
-| 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 2 | 3 | partial |
-| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 3 | 5 | partial |
+| 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 7 | 6 | deep |
+| 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 5 | 5 | partial |
+| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
-| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 5 | 6 | partial |
+| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 6 | 6 | partial |
 | 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 6 | 2 | partial |
 | 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 6 | 6 | partial |
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
-| 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 14 | 0 | deep |
+| 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 15 | 0 | deep |
 | 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 25 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
 | 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 3 | 3 | partial |
@@ -45,7 +45,7 @@ Axes per NUT:
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
 | 17 | WebSockets | optional | 2024-06-26→2026-10-20 | 7 | 0 | 0 | none |
 | 18 | Payment requests | optional | 2024-10-18→2026-10-20 | 10 | 1 | 2 | partial |
-| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 3 | 1 | deep |
+| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 3 | 3 | deep |
 | 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 9 | 4 | deep |
 | 21 | Clear auth | optional | 2025-01-29→2026-10-20 | 3 | 0 | 0 | none |
 | 22 | Blind auth | optional | 2025-01-29→2026-10-20 | 6 | 0 | 0 | none |
@@ -395,25 +395,26 @@ Gap: bolt12/onchain batch legs; NUT-20 locked-batch signatures array.
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.
 
-## Priority queue (updated 2026-10-24 after the fresh-must wave)
+## Priority queue (updated 2026-10-25 after the unattended program)
 
-Ranked by (mandatory/fresh-MUST × unmeasured × fund-loss class):
+Closed tonight: NUT-19 replay matrix (deep), NUT-20 lock path (deep),
+NUT-29 atomicity + caps (partial→measured), NUT-03 units + keyless
+(partial→measured), NUT-06 cap landscape (~complete), V3 readiness
+(pre-staged). Remaining, ranked:
 
-1. NUT-08 amount-0-on-blank-outputs #426 + NUT-07 UNSPENT #424 — the
-   remaining unmeasured tightening-wave items (melt-lifecycle class,
-   invoice-oracle pattern)
-2. NUT-13 derivation fork — only "not started" with fund-loss potential
-   (restore failures strand funds)
-3. NUT-20 post-hardening signature matrix — breaking change, our deep
-   area, no row
-4. NUT-29 batch atomicity — fund-loss class (partial batch states)
-5. NUT-19 true replay on cached endpoints (swap/mint/melt byte-identical
-   re-POST) — extends 2026-10-24 quote-create data
-6. NUT-03 mixed-unit swap lifecycle on testnut (quote layer done
-   2026-10-24)
-7. NUT-06 array limit on swap/melt paths (checkstate done)
-8. NUT-17 websocket parity, NUT-04/05 method surface — medium
-9. NUT-01 V1/V2 keyset-id acceptance — pairs with registry expiry rows
+1. **cashu-cf fix queue (ours, owner-gated deploys)**: (a) keyless-
+   amount signing (branch fix/keyless-amount-signing @ 97a1654 —
+   fund-loss); (b) batch B_ 500-crash → clean 4xx; (c) swap-outputs
+   SQLite error leak → explicit cap + clean error; (d) interop-lab
+   test's hardcoded /Users/macbook python path (env rot).
+2. NUT-20 batch locked-mint (29.md signatures array) — the one
+   unmeasured lock-path cell.
+3. NUT-07 UNSPENT/PENDING legs (needs an unpaid-invoice hold at the
+   target — oracle invoice works for quote-create; melt PENDING needs
+   a backend that holds).
+4. NUT-12 DLEQ completeness (#434-adjacent) acceptance matrix.
+5. Multi-unit cdk/ns arms (completes the NUT-03 family matrix).
+6. v3 (#443 merge) — V3-READINESS.md sequence, watch fires automatically.
 
 ## Maintenance
 
