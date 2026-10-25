@@ -45,7 +45,7 @@ Axes per NUT:
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
 | 17 | WebSockets | optional | 2024-06-26→2026-10-20 | 7 | 0 | 0 | none |
 | 18 | Payment requests | optional | 2024-10-18→2026-10-20 | 10 | 1 | 2 | partial |
-| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 3 | 1 | none |
+| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 3 | 1 | deep |
 | 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 9 | 4 | deep |
 | 21 | Clear auth | optional | 2025-01-29→2026-10-20 | 3 | 0 | 0 | none |
 | 22 | Blind auth | optional | 2025-01-29→2026-10-20 | 6 | 0 | 0 | none |
