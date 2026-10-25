@@ -27,7 +27,20 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 STATE = REPO / "research/upstream-state.json"
 WATCH = REPO / "research/UPSTREAM-WATCH.md"
-NUTS_CLONE = Path("/root/src/NUTs")
+DEFAULT_NUTS = Path("/root/src/NUTs")
+
+
+def ensure_nuts_clone(nuts_dir: Path) -> Path:
+    """Any host: create the blobless NUTs clone on first use."""
+    if nuts_dir.exists():
+        return nuts_dir
+    nuts_dir.parent.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run(["git", "clone", "--quiet", "--filter=blob:none",
+                        "https://github.com/cashubtc/NUTs.git", str(nuts_dir)],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(f"NUTs clone failed: {r.stderr[-150:]}")
+    return nuts_dir
 
 WATCH_TARGETS = {
     "cdk": {"kind": "release", "repo": "cashubtc/cdk"},
@@ -48,16 +61,16 @@ def latest_release(repo: str) -> tuple[str, str]:
     return tag, published
 
 
-def nuts_head() -> str:
-    r = sh(["git", "-C", str(NUTS_CLONE), "fetch", "--quiet", "origin"])
+def nuts_head(nuts_dir: Path) -> str:
+    r = sh(["git", "-C", str(nuts_dir), "fetch", "--quiet", "origin"])
     if r.returncode != 0:
         raise RuntimeError(f"git fetch NUTs: {r.stderr[:120]}")
-    return sh(["git", "-C", str(NUTS_CLONE), "rev-parse",
+    return sh(["git", "-C", str(nuts_dir), "rev-parse",
                "origin/HEAD"]).stdout.strip()
 
 
-def new_spec_commits(old: str, new: str) -> list[str]:
-    r = sh(["git", "-C", str(NUTS_CLONE), "log", "--format=%cs %h %s",
+def new_spec_commits(nuts_dir: Path, old: str, new: str) -> list[str]:
+    r = sh(["git", "-C", str(nuts_dir), "log", "--format=%cs %h %s",
             f"{old}..{new}"])
     return [l for l in r.stdout.splitlines() if l.strip()]
 
@@ -65,7 +78,12 @@ def new_spec_commits(old: str, new: str) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rebaseline", action="store_true")
+    ap.add_argument("--nuts-dir", default=str(DEFAULT_NUTS),
+                    help="NUTs clone (auto-created if missing)")
+    ap.add_argument("--clone-dir", default="/root/src/upstream-cache",
+                    help="blobless impl-clone cache for release digests")
     args = ap.parse_args()
+    nuts = ensure_nuts_clone(Path(args.nuts_dir))
 
     state = {"nuts_head": "", "releases": {}}
     if STATE.exists():
@@ -75,15 +93,16 @@ def main() -> int:
 
     # --- 1. NUTs spec drift ---
     try:
-        head = nuts_head()
+        head = nuts_head(nuts)
         old = state.get("nuts_head")
         if args.rebaseline or not old:
             state["nuts_head"] = head
             if not args.rebaseline:
                 events.append(f"CHANGE: nuts baseline set at {head[:10]}")
         elif head != old:
-            commits = new_spec_commits(old, head)
-            r = sh(["python3", "tools/spec_history.py", "--refresh"])
+            commits = new_spec_commits(nuts, old, head)
+            r = sh(["python3", "tools/spec_history.py", "--refresh",
+                    "--nuts-dir", str(nuts)])
             if r.returncode != 0:
                 events.append(f"CHANGE: nuts moved {old[:10]}->{head[:10]} "
                               f"but spec_history FAILED: {r.stderr[-150:]}")
@@ -110,7 +129,8 @@ def main() -> int:
                 continue
             proj = "cdk" if name == "cdk" else "nutshell"
             r = sh(["python3", "tools/release_digest.py",
-                    "--project", proj, "--version", tag])
+                    "--project", proj, "--version", tag,
+                    "--clone-dir", args.clone_dir])
             if r.returncode != 0:
                 events.append(f"CHANGE: {name} {seen}->{tag} but digest "
                               f"FAILED: {r.stderr[-150:]}")

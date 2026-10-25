@@ -26,7 +26,9 @@ else
     echo "$(date -u '+%F %T') NOTE: dirty tree, skipping sync (lane WIP?)" >> "$LOG"
 fi
 
-OUT=$($PY tools/upstream_watch.py 2>&1)
+OUT=$($PY tools/upstream_watch.py \
+    --nuts-dir "${NUTS_DIR:-$HOME/src/NUTs}" \
+    --clone-dir "${CLONE_DIR:-$HOME/src/upstream-cache}" 2>&1)
 echo "$(date -u '+%F %T') $OUT" >> "$LOG"
 
 if echo "$OUT" | grep -q '^CHANGE:'; then
