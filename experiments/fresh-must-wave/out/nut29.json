@@ -1,0 +1,98 @@
+{
+ "testnut(cashu-cf)": {
+  "control": {
+   "status": 200,
+   "sig_count": 2,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"008e808b89acc141\",\"C_\":\"023d8bf74880e31cdde38bb4b2b7f8d6d7226159cd5dd9cf5e3ee6207eaaa8ea81\",\"dleq\":{\"e\":\"a2e77d047722782ad80afad7d11407e58fbe86bc117215a1ed8d864db6cc7e9a\",\"s\":\"a4af4d748b"
+  },
+  "A_corrupt_B": {
+   "status": 500,
+   "sig_count": 0,
+   "body": "{\"error\":\"internal_error\",\"detail\":\"Failed to batch mint\"}"
+  },
+  "B_unknown_quote": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"error\":\"quote_already_issued\",\"detail\":\"Quote 01a17508-d4ba-711a-9673-85b955d68023 has already been issued\"}"
+  },
+  "C_dup_quotes": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"error\":\"duplicate_quote\",\"detail\":\"Duplicate quote ID: 01a17508-d4ba-711a-9673-85b955d68023\",\"code\":11016}"
+  },
+  "D_empty": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"quotes array is required and must be non-empty\"}"
+  },
+  "recontrol_after_rejections": {
+   "status": 200,
+   "sig_count": 2,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"008e808b89acc141\",\"C_\":\"02b423064b90e765a2fb1d75a2776332b17266afdaf89a084dd0a7b07d0fa7b1f3\",\"dleq\":{\"e\":\"778f00c5c5b878c3427be04dabe6502e2e920dcdb0f4c3f2508155ba0d7d2d3c\",\"s\":\"c573ed1775"
+  }
+ },
+ "ns-0.21.0": {
+  "control": {
+   "status": 200,
+   "sig_count": 2,
+   "body": "{\"signatures\":[{\"id\":\"0157fd664707853d14409b7b767eb94d4c7b43ea7389d245b5bf20d9aa1647ffb2\",\"amount\":64,\"C_\":\"02bf33935d76918550dbe067a12b094210033a0c44bce06a467cb2ab0eedec814a\",\"dleq\":{\"e\":\"4db2a528ea3f8ff9a1f2e9b3decba45"
+  },
+  "A_corrupt_B": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"detail\":\"invalid blinded message.\",\"code\":11000}"
+  },
+  "B_unknown_quote": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"detail\":\"outputs already signed\",\"code\":11003}"
+  },
+  "C_dup_quotes": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"detail\":\"Duplicate quote IDs provided\",\"code\":11016}"
+  },
+  "D_empty": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"detail\":\"batch must not be empty\",\"code\":11000}"
+  },
+  "recontrol_after_rejections": {
+   "status": 200,
+   "sig_count": 2,
+   "body": "{\"signatures\":[{\"id\":\"0157fd664707853d14409b7b767eb94d4c7b43ea7389d245b5bf20d9aa1647ffb2\",\"amount\":64,\"C_\":\"02f06eff1d00300bade06de43f9b8e0be2a3131810d157ebab8d81604faff2dec6\",\"dleq\":{\"e\":\"b1b043405af27d876413edf97726877"
+  }
+ },
+ "cdk-0.18.2": {
+  "control": {
+   "status": 200,
+   "sig_count": 2,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"01f454e9bdff65ec8b1e55c2f21fdb66364f7deffefded9ca58f7ebea1b501e4b4\",\"C_\":\"02547cae5f5a552e951fd4a93e289044371f1ddda3c6d219ef915e53f3d8f43cd9\",\"dleq\":{\"e\":\"947ba1eab5fcb6728c938d0e26cc966"
+  },
+  "A_corrupt_B": {
+   "status": 422,
+   "sig_count": 0,
+   "body": "Failed to deserialize the JSON body into the target type: outputs[1].B_: malformed public key at line 1 column 322"
+  },
+  "B_unknown_quote": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"code\":50000,\"detail\":\"Unknown quote\"}"
+  },
+  "C_dup_quotes": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"code\":11016,\"detail\":\"Duplicate quote IDs\"}"
+  },
+  "D_empty": {
+   "status": 400,
+   "sig_count": 0,
+   "body": "{\"code\":50000,\"detail\":\"Unknown quote\"}"
+  },
+  "recontrol_after_rejections": {
+   "status": 200,
+   "sig_count": 2,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"01f454e9bdff65ec8b1e55c2f21fdb66364f7deffefded9ca58f7ebea1b501e4b4\",\"C_\":\"0387b9680da009bdf62a9e49b63aea8ecbcf51cc1d4e9a370274ccb314e141e4bb\",\"dleq\":{\"e\":\"6fe2d473bea92ecdfd5d875c2072fc2"
+  }
+ }
+}

@@ -30,7 +30,7 @@ Axes per NUT:
 | 01 | Mint public key exchange | mandatory | 2023-01-27→2026-10-20 | 12 | 0 | 6 | partial |
 | 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 5 | 6 | deep |
 | 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 1 | 3 | partial |
-| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
+| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 3 | 5 | partial |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
 | 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 4 | 6 | partial |
 | 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 6 | 2 | partial |
@@ -39,7 +39,7 @@ Axes per NUT:
 | 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 14 | 0 | deep |
 | 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 25 | 20 | deep |
 | 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
-| 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 1 | 3 | partial |
+| 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 3 | 3 | partial |
 | 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 12 | 10 | deep |
 | 15 | Partial multi-path payments | optional | 2024-04-24→2026-10-20 | 11 | 0 | 0 | none |
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
@@ -55,7 +55,7 @@ Axes per NUT:
 | 26 | Payment req Bech32m | optional | 2026-01-11→2026-10-20 | 5 | 1 | 2 | none |
 | 27 | Nostr mint backup | optional | 2026-01-11→2026-10-20 | 3 | 0 | 0 | none |
 | 28 | Pay-to-Blinded-Key (P2BK) | optional | 2026-02-16→2026-06-28 | 2 | 2 | 0 | partial |
-| 29 | Batched minting | optional | 2026-03-09→2026-10-20 | 13 | 1 | 3 | none |
+| 29 | Batched minting | optional | 2026-03-09→2026-10-20 | 13 | 3 | 3 | none |
 | 30 | Onchain payments | optional | 2026-05-20→2026-10-20 | 6 | 0 | 0 | none |
 
 (Suite counts from `conformance/README.md`; research counts from the
@@ -358,11 +358,21 @@ Spec is 2 commits old — youngest NUT. Gap: no acceptance matrix for
 P2BK tokens across the three families beyond the pe-vector.
 Next: extend v4-pool with P2BK lifecycle (mint→send→receive) per arm.
 
-### NUT-29 — none (suite 3)
-Batched minting; 13 commits of churn (quote-sig + UUIDv7 waves).
-Gap: batch atomicity (partial failure semantics) unmeasured.
-Next: partial-batch probe (some outputs invalid → whole batch rejected
-or partial signatures?).
+### NUT-29 — partial (measured 2026-10-25)
+Hold: batch atomicity probes (experiments/fresh-must-wave/
+FINDINGS-nut29.md): **atomicity HOLDS on all three families** — no
+partial signatures on any failure leg; rejected batches do not burn
+paid quotes (cf same-quote retry after a 500 → 200). Error-code
+**11016 converged** on all arms (spec-fresh text adopted everywhere —
+counter-example to the drift pattern). Warts: cf 500-crash on
+malformed B_ (batch saga lacks point pre-validation — candidate cf fix,
+owner-gated, pairs with the max_array_length fix); cdk "Unknown quote"
+50000 for an EMPTY batch (misleading); check-order divergence
+(dup-outputs vs unknown-quote first); testnut leaves quote state PAID
+after successful batch issuance.
+Gap: bolt12/onchain batch legs unmeasured (bolt11-only here); NUT-20
+locked-batch signatures (the `signatures` array path) unmeasured —
+overlaps the NUT-20 lock probe.
 
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.
