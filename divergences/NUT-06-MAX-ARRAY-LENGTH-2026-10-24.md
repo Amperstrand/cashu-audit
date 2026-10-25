@@ -34,11 +34,19 @@ advertised, 1000 enforced).
 
 ## Findings
 
-1. **cashu-cf advertises 50, enforces 1000.** Wallets honoring the
-   advertised value over-batch-split (harmless); wallets ignoring it
-   still work — but any peer mint that genuinely enforces 50 would fork
-   behavior. Our advertisement should say 1000 (or the config value
-   should be the enforced one). Fix in cashu-cf — owner-gated.
+1. ~~**cashu-cf advertises 50, enforces 1000.**~~ **CORRECTED
+   2026-10-25 after reading cashu-cf source (info.ts:163-166):** the
+   advertisement is `min(swapInputsCap=100 (env MAX_SWAP_INPUTS),
+   batchOutputsCap=1000, batchQuotesCap=50)` — the 50 is the real
+   batch-QUOTES cap, and advertising the min is spec-intended,
+   wallet-protective behavior (a wallet splitting to 50 never hits any
+   endpoint limit). The "wrong by 20x" framing was incorrect; what
+   varies is PER-ENDPOINT caps (checkstate 1000 vs batch quotes 50),
+   which a single scalar cannot express. The open question is whether
+   `batchQuotesCap=50` should rise toward the reference norm (cdk/ns
+   advertise 1000 — their batch-quote limits unmeasured), which is a
+   Cloudflare-Workers capacity decision (CPU budget per batch), not a
+   one-line advertisement change. No cashu-cf code change made.
 2. **ns 0.20.3 enforces a limit it does not advertise.** Wallets cannot
    discover the bound on that release (fail-late, not fail-open).
 3. **Error identity forks three ways** (14005 vs bare-422 vs 11014) plus

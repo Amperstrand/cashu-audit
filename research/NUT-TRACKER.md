@@ -206,12 +206,16 @@ PAID) unmeasured — quote layer only. Next: async-melt lifecycle probe
 ### NUT-06 — partial
 Hold: info scenarios; wire matrix field forks (`method_name` casing,
 min/max presence, 2026-10-24 — see "Wire declarations"); max_array_length
-finding COMPLETE 2026-10-24 (divergences/NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md,
-corrected same day): **all 5 arms enforce 1000** on checkstate — cf
-ADVERTISES 50 (wrong by 20x), ns-0.20.3 enforces without advertising;
-error identity 3-way fork (14005 / bare-422 / 11014).
-Gap: swap/melt array paths (same 1000? per-endpoint?) unmeasured.
-Next: array-limit probe on swap outputs (fund-relevant path).
+finding CORRECTED TWICE (divergences/NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md):
+all arms enforce 1000 on checkstate; cf advertises 50 because it is
+`min(swap=100, batchOutputs=1000, batchQuotes=50)` — the honest min of
+real per-endpoint caps (spec-intended), NOT a wrong constant. The
+per-endpoint-cap question (batchQuotes 50 vs references' 1000) is a
+Workers-capacity decision, owner-gated; error identity 3-way fork
+(14005 / bare-422 / 11014); ns-0.20.3 enforces without advertising.
+Gap: swap/melt array caps per arm unmeasured.
+Next: batch-quote-count limit per arm (cdk/ns at 51+ quotes?) to size
+the batchQuotesCap question.
 
 ### NUT-07 — partial
 Hold: checkstate shape issue, witness-field violations (cashu-cf);
