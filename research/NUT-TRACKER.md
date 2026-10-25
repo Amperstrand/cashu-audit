@@ -29,10 +29,10 @@ Axes per NUT:
 | 00 | Notation, Utilization, Terminology (+token formats) | mandatory | 2023-01-27→2026-10-23 | 31 | 19 | 0 | deep |
 | 01 | Mint public key exchange | mandatory | 2023-01-27→2026-10-20 | 12 | 0 | 6 | partial |
 | 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 5 | 6 | deep |
-| 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 1 | 3 | partial |
+| 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 2 | 3 | partial |
 | 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 3 | 5 | partial |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
-| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 4 | 6 | partial |
+| 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 5 | 6 | partial |
 | 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 6 | 2 | partial |
 | 08 | Lightning fee return | optional | 2023-03-09→2026-10-20 | 20 | 6 | 6 | partial |
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
@@ -45,8 +45,8 @@ Axes per NUT:
 | 16 | Animated QR codes | optional | 2024-05-23→2026-10-20 | 3 | 0 | 0 | none |
 | 17 | WebSockets | optional | 2024-06-26→2026-10-20 | 7 | 0 | 0 | none |
 | 18 | Payment requests | optional | 2024-10-18→2026-10-20 | 10 | 1 | 2 | partial |
-| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 1 | 1 | none |
-| 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 8 | 4 | deep |
+| 19 | Cached responses | optional | 2024-12-03→2026-10-20 | 3 | 3 | 1 | none |
+| 20 | Signature on mint quote | optional | 2024-12-25→2026-10-20 | 14 | 9 | 4 | deep |
 | 21 | Clear auth | optional | 2025-01-29→2026-10-20 | 3 | 0 | 0 | none |
 | 22 | Blind auth | optional | 2025-01-29→2026-10-20 | 6 | 0 | 0 | none |
 | 23 | BOLT11 method abstraction | optional | 2025-06-01→2026-10-20 | 6 | 0 | 0 | none |
@@ -310,16 +310,19 @@ consolidation #381 (2026-07-21) rewrote the NUT — our findings predate?
 Verify against current text; decode scenarios exist.
 Next: re-baseline item6 findings against post-#381 18.md.
 
-### NUT-19 — partial
-Hold: fresh-must-wave probe 2026-10-24: declaring arms (cf, cdk) carry
-**`{}` params — no cached_endpoints, no ttl advertised**; ns doesn't
-declare. Identical melt-quote POST twice → NEW quote id on every arm
-(quote-create non-idempotent everywhere; extends the registry's
-retry-fork row). Side observation: no arm sends ETag; cf sends
-Cache-Control max-age=600.
-Gap: true NUT-19 replay (byte-identical /v1/swap, /v1/mint/bolt11,
-/v1/melt/bolt11) — needs real blind outputs; queued.
-Next: replay probe on cached endpoints via the must-gap driver.
+### NUT-19 — deep (replay matrix complete 2026-10-25)
+Hold: **full 3×3 replay-caching matrix measured**
+(experiments/fresh-must-wave/FINDINGS-nut19.md): cf and cdk return
+byte-identical cached 200s on mint + swap + melt replays; nutshell
+rejects all three (11003 / 11001 / 20006). Declaration correlates
+with behavior (ns absent, cf/cdk `{}`) but NO arm advertises its
+cached_endpoints list — the info params under-advertise everywhere.
+Quote-create remains non-idempotent on all arms (2026-10-24 datum).
+Bonus: ns `detail:"N"` opaque-crash class extends to plain swaps
+(keyless output amount); keyset denomination ranges diverge (cf 2^17
+max vs ns 2^63 — wallet splitting must consult the keyset).
+Gap: ttl behavior (does the cache expire?); replay of PARTIALLY
+failed requests.
 
 ### NUT-20 — deep (lock path measured 2026-10-25)
 Hold: quote-sig violations, NUT20-MINT-AUTH divergence, deterministic

@@ -1,0 +1,52 @@
+{
+ "testnut(cashu-cf)": {
+  "swap_first": {
+   "status": 400,
+   "body": "{\"error\":\"invalid_amount\",\"detail\":\"inputs (64) - outputs (64) available for fees (0) is less than r"
+  },
+  "melt_first": {
+   "status": 200,
+   "body": "{\"quote\":\"01a17520-4ac4-7171-9fc9-5949836eab78\",\"amount\":32,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\""
+  },
+  "melt_replay": {
+   "status": 200,
+   "identical_body": true,
+   "body": "{\"quote\":\"01a17520-4ac4-7171-9fc9-5949836eab78\",\"amount\":32,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\":\"lnbc320n1p4dulcv9qypqqqdqqxqrrsssp5s5lvpmd8vag955uxdr0qeua"
+  }
+ },
+ "ns-0.21.0": {
+  "swap_first": {
+   "status": 400,
+   "body": "{\"detail\":\"inputs (64) - fees (1) vs outputs (64) are not balanced.\",\"code\":11000}"
+  },
+  "melt_first": {
+   "status": 200,
+   "body": "{\"quote\":\"01a17520-7897-75b7-8fa8-adf3a3784b82\",\"amount\":32,\"unit\":\"sat\",\"method\":\"bolt11\",\"request\""
+  },
+  "melt_replay": {
+   "status": 400,
+   "identical_body": false,
+   "body": "{\"detail\":\"melt quote is not unpaid: paid\",\"code\":20006}"
+  }
+ },
+ "cdk-0.18.2": {
+  "swap_first": {
+   "status": 200,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"0103699a1b2f4033f244db53c91791501df4090a09d9ae9cceca3d5f5a20936ddd"
+  },
+  "swap_replay": {
+   "status": 200,
+   "identical_body": true,
+   "body": "{\"signatures\":[{\"amount\":64,\"id\":\"0103699a1b2f4033f244db53c91791501df4090a09d9ae9cceca3d5f5a20936ddd\",\"C_\":\"034931b5886a0c74fbfe8be97d9a50d5aed883aedce259bd7e46"
+  },
+  "melt_first": {
+   "status": 200,
+   "body": "{\"quote\":\"01a17520-c342-70f5-befa-bb367c212259\",\"amount\":32,\"fee_reserve\":2,\"state\":\"PAID\",\"expiry\":"
+  },
+  "melt_replay": {
+   "status": 200,
+   "identical_body": true,
+   "body": "{\"quote\":\"01a17520-c342-70f5-befa-bb367c212259\",\"amount\":32,\"fee_reserve\":2,\"state\":\"PAID\",\"expiry\":1792966503,\"payment_preimage\":\"\",\"change\":[{\"amount\":16,\"id\""
+  }
+ }
+}
