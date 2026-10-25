@@ -181,15 +181,17 @@ registry rows), FINDINGS-2026-10-22 (rotation identity, expiry).
 Gap: fees block (#126, 2024-06) interacts with NUT-08 — covered there.
 Next: expiry-enforcement registry row is owner-gated; nothing new.
 
-### NUT-03 — partial
-Hold: suite swap scenarios; fresh-must unit probe 2026-10-24
-(experiments/fresh-must-wave/): unsupported-unit quotes rejected by all
-arms — error identity forks cf 11005 (self-describing message) vs
-ns-0.20.3 10000 vs ns-0.21.0/cdk 11013, incl. **intra-ns code drift
-10000→11013** (silent, wallets keying codes fork across ns versions).
-Gap: cross-unit swap (sat inputs + usd outputs) unmeasured — needs
-two-unit lifecycle. Next: mixed-unit swap probe on testnut (only
-multi-unit arm).
+### NUT-03 — partial (unit consistency measured on cf 2026-10-25)
+Hold: suite swap scenarios; unit probe (experiments/fresh-must-wave/
+FINDINGS-nut03-units.md): testnut (only multi-unit arm) enforces #406
+on the swap path — same-unit inputs, outputs under input keyset; all
+violation shapes rejected (14005); usd lifecycle works end-to-end.
+Mint-path identity for unit mismatch is 12001 (vs 14005 on swap) —
+same violation class, two identities. Mixed-input error message is
+the most self-describing in the program ("Found units: sat, usd").
+Gap: ns/cdk multi-unit arms (sat-only by config) — family matrix
+incomplete; keyset-rotation cross-unit swaps unmeasured.
+Next: a two-unit cdk arm (config change) to complete the matrix.
 
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
