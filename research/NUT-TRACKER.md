@@ -203,19 +203,17 @@ Gap: async-melt BEHAVIOR (does a paid async melt return PENDING vs
 PAID) unmeasured — quote layer only. Next: async-melt lifecycle probe
 (invoice-oracle pattern).
 
-### NUT-06 — partial
-Hold: info scenarios; wire matrix field forks (`method_name` casing,
-min/max presence, 2026-10-24 — see "Wire declarations"); max_array_length
-finding CORRECTED TWICE (divergences/NUT-06-MAX-ARRAY-LENGTH-2026-10-24.md):
-all arms enforce 1000 on checkstate; cf advertises 50 because it is
-`min(swap=100, batchOutputs=1000, batchQuotes=50)` — the honest min of
-real per-endpoint caps (spec-intended), NOT a wrong constant. The
-per-endpoint-cap question (batchQuotes 50 vs references' 1000) is a
-Workers-capacity decision, owner-gated; error identity 3-way fork
-(14005 / bare-422 / 11014); ns-0.20.3 enforces without advertising.
-Gap: swap/melt array caps per arm unmeasured.
-Next: batch-quote-count limit per arm (cdk/ns at 51+ quotes?) to size
-the batchQuotesCap question.
+### NUT-06 — partial (cap landscape ~complete)
+Hold: info scenarios; wire field forks; **per-endpoint cap landscape
+measured 2026-10-25** (FINDINGS-arraycaps.md + FINDINGS-nut29-caps.md):
+cf mint-out 100 / swap-in 100 (source) / swap-out NONE (SQLite error
+leaks as the cap — candidate cf fix) / batch-Q 50 / checkstate 1000;
+ns 1000 everywhere (pydantic); cdk 1000 everywhere EXCEPT batch-Q 100
+(advertises 1000 — the one dishonest advertisement). Error-registry
+pattern: cf+cdk adopt spec codes (11014/11015/11016/11017/20008);
+ns pydantic 422s bypass.
+Gap: exact cf swap-input wire confirmation; melt-path caps.
+Next: melt outputs cap (cheapest remaining cell).
 
 ### NUT-07 — partial
 Hold: checkstate shape issue, witness-field violations (cashu-cf);

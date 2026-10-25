@@ -1,0 +1,39 @@
+{
+ "testnut(cashu-cf)": {
+  "L1_mint_128_outputs": "FAIL: mint blind 400: {\"error\":\"invalid_request\",\"detail\":\"Too many outputs (max 100)\",\"code\":14005}",
+  "L3_swap_1001_out_mismatch": {
+   "status": 400,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"too many SQL variables at offset 344: SQLITE_ERROR\",\"code\":14005}"
+  },
+  "L3_retry_fresh_1024": {
+   "status": 400,
+   "body": "{\"error\":\"invalid_request\",\"detail\":\"too many SQL variables at offset 344: SQLITE_ERROR\",\"code\":14005}"
+  }
+ },
+ "ns-0.21.0": {
+  "L1_mint_128_outputs": "ok",
+  "L2_swap_128_inputs": {
+   "status": 400,
+   "body": "{\"detail\":\"inputs (128) - fees (13) vs outputs (128) are not balanced.\",\"code\":11000}"
+  },
+  "L3_swap_1001_out_mismatch": {
+   "status": 422,
+   "body": "{\"detail\":[{\"type\":\"too_long\",\"loc\":[\"body\",\"outputs\"],\"msg\":\"List should have at most 1000 items after validation, not 1001\",\"input\":[{\"amount\":1,\"B_\":\"0213e93"
+  }
+ },
+ "cdk-0.18.2": {
+  "L1_mint_128_outputs": "ok",
+  "L2_swap_128_inputs": {
+   "status": 200,
+   "body": "{\"signatures\":[{\"amount\":128,\"id\":\"018d31491198f9c3aac299fe65f7afe065a64cb50d3d044b921b2a49bbeac82117\",\"C_\":\"0357dc3bc0edd1dd5c18d73a91c66785a72677cd644f465de99"
+  },
+  "L3_swap_1001_out_mismatch": {
+   "status": 400,
+   "body": "{\"code\":11015,\"detail\":\"Maximum outputs exceeded: 1001 provided, max 1000\"}"
+  },
+  "L3_retry_fresh_1024": {
+   "status": 400,
+   "body": "{\"code\":11015,\"detail\":\"Maximum outputs exceeded: 1001 provided, max 1000\"}"
+  }
+ }
+}
