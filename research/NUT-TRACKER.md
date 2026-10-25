@@ -265,18 +265,19 @@ deterministic-nonce #368 + completeness MUST (2026-09-11) unmapped to
 arms. Gap: cdk dual-gate divergence (registry D3) unfiled.
 Next: nonce-derivation + all-or-nothing acceptance matrix.
 
-### NUT-13 — partial (verified 2-1)
-Hold: derivation source-read + third vote 2026-10-24 (research/
-NUT13-DERIVATION-SOURCE-READ-2026-10-24.md): **0x01 slot contested and
-adjudicated 2-1** — nutshell (r) + cashu-ts (blindingFactor:0x01, and
-the spec's exact m/129373'/10' P2PK path) + spec table vs cdk 0.18.2
-alone (P2PK keys from the HMAC 0x01 slot). nutshell 0.21.0 has NO
-deterministic P2PK derivation (restore of P2PK-locked proofs fails).
-Cross-family P2PK restore broken by construction (same seed →
-different locked keys per family). Slot collision numeric:
-experiments/fresh-must-wave/out/nut13_slot_collision.json. Spec gap:
-tests/13-tests.md has NO V2 HMAC vectors.
-Next: registry row / nuts vector issue draft (owner-gated).
+### NUT-13 — partial (intent-researched, claim corrected)
+Hold: intent research 2026-10-25 (research/NUT13-INTENT-RESEARCH-2026-10-25.md):
+**the cross-family-restore claim is RETRACTED** — cdk's 0x01-slot
+`SecretKey::derive` is dead code (zero callers; pre-spec prototype);
+cdk's shipped P2PK keys follow the spec path `m/129373'/10'`
+(wallet/p2pk.rs) and quote-lock `129373'/20'` (nut20.rs), matching
+cashu-ts. BIP32-vs-KDF was deliberately settled upstream (#331 won,
+merged 2026-07-30 on production grounds). Real gaps: nutshell ships NO
+deterministic P2PK/quote-lock derivation; spec V2 step-3 wording is
+ambiguous (casualty: one dead-API mislabel). Upstream: nothing meets
+the bar; hold unless a v2-vectors PR opens.
+Next: only the nutshell-missing-derivation datum — candidate note if a
+nutshell NUT-13 issue/PR opens.
 
 ### NUT-14 — deep
 Hold: d5/d6 issues, refund vectors, NUT14-REFUND-VECTORS results,
