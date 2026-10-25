@@ -388,17 +388,30 @@ Ranked by (mandatory/fresh-MUST × unmeasured × fund-loss class):
 
 ## Maintenance
 
-The watch runs it for you: cron `47 5 * * *` (this host)
-`tools/upstream-watch-cron.sh` → `tools/upstream_watch.py` checks NUTs
-HEAD + latest cdk/nutshell releases against `research/upstream-state.json`.
-On movement it regenerates timelines, emits a release digest
+The watch runs it for you — **twice, on two hosts** (state is committed
+in `research/upstream-state.json`, so the hosts coordinate through the
+repo and a change caught by one is never double-digested):
+
+- hub: cron `47 5 * * *` local → `tools/upstream-watch-cron.sh` in
+  /root/src/cashu-audit (log `/root/upstream-watch.log`)
+- ai-legion-small: cron `7 7 * * *` UTC → dedicated clone
+  `~/src/cashu-audit-watch` (log `~/upstream-watch.log`; NUTs clone
+  auto-created at `~/src/NUTs`; gh auth = Amperstrand)
+
+Each run checks NUTs HEAD + latest cdk/nutshell releases; on movement it
+regenerates timelines, emits a release digest
 (`research/releases/<project>-<version>.md`), appends
 `research/UPSTREAM-WATCH.md`, commits + pushes. A `CHANGE:` line in
-`/root/upstream-watch.log` means: read the digest, then update the
-tracker epoch/card rows it names. Manual digest for a version the watch
-hasn't seen (e.g. adding a new pinned arm):
+either log means: read the digest, then update the tracker epoch/card
+rows it names. Manual digest for a version the watch hasn't seen (e.g.
+adding a new pinned arm):
 
     python3 tools/release_digest.py --project cdk --version v0.18.2
+
+The wrapper is location-independent (derives the repo from its own
+path, `$HOME`-based caches, auto-clones NUTs) — any host is one
+`git clone` + one crontab line away. It never resets a dirty tree
+(lane WIP is logged and skipped).
 
 After any arm release: `python3 tools/nut_support.py --host-network`
 → diff `research/MINT-NUT-SUPPORT.md`. Research/suite counts:
