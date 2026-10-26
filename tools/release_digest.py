@@ -43,6 +43,12 @@ PROJECTS = {
         "tag_prefix": "",
         "maps": "nutshell 0.20.3/0.21.0 (conformance-v2 arms)",
     },
+    "cashu-ts": {
+        "git_url": "https://github.com/cashubtc/cashu-ts.git",
+        "notes_repo": "cashubtc/cashu-ts",
+        "tag_prefix": "v",
+        "maps": "cashu-ts 4.11.0 (v4-pool consumer corpus; 5.0.0-rc wallet-emission work)",
+    },
 }
 
 NUT_IN_MSG = re.compile(r"\bNUT-?(\d{2})\b", re.I)

@@ -391,7 +391,12 @@ ns's pydantic 422s bypass the registry (framework-vs-handler layer —
 sharpens the error-drift narrative). Warts: cf 500-crash on malformed
 B_ (candidate cf fix); cdk "Unknown quote" for empty batch; check-order
 divergence; testnut quote stays PAID after batch issuance.
-Gap: bolt12/onchain batch legs; NUT-20 locked-batch signatures array.
+Gap: bolt12/onchain batch legs; NUT-20 locked-batch signatures array
+(measured 2026-10-26: converged — FINDINGS-nut20batch.md). Version
+drift 2026-10-26: cdk 0.17.7 checks batch EXISTENCE before length
+(1001 unknown ids -> 50000 Unknown quote) while 0.18.2 checks length
+first (11017) — the batch cap or its ordering arrived in the 0.18
+line (FINDINGS-release-sweep-2026-10-26.md).
 
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.

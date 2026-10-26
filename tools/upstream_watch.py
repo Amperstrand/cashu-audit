@@ -45,6 +45,7 @@ def ensure_nuts_clone(nuts_dir: Path) -> Path:
 WATCH_TARGETS = {
     "cdk": {"kind": "release", "repo": "cashubtc/cdk"},
     "nutshell": {"kind": "release", "repo": "cashubtc/nutshell"},
+    "cashu-ts": {"kind": "release", "repo": "cashubtc/cashu-ts"},
 }
 
 
@@ -53,12 +54,24 @@ def sh(cmd: list[str], **kw) -> subprocess.CompletedProcess:
 
 
 def latest_release(repo: str) -> tuple[str, str]:
-    r = sh(["gh", "api", f"repos/{repo}/releases/latest",
-            "--jq", ".tag_name + \" \" + .published_at"])
-    if r.returncode != 0:
-        raise RuntimeError(f"gh api {repo}: {r.stderr.strip()[:120]}")
-    tag, published = r.stdout.strip().split(" ", 1)
-    return tag, published
+    # Enumerate the 3 most-recent releases (incl. prereleases) — the
+    # /releases/latest endpoint only shows the newest line and misses
+    # backport releases (e.g. cdk v0.17.7 published after v0.18.1).
+    # State = the full tag SET, so a backport on an older line trips
+    # CHANGE even when the newest tag is unchanged.
+    r = sh(["gh", "api", f"repos/{repo}/releases?per_page=3",
+            "--jq", '.[] | .tag_name + " " + (.published_at // "?")'])
+    if r.returncode != 0 or not r.stdout.strip():
+        r = sh(["gh", "api", f"repos/{repo}/releases/latest",
+                "--jq", ".tag_name + \" \" + .published_at"])
+        if r.returncode != 0:
+            raise RuntimeError(f"gh api {repo}: {r.stderr.strip()[:120]}")
+    lines = [l for l in r.stdout.strip().splitlines() if l.strip()]
+    pairs = [tuple(l.split(" ", 1)) for l in lines]
+    tags = [p[0] for p in pairs]
+    newest = ",".join(tags)          # state: full set, newest first
+    tag, published = pairs[0]        # display: newest single release
+    return newest, published
 
 
 def nuts_head(nuts_dir: Path) -> str:
@@ -118,27 +131,35 @@ def main() -> int:
     # --- 2. releases ---
     for name, cfg in WATCH_TARGETS.items():
         try:
-            tag, published = latest_release(cfg["repo"])
+            tags, published = latest_release(cfg["repo"])
             seen = state.get("releases", {}).get(name)
             if args.rebaseline or not seen:
-                state.setdefault("releases", {})[name] = tag
+                state.setdefault("releases", {})[name] = tags
                 if not args.rebaseline:
-                    events.append(f"CHANGE: {name} baseline set at {tag}")
+                    events.append(f"CHANGE: {name} baseline set at {tags}")
                 continue
-            if tag == seen:
+            if tags == seen:
                 continue
-            proj = "cdk" if name == "cdk" else "nutshell"
-            r = sh(["python3", "tools/release_digest.py",
-                    "--project", proj, "--version", tag,
-                    "--clone-dir", args.clone_dir])
-            if r.returncode != 0:
-                events.append(f"CHANGE: {name} {seen}->{tag} but digest "
-                              f"FAILED: {r.stderr[-150:]}")
+            new_tags = [t for t in tags.split(",") if t not in seen.split(",")]
+            proj = name  # WATCH_TARGETS keys are release_digest PROJECTS keys
+            digested = []
+            last_out = ""
+            for tag in new_tags:
+                r = sh(["python3", "tools/release_digest.py",
+                        "--project", proj, "--version", tag,
+                        "--clone-dir", args.clone_dir])
+                if r.returncode != 0:
+                    events.append(f"CHANGE: {name} release {tag} but digest "
+                                  f"FAILED: {r.stderr[-150:]}")
+                    continue
+                digested.append(tag)
+                last_out = r.stdout.strip()
+            if not digested:
                 continue
-            state["releases"][name] = tag
-            events.append(f"CHANGE: {name} release {seen} -> {tag} "
-                          f"(published {published[:10]}) — {r.stdout.strip()}")
-            sections.append(f"### {name} {tag}\n\n```\n{r.stdout.strip()}\n```\n"
+            state["releases"][name] = tags
+            events.append(f"CHANGE: {name} release(s) {', '.join(digested)} "
+                          f"(published {published[:10]}) — {last_out}")
+            sections.append(f"### {name} {', '.join(digested)}\n\n```\n{last_out}\n```\n"
                             f"Read the digest, then the tracker cards it names.\n")
         except Exception as e:
             events.append(f"CHANGE: {name} check errored: {e}")

@@ -6,3 +6,7 @@
 - CHANGE: nuts baseline set at 1363de4132
 - CHANGE: cdk baseline set at v0.18.2
 - CHANGE: nutshell baseline set at 0.21.0
+
+## Run 2026-10-26 11:23 UTC
+
+- CHANGE: cashu-ts baseline set at v4.12.0,v5.0.0-rc.11,v4.11.0
