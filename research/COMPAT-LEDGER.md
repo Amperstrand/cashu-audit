@@ -101,6 +101,17 @@ all three families; unit consistency (#406); quote accounting Jul
 - 2026-10-25's "batch cap arrived in the 0.18 line" sharpened today:
   the 11017 flip is exactly at 0.18.1.
 
+## Closed-loop upgrades (measured 2026-10-26)
+
+cdk ladder 0.17.6→0.18.2 on one persistent DB (FINDINGS-cdk-upgrade-
+ladder.md): keysets stable, spent ledger enforced, parked quotes
+mintable at EVERY boundary. Operator migration step at the 0.17→0.18
+config-era break: `config init --existing-mint`. Traps: silent exit
+on invalid-checksum mnemonic; replay cache keyed on inputs (retry
+with re-randomized outputs can receive OLD signatures — 200, not an
+error). NOT covered: real-LN backends, keyset rotation mid-ladder,
+ns/cf ladders.
+
 ## Maintenance
 
 Regenerate cells with the fresh-must-wave probes (each leg is one

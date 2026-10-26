@@ -1,0 +1,45 @@
+{
+ "mnemonic": "all-abandon test vector (no funds)",
+ "rungs": [
+  {
+   "ver": "0.17.6",
+   "kid_len": 66,
+   "K": "baseline",
+   "R": "P minted",
+   "S": "proof spent",
+   "Q": "parked"
+  },
+  {
+   "ver": "0.17.7",
+   "kid_len": 66,
+   "K": "same",
+   "R": "redeemable",
+   "Q": "minted",
+   "S": "spent-enforced (fresh-outputs retry rejected)"
+  },
+  {
+   "ver": "0.18.0",
+   "kid_len": 66,
+   "K": "same",
+   "R": "redeemable",
+   "Q": "minted",
+   "S": "spent-enforced (fresh-outputs retry rejected)"
+  },
+  {
+   "ver": "0.18.1",
+   "kid_len": 66,
+   "K": "same",
+   "R": "redeemable",
+   "Q": "minted",
+   "S": "spent-enforced (fresh-outputs retry rejected)"
+  },
+  {
+   "ver": "0.18.2",
+   "kid_len": 66,
+   "K": "same",
+   "R": "redeemable",
+   "Q": "minted",
+   "S": "spent-enforced (fresh-outputs retry rejected)"
+  }
+ ]
+}
