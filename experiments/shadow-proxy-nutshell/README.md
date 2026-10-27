@@ -202,3 +202,26 @@ HTLC ✓reject ✓unlock · SIG_ALL ✓reject (A4) ✗unlock — the one open
 cell; positive SIG_ALL needs per-mint message-format handling (the
 documented 0.20.3 format flip + cdk divergence = the format minefield;
 highest-effort, deferred).
+
+## SIG_ALL positive path (2026-10-24): the matrix completes
+
+The "format minefield" dissolved under source-reading + empirics: the
+canonical melt SIG_ALL message is **identical across all three**
+implementations — `concat(secret_i‖C_i) ‖ quoteId` (ns appends quote at
+conditions.py:134; cf's primary candidate + buildSigAllMeltMessage; cdk
+accepted it first-try). Signature = schnorr over **sha256(message)**
+(cf hashes at spending-conditions.ts:361 — signing the raw utf8 bytes
+fails everywhere). **PAID on all three.**
+
+**Spending-condition matrix FINAL (three-way):**
+
+| Condition | Rejection | Unlock |
+|---|---|---|
+| P2PK (SIG_INPUTS) | ✓ | ✓ PAID ×3 |
+| HTLC | ✓ | ✓ PAID ×3 |
+| SIG_ALL | ✓ | ✓ PAID ×3 |
+
+Every cell locked across cashu-cf, nutshell 0.20.3, CDK 0.18.1 —
+rejection identities + unlock paths + the two wire rules (witness as
+JSON string; SIG_ALL message = canonical concat + quoteId, schnorr over
+sha256).
