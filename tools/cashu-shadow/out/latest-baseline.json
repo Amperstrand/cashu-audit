@@ -11,9 +11,9 @@
       },
       "b": {
         "status": 400,
-        "code": 12001,
-        "error": "keyset not found: decafbaddecafbad",
-        "detail": "keyset not found: decafbaddecafbad"
+        "code": null,
+        "error": "not_found",
+        "detail": "not_found"
       },
       "note": ""
     },
@@ -58,9 +58,9 @@
       },
       "b": {
         "status": 400,
-        "code": 10001,
-        "error": "proofs could not be verified",
-        "detail": "proofs could not be verified"
+        "code": 14005,
+        "error": "invalid_request",
+        "detail": "Proof verification failed at index 0: Invalid proof signature at index 0"
       },
       "note": ""
     },
@@ -71,13 +71,13 @@
         "status": 400,
         "code": 14008,
         "error": "duplicate_proof",
-        "detail": "Duplicate proof secret: shadow-a-bc453c3…"
+        "detail": "Duplicate proof secret: shadow-a-85c4cb6…"
       },
       "b": {
         "status": 400,
-        "code": 11007,
-        "error": "Duplicate inputs provided",
-        "detail": "Duplicate inputs provided"
+        "code": 14008,
+        "error": "duplicate_proof",
+        "detail": "Duplicate proof secret: shadow-b-840fb17…"
       },
       "note": ""
     },
@@ -91,10 +91,10 @@
         "detail": "No witness in proof"
       },
       "b": {
-        "status": 400,
-        "code": 11000,
-        "error": "no signatures in proof.",
-        "detail": "no signatures in proof."
+        "status": 403,
+        "code": 30006,
+        "error": "spending_condition_not_met",
+        "detail": "No witness in proof"
       },
       "note": ""
     },
@@ -107,12 +107,11 @@
         "error": null
       },
       "b": {
-        "status": 400,
-        "code": 11003,
-        "error": "outputs already signed",
-        "detail": "outputs already signed"
+        "status": 200,
+        "code": null,
+        "error": null
       },
-      "note": "a-identical=true b-identical=false"
+      "note": "a-identical=true b-identical=true"
     },
     {
       "scenario": "A7 fee-aware swap + checkstate SPENT",
@@ -124,7 +123,7 @@
       },
       "b": {
         "status": 200,
-        "code": "ppk:100 swap:200 state:SPENT",
+        "code": "ppk:10 swap:200 state:SPENT",
         "error": null
       },
       "note": ""

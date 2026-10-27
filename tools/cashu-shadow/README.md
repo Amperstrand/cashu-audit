@@ -67,3 +67,13 @@ holds for two pairs: cf↔ns and cf↔cdk.
   random secrets) against the saved baseline: `NONE — no drift` on
   back-to-back runs; NEW/GONE/DRIFT rows reported otherwise.
 - ISSUE-129 acceptance criteria fully met as of this increment.
+
+## Increment 4 (2026-10-27): LIVE-mint pair — post-deploy certification
+
+`config.cf-testnut.json` — A = local main engine, B = **DEPLOYED**
+testnut: full corpus, identity parity on EVERY cell (14005/14008/30006
+rejections, replay 200s, all unlock paths PAID). The one diff is config
+(A7 ppk: local 0 vs deployed 10) — expected, not code drift. This
+mechanizes the "greens certify a build, not a commit" lesson: run it
+after any deploy to prove the deployed worker behaves as the built
+code.

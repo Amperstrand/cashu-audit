@@ -1,0 +1,8 @@
+{
+  "cashu_cf_root": "/root/src/cashu-cf",
+  "backends": {
+    "A": { "kind": "cf", "name": "cashu-cf-local-main" },
+    "B": { "kind": "http", "name": "testnut-DEPLOYED", "url": "https://testnut.cashu.exchange" }
+  },
+  "proxy": false
+}
