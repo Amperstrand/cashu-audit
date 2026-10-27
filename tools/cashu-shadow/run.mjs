@@ -31,13 +31,31 @@ async function backendTransport(def) {
 }
 
 const A = await backendTransport(cfg.backends.A);
-const B = await backendTransport(cfg.backends.B);
+const B0 = await backendTransport(cfg.backends.B);
+const B = B0;
 let proxy = null;
 if (cfg.proxy) {
   const backendUrl = cfg.backends.B.kind === 'http' ? cfg.backends.B.url : null;
   if (!backendUrl) throw new Error('proxy mode requires backend B of kind http (the authoritative mint the proxy fronts)');
   const p = await cfTransport(CF, { shadow: true, backendUrl });
   proxy = { t: p.transport, dispose: p.dispose };
+  // per-request faithfulness for PURE READS: every GET through B is
+  // dual-sent via the proxy and asserted byte-identical. POSTs are NOT
+  // dual-sent (double execution risk on stateful paths).
+  const directGet = B0.t.bind(B0);
+  B.t = async (path, method, body) => {
+    const direct = await directGet(path, method, body);
+    if ((method ?? 'GET') === 'GET') {
+      try {
+        const viaProxy = await proxy.t(path, method, body);
+        const ok = viaProxy.status === direct.status && JSON.stringify(viaProxy.body) === JSON.stringify(direct.body);
+        faithful.push({ label: 'dual-send', path, faithful: ok, proxyStatus: viaProxy.status, directStatus: direct.status });
+      } catch (e) {
+        faithful.push({ label: 'dual-send', path, faithful: 'error', error: String(e.message ?? e).slice(0, 60) });
+      }
+    }
+    return direct;
+  };
 }
 
 const rows = [];
@@ -80,10 +98,36 @@ try {
   await A.dispose(); await B.dispose(); if (proxy) await proxy.dispose();
 }
 
+// drift vs baseline (ISSUE-129): compare identity triples per scenario/label
+const baselinePath = process.argv[3];
+let drift = null;
+if (baselinePath) {
+  try {
+    const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
+    const bmap = new Map(baseline.rows.map(r => [r.scenario + '|' + r.label, r]));
+    const drifts = [];
+    for (const r of rows) {
+      const b = bmap.get(r.scenario + '|' + r.label);
+      if (!b) { drifts.push({ ...r, kind: 'NEW' }); continue; }
+      const norm = (x) => x ? { status: x.status, code: x.code, error: x.error } : x;
+      if (JSON.stringify(norm(b.a)) !== JSON.stringify(norm(r.a)) || JSON.stringify(norm(b.b)) !== JSON.stringify(norm(r.b))) {
+        drifts.push({ scenario: r.scenario, label: r.label, kind: 'DRIFT', was: { a: b.a, b: b.b }, now: { a: r.a, b: r.b } });
+      }
+    }
+    for (const b of baseline.rows) {
+      if (!rows.some(r => r.scenario + '|' + r.label === b.scenario + '|' + b.label)) drifts.push({ ...b, kind: 'GONE' });
+    }
+    drift = drifts;
+    console.log(`\ndrift vs baseline: ${drifts.length === 0 ? 'NONE — no drift' : drifts.length + ' finding(s)'}`);
+    for (const d of drifts) console.log(`  ${d.kind}: ${d.scenario} / ${d.label}`);
+  } catch (e) { console.log('baseline unavailable: ' + String(e.message ?? e).slice(0, 80)); }
+}
+
 const OUT = resolve('out');
 mkdirSync(OUT, { recursive: true });
 const ts = new Date().toISOString().replace(/[:.]/g, '-');
-writeFileSync(join(OUT, `shadow-${ts}.json`), JSON.stringify({ config: cfg, rows, proxyFaithful: faithful }, null, 2));
+writeFileSync(join(OUT, `shadow-${ts}.json`), JSON.stringify({ config: cfg, rows, proxyFaithful: faithful, drift }, null, 2));
+writeFileSync(join(OUT, 'latest-baseline.json'), JSON.stringify({ rows }, null, 2));
 writeFileSync(join(OUT, `shadow-${ts}.md`), '# cashu-shadow run\n\n| scenario | label | A | B |\n|---|---|---|---|\n' +
   rows.map(r => `| ${r.scenario} | ${r.label} | ${r.a.status} ${JSON.stringify(r.a.code ?? r.a.error)} | ${r.b ? r.b.status + ' ' + JSON.stringify(r.b.code ?? r.b.error) : '-'} |`).join('\n') + '\n');
 console.log(`\nreport: out/shadow-${ts}.{json,md}`);

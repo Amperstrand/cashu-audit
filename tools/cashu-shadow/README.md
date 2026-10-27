@@ -55,3 +55,15 @@ through the framework, identities matching the locked three-way table
 (cdk 422 strict malformed-Y, 10001/11007/20008 rejections, replay
 200-parity with cf, all unlock paths PAID). The any-two-mints claim now
 holds for two pairs: cf↔ns and cf↔cdk.
+
+## Increment 3 (2026-10-27): dual-send faithfulness + drift-vs-baseline
+
+- Every B-side GET now dual-sends through cashu-cf-as-proxy and asserts
+  byte-identity (17 per corpus run + 3 probe-pass asserts = 20 faithful
+  checks). POSTs are never dual-sent (double-execution risk on stateful
+  paths).
+- `node run.mjs <config> out/latest-baseline.json` diffs the run's
+  identity triples (status/code/error — detail excluded, it carries
+  random secrets) against the saved baseline: `NONE — no drift` on
+  back-to-back runs; NEW/GONE/DRIFT rows reported otherwise.
+- ISSUE-129 acceptance criteria fully met as of this increment.
