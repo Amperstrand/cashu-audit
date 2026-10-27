@@ -15,8 +15,10 @@ posts, or publishes upstream on its own.
   auth bypass classes) live in `private/` from discovery until the
   upstream disclosure lands — evidence, repro scripts, captures, and
   registry-grade writeups ALL stay private until the vendor knows.
-  Only then are they promoted to `research/` + `experiments/` as the
-  public archive. `research/` and `experiments/` remain fine for our
+  Evidence stays private PERMANENTLY unless the owner explicitly
+  decides otherwise (owner directive 2026-10-27: "no intention of going
+  public — research stays with us, responsible disclosure to the vendor
+  only"). Vendor disclosure is NOT publication. `research/` and `experiments/` remain fine for our
   interop/behavior findings (divergences, error identities, fee
   semantics) that don't arm an attacker against an unaware vendor.
   Rationale: this repo is PUBLIC; a "public archive + owner-gated
