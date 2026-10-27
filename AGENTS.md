@@ -10,6 +10,21 @@ posts, or publishes upstream on its own.
 - `research/` — published findings (committed). `private/` — staged
   drafts and strategy (gitignored; NEVER commit, NEVER post without
   explicit owner approval).
+- **Security-sensitive findings (2026-10-27 rule, owner directive):**
+  vulnerabilities in OTHER implementations (fund-safety, crash-on-input,
+  auth bypass classes) live in `private/` from discovery until the
+  upstream disclosure lands — evidence, repro scripts, captures, and
+  registry-grade writeups ALL stay private until the vendor knows.
+  Only then are they promoted to `research/` + `experiments/` as the
+  public archive. `research/` and `experiments/` remain fine for our
+  interop/behavior findings (divergences, error identities, fee
+  semantics) that don't arm an attacker against an unaware vendor.
+  Rationale: this repo is PUBLIC; a "public archive + owner-gated
+  filing" split once left a fund-safety wallet bug fully reproducible
+  in the open for 4 days while the vendor was unaware (dleq-bypass,
+  2026-10-23→27; moved to private/, registry row redacted). Note: git
+  history retains pre-move content — moves are forward hygiene, not
+  retraction; disclose promptly rather than relying on obscurity.
 - `experiments/must-gap-vectors/` — the 17-vector enforcement probe,
   wallet-emission capture scripts, `verify.sh` (clean-VM one-command
   repro), nightly cron on ai-legion (03:17, drift-diffed).

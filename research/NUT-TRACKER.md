@@ -275,7 +275,7 @@ deliberately avoided (nuts#431 row: "no boundary-exact data").
 Next: boundary probe if a venue opens; else parked.
 
 ### NUT-12 — partial
-Hold: dleq-bypass experiment (registry row), CHANNELS-nuts296 census;
+Hold: dleq-bypass evidence REDACTED to private/ (2026-10-27, undisclosed security finding); CHANNELS-nuts296 census;
 deterministic-nonce #368 + completeness MUST (2026-09-11) unmapped to
 arms. Gap: cdk dual-gate divergence (registry D3) unfiled.
 Next: nonce-derivation + all-or-nothing acceptance matrix.
