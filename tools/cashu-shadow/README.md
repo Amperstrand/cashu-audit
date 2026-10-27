@@ -47,3 +47,11 @@ SIG_ALL message builder.
 Ported from experiments/shadow-proxy-nutshell/proxy-study.mjs (the
 2026-10-22..24 three-way study) — that experiment directory remains the
 evidence archive; this package is the reusable instrument.
+
+## Increment 2 (2026-10-27): cdk preset + second pair proven
+
+`config.cf-cdk.json` — cf engine vs cdk 0.18.1 direct: full corpus green
+through the framework, identities matching the locked three-way table
+(cdk 422 strict malformed-Y, 10001/11007/20008 rejections, replay
+200-parity with cf, all unlock paths PAID). The any-two-mints claim now
+holds for two pairs: cf↔ns and cf↔cdk.
