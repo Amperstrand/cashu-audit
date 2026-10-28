@@ -71,13 +71,13 @@
         "status": 400,
         "code": 14008,
         "error": "duplicate_proof",
-        "detail": "Duplicate proof secret: shadow-a-85c4cb6…"
+        "detail": "Duplicate proof secret: shadow-a-a0e6db5…"
       },
       "b": {
         "status": 400,
         "code": 14008,
         "error": "duplicate_proof",
-        "detail": "Duplicate proof secret: shadow-b-840fb17…"
+        "detail": "Duplicate proof secret: shadow-b-801fe84…"
       },
       "note": ""
     },
