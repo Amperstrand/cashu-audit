@@ -10,3 +10,15 @@
 ## Run 2026-10-26 11:23 UTC
 
 - CHANGE: cashu-ts baseline set at v4.12.0,v5.0.0-rc.11,v4.11.0
+
+## Run 2026-10-28 04:47 UTC
+
+- CHANGE: cashu-ts release(s) v4.13.0 (published 2026-10-27) — OK research/releases/cashu-ts-4.13.0.md: 5 commits, NUTs: NUT-11, NUT-18
+
+### cashu-ts v4.13.0
+
+```
+OK research/releases/cashu-ts-4.13.0.md: 5 commits, NUTs: NUT-11, NUT-18
+```
+Read the digest, then the tracker cards it names.
+
