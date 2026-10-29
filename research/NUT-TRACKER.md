@@ -420,10 +420,11 @@ checkstate retraction (cdk 1000/1000 on all arms 0.17.6–0.18.2);
 dleq-bypass disclosed via security email (owner-gated trail);
 testnut≡local-main post-deploy certified. Remaining, ranked:
 
-1. **Keyset-rotation rung** (tollgate #818 repro): mint under
-   keyset A, rotate, verify old proofs still swap + wallet-facing
-   error identities. No driver exists yet — build on the upgrade-
-   ladder harness.
+1. ~~Keyset-rotation rung~~ DONE 2026-10-29 (FINDINGS-keyset-
+   rotation.md): cdk 0.18.2 rotation conformant — old proofs swap
+   (fund safety), retired keys served via GET /v1/keys/{id}, retired-
+   output identity 12002 "Inactive Keyset" (distinct from 12001 —
+   the #818 self-heal signal). Driver + gRPC stubs committed.
 2. **Locktime-0 pool vector** (cashu-ts #1324; 4.13.0 re-touches
    NUT-11 — still zero spend-path vectors in the pool).
 3. cashu-cf fix residue (verify-then-close): batch B_ 500-crash →

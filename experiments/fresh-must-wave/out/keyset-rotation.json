@@ -1,0 +1,53 @@
+{
+ "rotated_to": "01e2cb67afbebb4bf44f96fdc7955e8afb910c2ca670eb56a5cfffc6aadadfcac7",
+ "amounts": [
+  1,
+  2,
+  4,
+  8,
+  16,
+  32,
+  64,
+  128,
+  256,
+  512,
+  1024,
+  2048,
+  4096,
+  8192,
+  16384,
+  32768,
+  65536,
+  131072,
+  262144,
+  524288,
+  1048576,
+  2097152,
+  4194304,
+  8388608,
+  16777216,
+  33554432,
+  67108864,
+  134217728,
+  268435456,
+  536870912,
+  1073741824,
+  2147483648
+ ],
+ "unit": "sat",
+ "R1_keys_only_B": true,
+ "R2_keysets_lists": [
+  "01df97b6",
+  "01e2cb67"
+ ],
+ "R2_A_flags": {
+  "active": false,
+  "input_fee_ppk": 0,
+  "final_expiry": null
+ },
+ "R3_retired_keys_served": false,
+ "R4_swap_A_proof_to_B": "200 OK",
+ "W1_swap_to_A_output": "400 {\"code\":12002,\"detail\":\"Inactive Keyset\"}",
+ "W2_mint_A_output": "400 {\"code\":12002,\"detail\":\"Inactive Keyset\"}",
+ "W3_checkstate_A_Y": "200 {\"states\":[{\"Y\":\"022b48e5b43511c5ea80b1b39203964be0529cc6a98d67fe3536e4aa0f2e29cbba\",\"state\":\"SPENT\",\"witness\":null}]}"
+}
