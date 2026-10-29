@@ -8,19 +8,39 @@ port 18498, sqlite under /tmp, input fee 0. Runner: `conformance/run_matrix.py`
 
 ## Headline
 
-**28 failures, ZERO overlap with any reference arm's expected-fail set**
-(cdk 0.18.1/0.18.2, nutshell 0.20.3/0.21.0 — each passes all 28). Every
-gonuts failure is a gonuts-unique gap. Grades:
+**28 failures: 19 gonuts-unique, 9 sharing scenario names with reference
+expected-fail sets** (recomputed 2026-10-30 after review — the original
+"zero overlap" claim was wrong). Shared names and how the identities
+compare: `mint_quote_zero_amount_fails` — ns arms REJECT with a 422
+pydantic shape (wrong identity), gonuts ACCEPTS the zero-amount quote
+outright (opposite defect); `melt_replay_returns_cached_response` — ns
+arms fail on cached-response identity, gonuts answers 20006
+"quote already paid" instead of the cached 200 (same class, different
+error); the six `htlc_sigall_*`/`p2pk_sigall_locktime_*` family names —
+ns-0.20.3 also rejects these (its positioned witness split, expected-fail),
+and gonuts' rejections are the same defect class (SIG_ALL verification
+broken) plus MORE of the family; `batch_mint_rejects_too_many_outputs` —
+cdk arms fail on strict-parse shape (422), gonuts has no endpoint (404).
+The remaining 19 (incl. all of grade A and the quote-hygiene pair) fail on
+NO reference arm. Grades:
 
-### A — fund-safety (mint-operator loss vector)
+### A — quote-settlement race (mint-operator loss vector)
 
 - **`concurrent_double_melt_rejected` FAILED: BOTH concurrent melts paid
-  (A=200, B=200).** Two invoices settled against one set of proofs in a
-  race — the sequential double-melt IS rejected (400), so the spend mark
-  lands after, not before, the settle. No reference arm fails this. This
-  is the highest-severity finding of the run: the melt path must mark
-  inputs spent (or otherwise serialize per-quote) BEFORE the Lightning
-  settle, under a lock that spans check→settle.
+  (A=200, B=200).** Trigger (per the scenario source,
+  `security_concurrent_melt.py:55–63`): ONE melt quote, TWO DISJOINT
+  proof sets submitted concurrently — this exercises quote-level
+  double-settlement, NOT proof reuse (each proof set is spent once).
+  The observed defect is duplicate PAID for a single quote/invoice;
+  with FAKEBACKEND this does not by itself establish double Lightning
+  settlement — settlement evidence needs a real or simulated backend
+  leg. The sequential control IS rejected (400), so the quote-state
+  serialization that guards the sequential case does not span the
+  concurrent window. Remedy: the cashu-cf #41 pattern — a single
+  conditional UNPAID→PENDING transition (CAS) on the quote BEFORE
+  settle, under a lock spanning check→settle; note that proof
+  spend-marking alone would NOT close this variant (the proofs are
+  disjoint — the race is on the quote, not the Ys).
 
 ### B — NUT-11/14 spending-condition enforcement on MELT (19 scenarios)
 
@@ -67,16 +87,22 @@ The fork's **wallet** side (the TollGate-consumed half) is now
 converged with the field's fund-safety practices (v0.15.0: intent
 journal + replay + NUT-09 restore + response binding + fee refusal —
 all cdk-shaped, most live-verified). The **mint** side is NOT at
-reference-arm conformance: 28 unique failures, one of them a
-concurrent double-pay. Operational guidance until A is fixed: do not
+reference-arm conformance: 28 failures (19 unique to gonuts, 9
+shared-name with reference expected-fail sets — identities compared in
+the headline), one of them a concurrent quote double-pay. Operational
+guidance until A is fixed: do not
 expose the gonuts mint to untrusted melt traffic; it remains fit for
 test/lab mints (its current TollGate role — the deployed mints are
 cashu-cf/cdk).
 
 ## Follow-ups (tracked in OpenTollGate repos; fork issues disabled)
 
-1. [P0] melt: serialize check→spend-mark→settle; concurrent double-melt
-   must leave exactly one PAID. Repro: this lane's scenario, one command.
+1. [P0] melt: single conditional UNPAID→PENDING transition (CAS) on the
+   quote before settle, spanning check→settle; concurrent melts on one
+   quote must leave exactly one PAID. Repro: this lane's scenario, one
+   command. Follow-up repro (owner/lab): same-proofs/different-quotes
+   variant + a settlement-evidencing backend to complete the loss-vector
+   picture.
 2. [P1] melt-path NUT-11/14 verification: same parser as swap; SIG_ALL
    counts; anyone-can-spend after locktime.
 3. [P2] quote ids → UUIDv7; amount_issued accounting; zero-amount
