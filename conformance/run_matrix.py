@@ -27,6 +27,23 @@ for _finder, _name, _ispkg in pkgutil.iter_modules(_scenarios_pkg.__path__):
     importlib.import_module(f"scenarios.{_name}")
 
 
+def capture_mint_identity(url: str) -> str:
+    """#40: mint identity at run start — /v1/info name+version per URL.
+
+    Reports must be attributable after the fact: a bare URL (especially a
+    container-internal port) cannot reconstruct which implementation and
+    version served the run.
+    """
+    try:
+        mint = MintClient(url)
+        info = mint.get_mint_info()
+        name = info.get("name") or "unnamed"
+        version = info.get("version") or "unknown-version"
+        return f"{name} / {version}"
+    except Exception as e:
+        return f"identity-unavailable ({str(e)[:60]})"
+
+
 def run_all(mint_url: str) -> list[ScenarioResult]:
     mint = MintClient(mint_url)
     results: list[ScenarioResult] = []
@@ -70,14 +87,16 @@ def main():
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
 
     all_results: dict[str, list[ScenarioResult]] = {}
+    identities: dict[str, str] = {}
 
     for url in mint_urls:
+        identities[url] = capture_mint_identity(url)
         print(f"\n{'='*60}")
-        print(f"Testing mint: {url}")
+        print(f"Testing mint: {url}  [{identities[url]}]")
         print(f"{'='*60}")
         all_results[url] = run_all(url)
 
-    matrix = generate_matrix(all_results, mint_urls)
+    matrix = generate_matrix(all_results, mint_urls, identities=identities)
     Path(args.output).write_text(matrix)
     print(f"\nMatrix written to {args.output}")
 

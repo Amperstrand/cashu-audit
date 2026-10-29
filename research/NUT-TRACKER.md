@@ -203,7 +203,17 @@ not a one-line change.
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
 mint-retry idempotency fork (registry, measured 2026-10-23 —
-shadow-proxy A6b). Gap: custom methods (#382) and `method` field (#378
+shadow-proxy A6b); cdk-mintd duplicate-outputs ERROR IDENTITY bug
+(divergences/2026-10-29-cdk-mintd-duplicate-outputs-error-identity.md,
+measured 2026-10-29 with two same-seed wallets: the issue path maps
+the blind-signature UNIQUE violation to InvoiceAlreadyPaid instead of
+NUT-19 11003 — wallets roll the derivation counter back and brick
+permanently; with 11003 they walk past the burn in N attempts. Fix on
+Amperstrand/cdk fix/duplicate-outputs-error-identity; upstream filing
+owner-gated. Completes the error-identity picture the A6b row started:
+nutshell refuses duplicates with the CORRECT 11003; cdk replays
+identical re-sends but mis-identifies fresh collisions).
+Gap: custom methods (#382) and `method` field (#378
 solution, 2026-06-10) unmeasured; expiry-as-deadline (#427) unmeasured.
 Next: quote `method` round-trip + unknown-method error identity.
 
@@ -400,26 +410,34 @@ cdk 0.18.1 (0.17.6/0.17.7/0.18.0 = existence-first, no length cap)
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.
 
-## Priority queue (updated 2026-10-25 after the unattended program)
+## Priority queue (re-ranked 2026-10-29 against wire-verified state)
 
-Closed tonight: NUT-19 replay matrix (deep), NUT-20 lock path (deep),
-NUT-29 atomicity + caps (partial→measured), NUT-03 units + keyless
-(partial→measured), NUT-06 cap landscape (~complete), V3 readiness
-(pre-staged). Remaining, ranked:
+Closed since the 10-25 ranking: cf keyless-amount fix DEPLOYED to
+testnut (wire-verified 10-29: 64→[63,1] rejected — note the deployed
+identity is 11001-fee-flavored, not the branch's 14005); NUT-20
+batch locked-mint converged; COMPAT-LEDGER matrix complete incl.
+checkstate retraction (cdk 1000/1000 on all arms 0.17.6–0.18.2);
+dleq-bypass disclosed via security email (owner-gated trail);
+testnut≡local-main post-deploy certified. Remaining, ranked:
 
-1. **cashu-cf fix queue (ours, owner-gated deploys)**: (a) keyless-
-   amount signing (branch fix/keyless-amount-signing @ 97a1654 —
-   fund-loss); (b) batch B_ 500-crash → clean 4xx; (c) swap-outputs
-   SQLite error leak → explicit cap + clean error; (d) interop-lab
-   test's hardcoded /Users/macbook python path (env rot).
-2. NUT-20 batch locked-mint (29.md signatures array) — the one
-   unmeasured lock-path cell.
-3. NUT-07 UNSPENT/PENDING legs (needs an unpaid-invoice hold at the
-   target — oracle invoice works for quote-create; melt PENDING needs
-   a backend that holds).
-4. NUT-12 DLEQ completeness (#434-adjacent) acceptance matrix.
-5. Multi-unit cdk/ns arms (completes the NUT-03 family matrix).
-6. v3 (#443 merge) — V3-READINESS.md sequence, watch fires automatically.
+1. ~~Keyset-rotation rung~~ DONE 2026-10-29 (FINDINGS-keyset-
+   rotation.md): cdk 0.18.2 rotation conformant — old proofs swap
+   (fund safety), retired keys served via GET /v1/keys/{id}, retired-
+   output identity 12002 "Inactive Keyset" (distinct from 12001 —
+   the #818 self-heal signal). Driver + gRPC stubs committed.
+2. ~~Locktime-0~~ MEASURED 2026-10-29 (FINDINGS-locktime0-cashu-ts.md):
+   SDK-level semantic flip 4.11.0→4.13.0 — lt0 PERMANENT→EXPIRED,
+   lt0+refund invalid→valid. Pool vectors + gonuts pinning remain.
+3. cashu-cf fix residue (verify-then-close): batch B_ 500-crash →
+   clean 4xx; swap-outputs SQLite leak → cap + clean error;
+   interop-lab hardcoded /Users/macbook python path.
+4. NUT-07 UNSPENT/PENDING legs (needs a holding invoice backend —
+   candidate for the kali-live box when reachable).
+5. NUT-12 DLEQ completeness acceptance matrix.
+6. Multi-unit cdk arm (blocked: mintd exits silently with usd in
+   supported_units — per-unit backend config research).
+7. v3 (#443 still OPEN as of 2026-10-29) — V3-READINESS.md sequence;
+   the watch fires when it merges.
 
 ## Maintenance
 

@@ -28,3 +28,11 @@ witnesses. Both CDK and Nutshell validate witnesses at melt input
 `concurrent_double_melt_rejected` fail on signut only because the matrix's
 payment destinations are not payable on signet (real CLN → payment_failed →
 quote PENDING). Not code defects; test-harness limitation.
+
+## RESOLVED 2026-10-29 (post-ISSUE-124, deployed testnut)
+All five melt vectors above now reject with 403 `spending_condition_not_met`
+(code 30006) at melt execution; valid-witness control melts 200 PAID; forged
+proof rejects 400 `invalid_proof`/30003. Evidence:
+`experiments/melt-witness-bypass/probe-out-post124-matrix-testnut.txt`
+(issue #53 closed; the entropy-trap note below remains a separate,
+positioned divergence — registry row 32).

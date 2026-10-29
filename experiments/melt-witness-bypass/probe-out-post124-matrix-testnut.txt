@@ -1,0 +1,8 @@
+=== post-124 melt witness matrix vs https://testnut.cashu.exchange ===
+control_p2pk_witness_succeeds: HTTP 200 error=PAID code=PASS
+p2pk_unsigned: HTTP 403 error=spending_condition_not_met code=30006
+p2pk_sigall_unsigned: HTTP 403 error=spending_condition_not_met code=30006
+htlc_preimage_only: HTTP 403 error=spending_condition_not_met code=30006
+htlc_signature_only: HTTP 403 error=spending_condition_not_met code=30006
+p2pk_before_locktime_wrong_key: HTTP 403 error=spending_condition_not_met code=30006
+=== VERDICT: ALL VECTORS ENFORCED (fix live) + control passes ===

@@ -10,12 +10,21 @@ from .scenarios import Result, ScenarioResult
 def generate_matrix(
     results: dict[str, list[ScenarioResult]],
     mint_urls: list[str],
+    identities: dict[str, str] | None = None,
 ) -> str:
     lines: list[str] = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     lines.append(f"# Cashu Conformance Matrix — {now}")
     lines.append("")
+
+    # #40: provenance block — mint identity captured at run start, adjacent
+    # to every URL so the report is attributable without external state.
+    if identities:
+        lines.append("**Targets** (identity captured at run start):")
+        for u in mint_urls:
+            lines.append(f"- `{u}` — {identities.get(u, 'identity-unavailable')}")
+        lines.append("")
 
     total_pass = sum(1 for rs in results.values() for r in rs if r.result == Result.PASS)
     total_fail = sum(1 for rs in results.values() for r in rs if r.result == Result.FAIL)
@@ -34,7 +43,17 @@ def generate_matrix(
                 all_names.append(r.name)
                 seen.add(r.name)
 
-    mint_labels = [f"`{u}`" if len(u) <= 40 else f"`{u[:37]}...`" for u in mint_urls]
+    # #40: column headers use the captured identity (short form), not the
+    # raw URL — the URL stays in the provenance block above.
+    def _label(u: str) -> str:
+        ident = (identities or {}).get(u)
+        if not ident or ident.startswith("identity-unavailable"):
+            return f"`{u}`" if len(u) <= 40 else f"`{u[:37]}...`"
+        short = ident.split(" / ")[0]
+        ver = ident.split(" / ")[1] if " / " in ident else "?"
+        return f"`{short}@{ver}`"
+
+    mint_labels = [_label(u) for u in mint_urls]
 
     for category, names in categories.items():
         lines.append(f"## {category}")
