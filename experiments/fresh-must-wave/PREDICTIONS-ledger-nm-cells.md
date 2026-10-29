@@ -9,3 +9,10 @@
 | cdk 0.17.6/0.18.0 keyless swap 64->[63,1] | 400/12001 (line-stable) |
 
 Any miss = probe bug first (per house rule), then a real drift cell.
+
+2026-10-29 review annotation: the checkstate rows' stated basis ("0.18.2
+measured 100") was RETRACTED the same day (see COMPAT-LEDGER corrections —
+with valid curve points the cap is 1000/1000 on every cdk arm 0.17.6–0.18.2).
+Rows are left as frozen — but the post-retraction family evidence predicts
+1000-flat for the unmeasured arms, so a "100" measurement will now be
+treated as probe-bug-first, exactly per the house rule above.
