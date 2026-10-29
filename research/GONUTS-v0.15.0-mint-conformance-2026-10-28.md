@@ -100,9 +100,12 @@ cashu-cf/cdk).
 1. [P0] melt: single conditional UNPAID→PENDING transition (CAS) on the
    quote before settle, spanning check→settle; concurrent melts on one
    quote must leave exactly one PAID. Repro: this lane's scenario, one
-   command. Follow-up repro (owner/lab): same-proofs/different-quotes
-   variant + a settlement-evidencing backend to complete the loss-vector
-   picture.
+   command. Follow-up repro EXECUTED 2026-10-29 (local arm, FAKEBACKEND):
+   **same-proofs/two-quotes concurrent -> exactly one settles (B=400)** —
+   the proof-level guard holds across quotes, confirming the defect is
+   precisely quote-level double-settlement (the CAS remedy is the right
+   target). Still open: a settlement-evidencing backend leg for the
+   Lightning-loss picture (FAKEBACKEND auto-pays everything).
 2. [P1] melt-path NUT-11/14 verification: same parser as swap; SIG_ALL
    counts; anyone-can-spend after locktime.
 3. [P2] quote ids → UUIDv7; amount_issued accounting; zero-amount
