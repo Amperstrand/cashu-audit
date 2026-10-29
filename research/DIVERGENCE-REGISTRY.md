@@ -67,3 +67,4 @@ approval → post.
   line in `~/watch-upstream.log` means someone replied — read the
   thread before any further upstream action.
 - `17 3 * * * ~/bin/must-gap-nightly.sh` — 17-vector drift detection.
+Host-header probe result: Workers scope-based routing → 403 on all hostile Hosts (evil.com, mint.test:1234, MINT.TEST, empty). Immune to ns 7a5a7ce class.
