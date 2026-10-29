@@ -410,26 +410,32 @@ cdk 0.18.1 (0.17.6/0.17.7/0.18.0 = existence-first, no length cap)
 ### NUT-30 — none
 Onchain (2026-05). Newest method surface. Next: same as 23/25 probe.
 
-## Priority queue (updated 2026-10-25 after the unattended program)
+## Priority queue (re-ranked 2026-10-29 against wire-verified state)
 
-Closed tonight: NUT-19 replay matrix (deep), NUT-20 lock path (deep),
-NUT-29 atomicity + caps (partial→measured), NUT-03 units + keyless
-(partial→measured), NUT-06 cap landscape (~complete), V3 readiness
-(pre-staged). Remaining, ranked:
+Closed since the 10-25 ranking: cf keyless-amount fix DEPLOYED to
+testnut (wire-verified 10-29: 64→[63,1] rejected — note the deployed
+identity is 11001-fee-flavored, not the branch's 14005); NUT-20
+batch locked-mint converged; COMPAT-LEDGER matrix complete incl.
+checkstate retraction (cdk 1000/1000 on all arms 0.17.6–0.18.2);
+dleq-bypass disclosed via security email (owner-gated trail);
+testnut≡local-main post-deploy certified. Remaining, ranked:
 
-1. **cashu-cf fix queue (ours, owner-gated deploys)**: (a) keyless-
-   amount signing (branch fix/keyless-amount-signing @ 97a1654 —
-   fund-loss); (b) batch B_ 500-crash → clean 4xx; (c) swap-outputs
-   SQLite error leak → explicit cap + clean error; (d) interop-lab
-   test's hardcoded /Users/macbook python path (env rot).
-2. NUT-20 batch locked-mint (29.md signatures array) — the one
-   unmeasured lock-path cell.
-3. NUT-07 UNSPENT/PENDING legs (needs an unpaid-invoice hold at the
-   target — oracle invoice works for quote-create; melt PENDING needs
-   a backend that holds).
-4. NUT-12 DLEQ completeness (#434-adjacent) acceptance matrix.
-5. Multi-unit cdk/ns arms (completes the NUT-03 family matrix).
-6. v3 (#443 merge) — V3-READINESS.md sequence, watch fires automatically.
+1. **Keyset-rotation rung** (tollgate #818 repro): mint under
+   keyset A, rotate, verify old proofs still swap + wallet-facing
+   error identities. No driver exists yet — build on the upgrade-
+   ladder harness.
+2. **Locktime-0 pool vector** (cashu-ts #1324; 4.13.0 re-touches
+   NUT-11 — still zero spend-path vectors in the pool).
+3. cashu-cf fix residue (verify-then-close): batch B_ 500-crash →
+   clean 4xx; swap-outputs SQLite leak → cap + clean error;
+   interop-lab hardcoded /Users/macbook python path.
+4. NUT-07 UNSPENT/PENDING legs (needs a holding invoice backend —
+   candidate for the kali-live box when reachable).
+5. NUT-12 DLEQ completeness acceptance matrix.
+6. Multi-unit cdk arm (blocked: mintd exits silently with usd in
+   supported_units — per-unit backend config research).
+7. v3 (#443 still OPEN as of 2026-10-29) — V3-READINESS.md sequence;
+   the watch fires when it merges.
 
 ## Maintenance
 
