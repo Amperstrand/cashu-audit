@@ -203,7 +203,17 @@ not a one-line change.
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
 mint-retry idempotency fork (registry, measured 2026-10-23 —
-shadow-proxy A6b). Gap: custom methods (#382) and `method` field (#378
+shadow-proxy A6b); cdk-mintd duplicate-outputs ERROR IDENTITY bug
+(divergences/2026-10-29-cdk-mintd-duplicate-outputs-error-identity.md,
+measured 2026-10-29 with two same-seed wallets: the issue path maps
+the blind-signature UNIQUE violation to InvoiceAlreadyPaid instead of
+NUT-19 11003 — wallets roll the derivation counter back and brick
+permanently; with 11003 they walk past the burn in N attempts. Fix on
+Amperstrand/cdk fix/duplicate-outputs-error-identity; upstream filing
+owner-gated. Completes the error-identity picture the A6b row started:
+nutshell refuses duplicates with the CORRECT 11003; cdk replays
+identical re-sends but mis-identifies fresh collisions).
+Gap: custom methods (#382) and `method` field (#378
 solution, 2026-06-10) unmeasured; expiry-as-deadline (#427) unmeasured.
 Next: quote `method` round-trip + unknown-method error identity.
 
