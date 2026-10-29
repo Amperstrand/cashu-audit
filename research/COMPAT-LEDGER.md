@@ -15,13 +15,13 @@ marked otherwise. Method: cashu-audit probes 2026-10-25/26.
 | Default keyset id on `/v1/keys` | 16-hex V1 | 16-hex V1 | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | 16-hex V1 |
 | Byte-identical swap replay | 400 reject | 400 reject | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached |
 | Unsupported-unit error code | 10000 | **11013** | 11013 | 11013 | 11013 | 11013 | 11013 | 11005 |
-| Batch mint: length cap | n/m | 1000-flat | none (existence-first) | none | none | **11017 @ 100** | **11017 @ 100** | 11016? @ 50 |
+| Batch mint: length cap | **1000 (pydantic, unadvertised)** | 1000-flat | none (existence-first) | none | none | **11017 @ 100** | **11017 @ 100** | 11016? @ 50 |
 | Keyless-amount swap (e.g. 63) | crash `detail:"63"` code 0 | crash `detail:"N"` | 12001 reject | 12001 reject | 12001 reject | 12001 reject | 12001 reject | **SIGNS then refuses redemption — fund strand (fix staged, cashu-cf 97a1654)** |
-| Locked quote, no signature | 20008 | 20008 | n/m | 20008 | n/m | n/m | 20008 | 20008 |
+| Locked quote, no signature | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 |
 | Batch locked-mint, sigs array | n/m | converged 200/20008 | n/m | n/m | n/m | n/m | converged | converged |
 | Melt-quote fee_reserve | 10 | 10 | 20 | 20 | 20 | 20 | 20 | 10 |
 | Declared change amounts honored? | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored |
-| checkstate batch cap (advertised/enforced) | n/m | 1000/1000 | n/m | n/m | n/m | n/m | 1000/**100** | **50**/1000 |
+| checkstate batch cap (advertised/enforced) | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | **50**/1000 |
 
 n/m = not measured (image exists; one arm-run away). cf = cashu-cf
 testnut. cdk batch-check details: pre-0.18.1 a batch of 1001 unknown
@@ -94,6 +94,13 @@ all three families; unit consistency (#406); quote accounting Jul
 
 ## Corrections (house discipline)
 
+- 2026-10-29: the cdk-0.18.2 checkstate cell read "advertised 1000 /
+  enforced 100" — RETRACTED. With VALID curve points the cap is
+  1000/1000 (11014 "Maximum inputs exceeded: 1001 provided, max
+  1000"), identical to every cdk arm 0.17.6–0.18.2; the original
+  probe's Ys never reached the length check. The
+  advertisement-vs-enforcement gap is BATCH-MINT-only (11017 @ 100,
+  re-verified this pass). All checkstate cells now measured.
 - Mid-session 2026-10-26: a probe sent a FRESH blinded output on the
   "replay" POST — the 400s it produced on 0.18.0/0.18.1/0.18.2 were
   "inputs already spent", not caching behavior. Retracted same
