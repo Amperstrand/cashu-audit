@@ -9,7 +9,7 @@ port 18498, sqlite under /tmp, input fee 0. Runner: `conformance/run_matrix.py`
 ## Headline
 
 **28 failures: 19 gonuts-unique, 9 sharing scenario names with reference
-expected-fail sets** (recomputed 2026-10-30 after review — the original
+expected-fail sets** (recomputed 2026-10-29 after review — the original
 "zero overlap" claim was wrong). Shared names and how the identities
 compare: `mint_quote_zero_amount_fails` — ns arms REJECT with a 422
 pydantic shape (wrong identity), gonuts ACCEPTS the zero-amount quote
@@ -41,6 +41,21 @@ NO reference arm. Grades:
   settle, under a lock spanning check→settle; note that proof
   spend-marking alone would NOT close this variant (the proofs are
   disjoint — the race is on the quote, not the Ys).
+
+  Provenance (review verification, 2026-10-29): the window is
+  **inherited, not fork-introduced** — elnosh/gonuts upstream
+  `mint/mint.go` (repo archived 2025-08-16) carries the identical
+  read-check-write sequence (`GetMeltQuote` → Paid/Pending rejects →
+  unconditional `UpdateMeltQuote(..., Pending)` → pay), diff-verified
+  against v0.15.0; no pre-existing melt-race issue exists upstream and
+  the archived repo cannot receive one. The fork's CAS remediation
+  protects OpenTollGate deployments; any third-party gonuts mint built
+  from upstream remains exposed. Recorded here because the concurrent
+  melt scenario itself (the repro shape) is already public in this
+  repo's lane as the cashu-cf #41 regression; owner call whether this
+  provenance note should additionally live in `private/` per the
+  2026-10-27 disclosure rule (vendor is not merely unaware — it is
+  unreachable).
 
 ### B — NUT-11/14 spending-condition enforcement on MELT (19 scenarios)
 
