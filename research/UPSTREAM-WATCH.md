@@ -22,3 +22,17 @@ OK research/releases/cashu-ts-4.13.0.md: 5 commits, NUTs: NUT-11, NUT-18
 ```
 Read the digest, then the tracker cards it names.
 
+
+## Run 2026-10-30 04:47 UTC
+
+- CHANGE: cdk release(s) v0.18.3 (published 2026-10-29) — OK research/releases/cdk-0.18.3.md: 6 commits, NUTs: none
+- CHANGE: cashu-ts release v5.0.0-rc.12 but digest FAILED: cannot infer --prev for v5.0.0-rc.12; pass it explicitly
+
+
+### cdk v0.18.3
+
+```
+OK research/releases/cdk-0.18.3.md: 6 commits, NUTs: none
+```
+Read the digest, then the tracker cards it names.
+
