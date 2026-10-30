@@ -158,7 +158,7 @@ Legend: ✅ have / aligned · 🔶 diverges (document or decide) · ❌ gap · �
 5. **Error-code hygiene (3.21)** → **cashu-cf#101**: 11003 reuse, 2xxxx collisions, never-emitted 11014/11015/12002/12003/30007/30008.
 6. **HTLC delay-mode busy-wait (3.24)** → cashu-cf#102: 60s synchronous busy-wait hardcoded on — config-gate, bound, or drop.
 7. **checkstate duplicate-Y (3.10)** → cashu-cf#102 (document only; strictest-is-fine).
-8. **Keyset-balance invariant (3.14)**: optional defense-in-depth mirroring ns-main `e107c6d`; primary guarantee already via Phase-0.5 crypto verify. Document the reasoning in-repo (not filed — decision memo first).
+8. **Keyset-balance invariant (3.14)**: optional defense-in-depth mirroring ns-main `e107c6d`; primary guarantee already via Phase-0.5 crypto verify. Decision memo filed 2026-10-30 as **cashu-cf#105** (document-first recommendation; drift-freeze risk called out).
 
 ### P3 — gaps to schedule (no upstream pressure)
 9. **NUT-13/21/22 auth** (3.17): both references investing. When built: cdk's atomic blind-auth spend (31002), ns's scope-path lesson, per-mint auth seed derivation.
