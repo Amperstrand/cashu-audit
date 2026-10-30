@@ -10,18 +10,24 @@ marked otherwise. Method: cashu-audit probes 2026-10-25/26.
 
 ## The matrix (measured 2026-10-25/26)
 
-| Wallet-visible behavior | ns 0.20.3 | ns 0.21.0 | cdk 0.17.6 | cdk 0.17.7 | cdk 0.18.0 | cdk 0.18.1 | cdk 0.18.2 | cf testnut |
+| Wallet-visible behavior | ns 0.20.3 | ns 0.21.0 | cdk 0.17.6 | cdk 0.17.7 | cdk 0.18.0 | cdk 0.18.1 | cdk 0.18.2 | cdk 0.18.3 | cf testnut |
 |---|---|---|---|---|---|---|---|---|
-| Default keyset id on `/v1/keys` | 16-hex V1 | 16-hex V1 | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | 16-hex V1 |
-| Byte-identical swap replay | 400 reject | 400 reject | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached |
-| Unsupported-unit error code | 10000 | **11013** | 11013 | 11013 | 11013 | 11013 | 11013 | 11005 |
-| Batch mint: length cap | **1000 (pydantic, unadvertised)** | 1000-flat | none (existence-first) | none | none | **11017 @ 100** | **11017 @ 100** | 11016? @ 50 |
-| Keyless-amount swap (e.g. 63) | crash `detail:"63"` code 0 | crash `detail:"N"` | 12001 reject | 12001 reject | 12001 reject | 12001 reject | 12001 reject | **SIGNS then refuses redemption — fund strand (fix staged, cashu-cf 97a1654)** |
-| Locked quote, no signature | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 |
-| Batch locked-mint, sigs array | n/m | converged 200/20008 | n/m | n/m | n/m | n/m | converged | converged |
-| Melt-quote fee_reserve | 10 | 10 | 20 | 20 | 20 | 20 | 20 | 10 |
-| Declared change amounts honored? | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored |
+| Default keyset id on `/v1/keys` | 16-hex V1 | 16-hex V1 | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | **66-hex V2** | 16-hex V1 |
+| Byte-identical swap replay | 400 reject | 400 reject | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached | 200 cached |
+| Unsupported-unit error code | 10000 | **11013** | 11013 | 11013 | 11013 | 11013 | 11013 | 11013 | 11005 |
+| Batch mint: length cap | **1000 (pydantic, unadvertised)** | 1000-flat | none (existence-first) | none | none | **11017 @ 100** | **11017 @ 100** | **11017 @ 100** | 11016? @ 50 |
+| Keyless-amount swap (e.g. 63) | crash `detail:"63"` code 0 | crash `detail:"N"` | 12001 reject | 12001 reject | 12001 reject | 12001 reject | 12001 reject | 12001 reject | **SIGNS then refuses redemption — fund strand (fix staged, cashu-cf 97a1654)** |
+| Locked quote, no signature | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 | 20008 |
+| Batch locked-mint, sigs array | n/m | converged 200/20008 | n/m | n/m | n/m | n/m | converged | converged | converged |
+| Melt-quote fee_reserve | 10 | 10 | 20 | 20 | 20 | 20 | 20 | 20 | 10 |
+| Declared change amounts honored? | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored |
 | checkstate batch cap (advertised/enforced) | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | **50**/1000 |
+
+cdk 0.18.3 column (2026-10-30): six legs WIRE-VERIFIED identical to
+0.18.2 — kid 66-hex, replay cached, keyless 12001, locked 20008,
+batch 11017@100, checkstate 11014@1000; every frozen prediction hit
+(PREDICTIONS-cdk0183.md). Unmeasured rows inherit 0.18.2 (release
+is sqlite/ffi-only per digest) — mark n/m if that ever matters.
 
 n/m = not measured (image exists; one arm-run away). cf = cashu-cf
 testnut. cdk batch-check details: pre-0.18.1 a batch of 1001 unknown
