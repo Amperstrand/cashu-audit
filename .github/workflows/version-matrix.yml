@@ -24,6 +24,7 @@ jobs:
         --docker-arm cdk-latest=cdk:cashubtc/mintd:latest
         --docker-arm nutshell-latest=nutshell:cashubtc/nutshell:latest
         --docker-arm cdk-0.18.0=cdk:cashubtc/mintd:0.18.0
+        --docker-arm cdk-0.18.3=cdk:cashubtc/mintd:0.18.3
         --docker-arm nutshell-0.20.3=nutshell:cashubtc/nutshell:0.20.3
     steps:
       - uses: actions/checkout@v4
