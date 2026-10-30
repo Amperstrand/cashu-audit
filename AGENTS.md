@@ -83,3 +83,7 @@ posts, or publishes upstream on its own.
    violation of this — the rule exists so it is never repeated.)
 7. Anything sourced from Cashu dev calls is under the Chatham House
    rule: use the information, never attribute the speaker.
+
+## private/ is NOT access control (earned 2026-10-30)
+
+This repo is PUBLIC. A directory named `private/` plus a `.gitignore` line only hides files that were never tracked — files committed before (or during) the "hygiene" move stay world-readable and code-search-indexed, and gitignore makes the untracked ones invisible in `git status`, so nobody notices either state. Disclosure-grade material (findings writeups, repros, captures, disclosure email texts, upstream drafts) lives in the PRIVATE mirror repo `Amperstrand/cashu-audit-private` from birth. CI (`.github/workflows/no-private-paths.yml`) fails any push that tracks `private/`.
