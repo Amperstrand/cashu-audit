@@ -21,6 +21,8 @@ marked otherwise. Method: cashu-audit probes 2026-10-25/26.
 | Batch locked-mint, sigs array | n/m | converged 200/20008 | n/m | n/m | n/m | n/m | converged | converged | converged |
 | Melt-quote fee_reserve | 10 | 10 | 20 | 20 | 20 | 20 | 20 | 20 | 10 |
 | Declared change amounts honored? | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored |
+| restore with `outputs: []` | 400 `at least one output` (14005) | 400 `no outputs provided` (code 0) | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 14005 |
+| checkstate duplicate Ys | **400 duplicate-reject** | 200 both copies | 200 both copies | 200 both copies | 200 both copies | 200 both copies | 200 both copies | 200 both copies | **400 duplicate-reject** |
 | checkstate batch cap (advertised/enforced) | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | **50**/1000 |
 
 cdk 0.18.3 column (2026-10-30): six legs WIRE-VERIFIED identical to
