@@ -42,6 +42,11 @@ posts, or publishes upstream on its own.
 - `research/DIVERGENCE-REGISTRY.md` — the map of our findings ↔
   upstream venues ↔ what upstream already knows. **Read before any
   upstream-contribution work; update after any venue research.**
+- **Prior-art sweeps cover OPEN PRs, not just issues** (2026-10-30
+  rule): an unmerged PR can describe a defect publicly for months —
+  that is venue intel (and severity calibration), never proof it was
+  handled; the sweep that only reads issues will miss it. And the
+  inverse holds: public prior art alone does not get a fix merged.
 
 ## Method (non-negotiable)
 
