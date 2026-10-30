@@ -125,7 +125,9 @@ cashu-ts 4.11.0), headline splits:
 for `c`, fix is local). Version generality (2026-10-23): `ProofV4` is
 byte-identical in cdk 0.18.1 and 0.18.2 (serde attrs included) — the
 defect ships in both, so the nightly's frozen 0.18.1 reference rejects
-the pe vector identically.
+the pe vector identically. Rechecked 2026-10-30 against v0.18.3
+(sqlite/ffi-only release): `ProofV4` and the `pe` serde unchanged —
+defect spans 0.18.1–0.18.3.
 
 ## Next actions
 
