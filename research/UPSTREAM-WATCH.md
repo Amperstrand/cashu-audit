@@ -36,3 +36,8 @@ OK research/releases/cdk-0.18.3.md: 6 commits, NUTs: none
 ```
 Read the digest, then the tracker cards it names.
 
+
+## Run 2026-10-30 06:07 UTC
+
+- CHANGE: cashu-ts release v5.0.0-rc.12 but digest FAILED: cannot infer --prev for v5.0.0-rc.12; pass it explicitly
+
