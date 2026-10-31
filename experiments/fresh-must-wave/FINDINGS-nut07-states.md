@@ -35,3 +35,13 @@ ns-0.21.0, cdk-0.18.3 (all fakewallet-backed; docker + live probe).
 
 Probes: this file's table is the evidence (single script, three arms,
 rapid-poll during settle).
+
+
+## Post-script (same night, code-read + rules-wall verification)
+The cf PAID-forever wart is DEPLOYED-VINTAGE most likely: current main
+implements the ISSUED transition (ledger/rules.ts applyMintQuoteIssued
+pure rule — 41-test wall green — plus crud.ts finalize with CAS + KV
+mirror, called on the single-mint happy path at api/mint.ts:1349).
+Deployed testnut predates the 094 rules extraction. NOT wire-proven on
+main (mock env cannot sign); certify_testnut.py gained an ISSUED leg so
+the next deploy proves it mechanically.

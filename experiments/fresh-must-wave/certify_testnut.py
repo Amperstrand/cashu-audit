@@ -52,6 +52,23 @@ def main():
     st, b = mg.http("POST", f"{base}/v1/mint/quotes", {"ids": ids})
     check("A2 mint/quotes 51 ids -> 400/11014", st == 400 and "11014" in b, f"{st} {b[:90]}")
 
+    # NUT-04 (2026-10-31 finding): quote must read ISSUED after a successful mint
+    st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": 4, "unit": "sat"})
+    if st == 200:
+        q3 = json.loads(b)["quote"]
+        for _ in range(30):
+            st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{q3}")
+            if st == 200 and json.loads(b).get("state") == "PAID": break
+            time.sleep(1)
+        oK = out(4, kid)
+        st, b = mg.http("POST", f"{base}/v1/mint/bolt11", {"quote": q3, "outputs": [oK]})
+        mint_ok = st == 200
+        st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{q3}")
+        s3 = json.loads(b).get("state") if st == 200 else f"err{st}"
+        check("NUT-04 quote ISSUED after mint", mint_ok and s3 == "ISSUED", f"mint={mint_ok} state={s3}")
+    else:
+        check("NUT-04 quote ISSUED after mint", False, f"quote create {st}")
+
     # B2: restore-empty -> 200 with empty arrays
     st, b = mg.http("POST", f"{base}/v1/restore", {"outputs": []})
     ok = st == 200 and json.loads(b) == {"outputs": [], "signatures": []}

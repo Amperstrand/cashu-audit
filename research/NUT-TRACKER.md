@@ -251,8 +251,9 @@ CREATION (UNPAID unobservable) and NEVER reports ISSUED after minting
 (wallet trap: state-polling wallets conclude not-yet-minted forever and
 retry into 11003) — ns+cdk report ISSUED correctly; PENDING unobservable
 on every fakewallet (needs holding backend = kali tier); unknown-quote
-identity forks 404/14005 vs 400/code-0 vs 400/50000. cf ISSUED fix
-queued behind deploy creds.Hold: checkstate shape issue, witness-field violations (cashu-cf);
+identity forks 404/14005 vs 400/code-0 vs 400/50000. cf ISSUED fix:
+likely ALREADY on main (094 rules extraction; 41-test wall green) —
+verify via the new certifier ISSUED leg after the next deploy.Hold: checkstate shape issue, witness-field violations (cashu-cf);
 fresh-must-wave side finding 2026-10-24: **cdk curve-validates Ys at
 checkstate** (422 "malformed public key" on non-point hex) — cf/ns
 accept arbitrary hex; ns accepts ONLY the Ys shape (outputs-shape →
