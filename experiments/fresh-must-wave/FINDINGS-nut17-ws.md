@@ -36,3 +36,11 @@ PAID observed via HTTP before reading pushes.
 Advertised-vs-actual: ns advertises 3 commands, cdk 9 (bolt11+bolt12
 sat) — all measured commands behaved as advertised on the bolt11 sat
 path; bolt12 commands untested (no bolt12 backend).
+
+## Version stability (frozen predictions FIRST this time)
+ns-0.20.3 and cdk-0.18.1 vs baselines: field shapes identical on both
+(expiry/pubkey drift preserved). Push counts: cdk-0.18.1 ×1 exactly as
+predicted. ns-0.20.3 first read ×2 — probe artifact (drain window),
+repeat ×4 runs: **3,3,3,3 — the triple-fire is deterministic and
+version-stable (0.20.3 ≡ 0.21.0)**. Prediction deviation honestly
+noted: the ×2 was mine, not the mint's.
