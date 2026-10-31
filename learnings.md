@@ -132,3 +132,68 @@ The divergence database is the highest-value artifact for the Cashu community. I
 - Error-identity lesson reinforced: the first S8 check "passed" a 200
   through a family regex. Always assert the exact (status, error, code)
   triple; family regexes are how enforcement gaps read as green.
+
+## Cross-implementation research arc lessons (2026-10-21 → 10-30, agenda #43)
+
+From the keyset-ID/NUT-02/V4-pool/dleq research arc (cdk 0.17.6–0.18.3,
+nutshell 0.20.3/0.21.0, cashu-ts 4.11.0/rc.9, cashu-cf). Operational
+lessons; finding details live in the findings docs + registry.
+
+### Method rules that earned their keep
+- **Frozen predictions forced the best findings**: P1 predicted wrong
+  ("mints flip active on expiry" — they never do) and the mandatory
+  triage turned a wrong prediction into the enforcement-divergence
+  finding. Predict, run, triage the surprise — never skip to the result.
+- **Error-identity assertions** caught three separate one-class-per-bug
+  splits: same unresolvable short-id → three wallets, three identities
+  (deadlock/KeyError/CTSError); `cashuC` prefix → three identities;
+  cdk's dedicated `MultiMintTokenNotSupported` shadowed by a generic
+  earlier error. Any-4xx/any-reject suites would have collapsed these.
+- **Surprising FAIL = probe bug until proven otherwise** — twice: the
+  "Unsupported token" surprise needed a single-entry control token to
+  isolate parse-vs-receive; a cashu-ts harness rejection was a
+  keyset-list gap, not a divergence. Both triages prevented false
+  findings from entering the registry.
+- **Version-generality checks before filing**: cheap source diffs
+  proved pe-serde identical across cdk 0.18.1–0.18.3 (struct
+  byte-identical) and both nutshell defects present in 0.20.3 AND
+  0.21.0 — filing texts would otherwise have shipped wrong version
+  framing. Diff the struct/file, don't trust the release notes.
+- **New-release checkpoint**: when a new release lands (upstream-watch
+  CHANGE line), first-hand re-verify each committed finding against
+  the tag — the digest said "NUTs: none" for 0.18.3 and was right, but
+  the registry-grade claim needed the four regions grepped on the tag.
+
+### Environment gotchas (ai-legion class)
+- **earlyoom kills release-profile cargo builds** (it prefers killing
+  rustc); `nice -n 10 cargo build -j 2` debug-profile builds cdk-cli
+  in <2 min — use debug for probes.
+- **Docker arms die to the OOM killer under load** (exit 137) — arms
+  are restart-safe: keysets derive deterministically from the
+  mnemonic, so `docker start` resumes identical state.
+- **/tmp is wiped between windows** — durable copies immediately;
+  /tmp holds machinery only, never the record.
+- **Wallet env vars have no CASHU_ prefix** (MINT_HOST not
+  CASHU_MINT_HOST) — a wrong-prefix wallet silently hits the DEFAULT
+  public mint (8333.space). Verify the env mapping with a local
+  (echo/info) command before the first network call; keep first calls
+  local-only.
+- **nutshell management RPC needs MINT_RPC_SERVER_MUTUAL_TLS=false**
+  (mTLS defaults ON and blocks insecure boot with a confusing
+  missing-cert error); in-container `mint-cli -h 127.0.0.1 -p 8086 -i`.
+- **cdk-mintd multi-unit arms**: `[[payment_backend]]` is a LIST with
+  one entry per unit — `[fake_wallet] supported_units` alone does not
+  create the second unit's keyset.
+
+### Workflow lessons
+- **The private mirror must be the birthplace** (2026-10-27 policy):
+  drafting in a gitignored dir of a public repo is one accidental
+  `git add -f` away from disclosure; the CI guard catches it but the
+  mirror is the real control.
+- **Decision briefs beat final reports for owner throughput**: the
+  D1–D7 one-page briefs (finding, evidence pointer, decision ask)
+  moved faster than any long-form doc; the long-form log stayed as
+  backup.
+- **Check the other lanes' commits before writing anything** — two of
+  this arc's conclusions were already being consumed/extended by
+  parallel lanes; reading HEAD first avoided duplicated work twice.
