@@ -71,7 +71,7 @@ and OpenTollGate/tollgate#30).
 `.github/workflows/nightly-corpus.yml` (cron `17 3 * * *` UTC + dispatch):
 
 - **Coverage**: the offline surface — corpus self-validation, the
-  consumer-conformance decode lanes (cdk-cli v0.18.1 cargo-cached,
+  consumer-conformance decode lanes (cdk-cli v0.18.3 cargo-cached,
   nutshell **0.21.0 via docker** (`conformance/docker-nutshell` wrapper —
   2026-10-23: PyPI fully deleted breez-sdk-spark <0.18 making cashu
   0.20.3+ uninstallable; the image restores the original reference and is
@@ -103,7 +103,7 @@ and OpenTollGate/tollgate#30).
 `.github/workflows/conformance-v2.yml` (Mondays 06:00 UTC + dispatch): the
 deterministic live-verdict lane on LOCAL docker arms — #33's rebuild of
 the delisted public-test-mint lane, #34's closed design (deterministic,
-artifact-only). Three arms: nutshell 0.20.3 / nutshell 0.21.0 / cdk 0.18.1,
+artifact-only). Five arms: nutshell 0.20.3 / nutshell 0.21.0 / cdk 0.18.1 / cdk 0.18.2 / cdk 0.18.3,
 each booted by `run_arm_lane.py` together with an **invoice-oracle** arm
 (a scratch mint whose only job is issuing invoices the target has never
 seen — FakeWallet mints auto-settle their own invoices, which raced every
@@ -123,6 +123,6 @@ melt-success scenario before this).
   hosts with a broken docker bridge hairpin — ai-legion; GH runners don't
   need it).
 - Reference verdicts: ns-0.20.3 98P/8EF/6S · ns-0.21.0 104P/2EF/6S ·
-  cdk-0.18.1 102P/4EF/5S+1 non-gating TIMEOUT. Note 0.21.0 passes all six
+  cdk-0.18.1 102P/4EF/5S+1 non-gating TIMEOUT · cdk-0.18.3 107P/4EF/5S (2026-10-30 lane run: the same four documented divergences as 0.18.2 — no drift). Note 0.21.0 passes all six
   0.20.3 SIG_ALL/HTLC positioned divergences — the lane reproduces the
   registry's convergence data deterministically.

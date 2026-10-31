@@ -51,6 +51,10 @@ jobs:
             target: "cdk182=cdk:cashubtc/mintd:0.18.2"
             seed: conformance/expected-fail-cdk-0.18.2.json
             image: cashubtc/mintd:0.18.2
+          - arm: cdk-0.18.3
+            target: "cdk183=cdk:cashubtc/mintd:0.18.3"
+            seed: conformance/expected-fail-cdk-0.18.3.json
+            image: cashubtc/mintd:0.18.3
     steps:
       - uses: actions/checkout@v4
 

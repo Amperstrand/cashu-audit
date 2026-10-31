@@ -1,0 +1,6 @@
+{
+ "htlc_locktime_after_expiry_refund_succeeds": "POSITIONED: cdk's HTLC refund-path witness handling \u2014 'Secret is not a HTLC secret' (code 50000); registry cdk#2252 item 6 family (identical through 0.18.3 \u2014 no drift)",
+ "swap_wrong_keyset_fails": "SHAPE: cdk validates NUT-02 keyset IDs at deserialization (422) before the semantic swap check (identical through 0.18.3 \u2014 no drift)",
+ "batch_mint_rejects_too_many_outputs": "SHAPE: cdk's strict QuoteId UUID parse (422) fires before the too-many-outputs check (identical through 0.18.3 \u2014 no drift)",
+ "mint_info_returns_required_fields": "ARM CONFIG ARTIFACT: lane TOML sets no mint name (identical through 0.18.3 \u2014 no drift)"
+}
