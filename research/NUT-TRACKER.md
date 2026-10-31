@@ -438,9 +438,11 @@ testnut≡local-main post-deploy certified. Remaining, ranked:
    (fund safety), retired keys served via GET /v1/keys/{id}, retired-
    output identity 12002 "Inactive Keyset" (distinct from 12001 —
    the #818 self-heal signal). Driver + gRPC stubs committed.
-2. ~~Locktime-0~~ MEASURED 2026-10-29 (FINDINGS-locktime0-cashu-ts.md):
-   SDK-level semantic flip 4.11.0→4.13.0 — lt0 PERMANENT→EXPIRED,
-   lt0+refund invalid→valid. Pool vectors + gonuts pinning remain.
+2. ~~Locktime-0~~ CLOSED 2026-10-31: semantic flip measured 2026-10-29
+   (lt0 PERMANENT→EXPIRED; lt0+refund invalid→valid) AND pool vectors
+   landed (private/v4-pool, 3 tokens, decode-verified on 4.11.0+4.13.0,
+   manifest verdicts recorded). Remaining: gonuts-side pinning (tollgate
+   lane's queue).
 3. cashu-cf fix residue (verify-then-close): batch B_ 500-crash →
    clean 4xx; swap-outputs SQLite leak → cap + clean error;
    interop-lab hardcoded /Users/macbook python path.
