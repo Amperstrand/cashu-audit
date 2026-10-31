@@ -449,16 +449,25 @@ testnut≡local-main post-deploy certified. Remaining, ranked:
    landed (private/v4-pool, 3 tokens, decode-verified on 4.11.0+4.13.0,
    manifest verdicts recorded). Remaining: gonuts-side pinning (tollgate
    lane's queue).
-3. cashu-cf fix residue (verify-then-close): batch B_ 500-crash →
-   clean 4xx; swap-outputs SQLite leak → cap + clean error;
-   interop-lab hardcoded /Users/macbook python path.
+3. cashu-cf fix residue: batch B_ 500-crash DONE (deployed);
+   saga 30007/30008 + spec-code remap DONE 2026-10-31
+   (fix/saga-error-codes @ 5aaf50b, local, awaits deploy);
+   melt-identity pre-deploy baseline captured (10009 cell).
+   NEW from 2026-10-31: cf#110 invoice-validation gate (bech32-
+   malformed + non-invoice accepted, amount invented) — fix branch
+   candidate; NUT-17 cf absence (advisory: poll-only wallets + the
+   ISSUED trap).
 4. NUT-07 UNSPENT/PENDING legs (needs a holding invoice backend —
-   candidate for the kali-live box when reachable).
+   candidate for the kali-live box when reachable). Compounded by the
+   cf never-ISSUED polling trap (deploy-vintage; certifier armed).
 5. NUT-12 DLEQ completeness acceptance matrix.
-6. Multi-unit cdk arm (blocked: mintd exits silently with usd in
-   supported_units — per-unit backend config research).
+6. ~~Multi-unit cdk arm~~ SOLVED 2026-10-31 ([[payment_backend]] per
+   unit; matrix complete — see NUT-03 card). ns multi-unit n/m (low
+   value).
 7. v3 (#443 still OPEN as of 2026-10-29) — V3-READINESS.md sequence;
-   the watch fires when it merges.
+   the watch fires when it merges. NOTE: cashu-ts rc.12 tracks the
+   SIMPLIFIED core revision — rc.11 v3 transcripts no longer verify;
+   re-pin v3 arms to rc.12 when this lane resumes.
 
 ## Maintenance
 
