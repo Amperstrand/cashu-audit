@@ -90,3 +90,11 @@ have implementations quickly. Nutshell shows no v3 prep.
 - Is pre-v3 NUT-20 locking unchanged on v3 mints (the diff says the
   signature field REPLACES the NUT-20 message for v3 — verify no
   double-requirement).
+
+## Currency check (2026-10-30)
+#443 open, mergeable-clean, 101 commits, quiet since Oct 26. Direction
+UNCHANGED from this doc's basis (Oct-14 summary reconfirms: transcript
+quote inputs 0x12, blinded outputs 0x21, tagged-hash quote ids, NUT-13
+type 0x05 preimage, NUT-22 path-relative targets, tighter malformed-
+input rules — the last item is the same wave as cashu-cf#100's request
+bounds). Sequence below stands as written; the watch fires on merge.
