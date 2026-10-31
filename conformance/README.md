@@ -126,3 +126,26 @@ melt-success scenario before this).
   cdk-0.18.1 102P/4EF/5S+1 non-gating TIMEOUT · cdk-0.18.3 107P/4EF/5S (2026-10-30 lane run: the same four documented divergences as 0.18.2 — no drift). Note 0.21.0 passes all six
   0.20.3 SIG_ALL/HTLC positioned divergences — the lane reproduces the
   registry's convergence data deterministically.
+
+## NUT-18 payload matrix (#63 — dispatch/local lane)
+
+`nut18_payload_matrix.py` — the 2026-10-31 payload-spelling probe as a
+repeatable battery: parser matrix (payload variants + the two wire
+captures × cdk/cashu-ts, EXACT error-identity assertions), live
+settlement leg (10-case harness against a nutshell arm), emission-watch
+pins in the header. 17 rows; exit 1 on any drift.
+
+```bash
+python3 conformance/nut18_payload_matrix.py \
+  --cdk-probe /tmp/opencode/cdk-0182-target-dbg/debug/examples/nut18_payload_probe \
+  --ts-dir /root/src/upstream-cache/cashu-ts-rc9 \
+  --arm http://127.0.0.1:28086 \
+  --report-out reports/nut18-matrix-$(date -u +%F).json
+```
+
+Prerequisites live in the private mirror (`private/nut18-live/`:
+payloads + captures — do NOT recraft captures) and rebuild recipes are
+in the script footer. Traps: cashu-ts leg MUST be v5.0.0-rc.9 (4.11.0
+lacks `PaymentRequest.decodePayload`); test files MUST match
+`*.node.test.ts` or the checkout's browser vitest project fails on
+`fs`; `nut18-arm` (28086) is restart-safe (deterministic key).
