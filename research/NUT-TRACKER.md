@@ -194,8 +194,15 @@ asymmetry, stranded funds on the issuing mint** (cf fix queued, item
 crash-rejects `detail:"N"` (F5 class, third instance). Melt
 change-output caps: cf handles 1001 (melt path clean — the swap-path
 SQLite leak is swap-specific); cdk 11015/1000.
-Gap: ns/cdk multi-unit arms; cf balanced beyond-keyset-max leg.
-NOTE 2026-10-25: two-unit cdk arm attempted (supported_units
+Gap: cf balanced beyond-keyset-max leg; ns multi-unit arm (low value).
+RESOLVED 2026-10-31: the cdk silent exit was a config-shape error —
+one [[payment_backend]] entry PER UNIT is required alongside
+[fake_wallet].supported_units; supported_units alone dies silently
+(cdk wart: config inconsistency exits with no error). Correct shape
+boots the two-unit arm; family matrix COMPLETE: U1 usd lifecycle OK;
+U2 cross-unit swap 400/11010 "Input unit must match output"; U3
+mixed-unit inputs 400/11009 "Cannot have multiple units" — cdk fully
+#406-conformant, spec-coded. NOTE 2026-10-25: two-unit cdk arm attempted (supported_units
 ["sat","usd"] fake-wallet TOML): config-init OK but mintd exits
 silently at boot (no logs) — needs per-unit backend config research;
 not a one-line change.
