@@ -113,12 +113,18 @@ def main() -> int:
                    "--format=%(refname:short)%(if)%(objecttype)%(then)%(else),lightweight%(end)"
                    ]).stdout.splitlines()
         names = [t.split(",lightweight")[0] for t in tags]
-        # skip rc/beta tags and the target itself
-        stable = [t for t in names if not re.search(r"rc|beta|alpha", t, re.I)]
-        idx = next((i for i, t in enumerate(stable) if t == tag), None)
-        if idx is None or idx + 1 >= len(stable):
+        if tag not in names:
+            raise SystemExit(f"tag {tag} not found in the clone's refs")
+        i = names.index(tag)
+        if i + 1 >= len(names):
             raise SystemExit(f"cannot infer --prev for {tag}; pass it explicitly")
-        prev = stable[idx + 1]
+        # prefer the nearest preceding STABLE tag; when the target is itself
+        # an rc/beta (e.g. cashu-ts v5.0.0-rc.12, upstream-watch 2026-10-31),
+        # fall back to the immediately preceding tag — the digest range just
+        # needs the correct span.
+        j = next((k for k in range(i + 1, len(names))
+                  if not re.search(r"rc|beta|alpha", names[k], re.I)), None)
+        prev = names[j] if j is not None else names[i + 1]
 
     # 1. release notes
     notes = ""
