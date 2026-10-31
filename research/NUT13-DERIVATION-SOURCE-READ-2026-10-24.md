@@ -1,5 +1,24 @@
 # NUT-13 deterministic derivation — SOURCE READ, three-way divergence on the 0x01 slot (2026-10-24)
 
+> **CORRECTION 2026-10-31 (see research/FINDINGS-2026-10-31-nut18-payload-spelling.md
+> §2 + private mirror verification):** this document's central claims
+> were falsified on re-verification and should not be cited:
+> (1) cdk 0.18.2's `SecretKey::derive` (0x01 slot) is cdk's
+> BLINDING FACTOR, not a P2PK key — type-name confusion; it is
+> live, spec-exact code (`PreMintSecrets::from_seed`,
+> nut13.rs:138/173/207), and cdk's shipped P2PK keys use
+> m/129373'/10'/0'/0'/{counter} (wallet/p2pk.rs, in-tree test
+> asserts the official vector pubkeys). (2) "no V2 HMAC vectors
+> exist" was false when written: official V2 vectors shipped by
+> 2026-03-27 (nuts 04cce64), P2PK vectors 2026-01-19 (2ce332e); all
+> 25 official values independently reproduced 2026-10-31. (3) The
+> "0x00–0x03" cashu-ts map is stale — v4.11.0/rc.9 have
+> {SECRET:0, BLINDING_FACTOR:1}. Retained below unchanged as the
+> historical record of the 2026-10-24 read that the 2026-10-25
+> retraction (research/NUT13-INTENT-RESEARCH-2026-10-25.md)
+> superseded and 2026-10-31 verification closed.
+
+
 NUT row: NUT-13. **Source-level analysis, not wire-measured** (labels
 per house method). Sources: NUTs 13.md @ 1363de4; cdk v0.18.2
 crates/cashu/src/nuts/nut13.rs; nutshell 0.21.0 cashu/wallet/secrets.py
