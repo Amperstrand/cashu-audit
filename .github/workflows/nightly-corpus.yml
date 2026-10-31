@@ -46,11 +46,11 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             cdk-target
-          key: cdk-cli-v0.18.1-${{ runner.os }}
+          key: cdk-cli-v0.18.3-${{ runner.os }}
 
-      - name: Build cdk-cli 0.18.1 (primary reference wallet)
+      - name: Build cdk-cli 0.18.3 (primary reference wallet)
         run: |
-          git clone --depth 1 --branch v0.18.1 https://github.com/cashubtc/cdk.git cdk-src
+          git clone --depth 1 --branch v0.18.3 https://github.com/cashubtc/cdk.git cdk-src
           cd cdk-src && CARGO_TARGET_DIR=$GITHUB_WORKSPACE/cdk-target cargo build -p cdk-cli --release
           mkdir -p "$HOME/.local/bin" && ln -sf "$GITHUB_WORKSPACE/cdk-target/release/cdk-cli" "$HOME/.local/bin/cdk-cli"
 
