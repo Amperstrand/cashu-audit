@@ -2,7 +2,7 @@
 
 **Window:** 2026-08-01 → 2026-10-30 · **Audited target:** Amperstrand/cashu-cf @ `67285b2` (read-only)
 **Baselines:** cdk v0.18.1 (local snapshot) → upstream main `3523c8a9` (fetched 2026-10-28); nutshell tag `0.21.0` (`a974914`, 2026-09-16) → main `ac1c2e0` (2026-10-21)
-**Method:** commit-log triage + diff reading on both upstream mains (release-status verified against release-branch trees, not dates — the grafted cdk clone makes dates unreliable); cashu-cf source inventory at `67285b2`. Wire claims from upstream mains are **source-verified only** (both sides' changes are *unreleased* — no docker arms exist yet; lane follow-ups in §6). Existing three-way corpus findings (DIVERGENCE-REGISTRY, conformance-v2, must-gap) used as the behavioral baseline for released arms.
+**Method:** commit-log triage + diff reading on both upstream mains (release-status verified against release-branch trees, not dates — the grafted cdk clone makes dates unreliable); cashu-cf source inventory at `67285b2`. **Wire claims upgraded 2026-10-31:** ns-main §2.2–2.5 error identities are now **wire-verified** via `experiments/ns-main-identity-probes/` (7/7 exact-identity PASS + one new discovery, S5); cdk-main claims remain source-verified pending 0.19 arms. Existing three-way corpus findings (DIVERGENCE-REGISTRY, conformance-v2, must-gap) used as the behavioral baseline for released arms.
 **Post-window release check:** cdk **v0.18.3** (2026-10-29) landed after the main-side analysis — sqlite/ffi-only, no mint wire changes; the pe-serde recheck against it is commit `329878e` (affected span now 0.16–0.18.3, fix still main-only). cashu-ts v5.0.0-rc.12 appeared on the upstream-watch lane (out of scope here; watch handles it).
 
 ---
@@ -77,6 +77,8 @@ Release status per item: **[0.18.0]** = already in our baseline arms, **[0.18.2]
 
 ## 2. Nutshell changes since 0.21.0 (70 commits, all main-only / unreleased)
 
+**Wire-verified 2026-10-31 against a local main @ ac1c2e0 FakeWallet mint — `experiments/ns-main-identity-probes/` (7/7 exact-identity PASS). Rows 2.2–2.5 and the new 2.10 carry observed identities.**
+
 ### 2.1 Multi-mint V3 token decoding — `e5500d9` (+`ad607fa`)
 Confirms our staged finding's dead-code diagnosis, but the fix **bypasses** rather than repairs it: `from_tokenv3` still raises plain `Exception` (base.py:1427) and the `except ValueError` fallback stays dead; instead `deserialize_token_from_string` short-circuits — `len(mints) > 1 → return tokenV3Obj` (helpers.py:109-110) — and `redeem_universal` dispatches per-mint sequential redemption (`Wallet.with_db` per entry). **Multi-mint V3 is now receivable by nutshell-wallet main**; cdk wallet still `Unsupported token`; cashu-ts intentionally rejects. Our staged nutshell issue draft (`private/UPSTREAM-nutshell-multimint-fallback.md`) is **moot as written** — re-scope to "fixed on main, unreleased; 0.21.0-and-older strand senders" or drop. Registry updated.
 
@@ -107,6 +109,9 @@ Slot index outside `0..0xFF` now `ValueError` (was: `bytes([slot & 0xFF])` silen
 - `3e2b7d1` (wallet): melt-quote response `method` now Optional (older mints without it parse again — note for our own response shapes: omission tolerated by ns-main wallet).
 - `1c682a8` (wallet/core): `supports_nut()` requires literal `true` — truthy strings/ints now False when reading third-party /v1/info.
 - LND fee probing (`129a3c1` cluster): `fee_reserve = max(configured, probed routing fee)` for non-MPP — NUT-05 fee_reserve values may differ from 0.21.0 on LND-backed mints.
+
+### 2.10 NEW (discovered on the wire, 2026-31-10 probes) — opaque KeyError on non-denomination swap outputs
+Single swap output whose amount is outside the keyset's power-of-2 list (e.g. one 63-sat output after a 1-sat keyset fee on a 64-sat input) → `KeyError(amount)` from `keyset.private_keys[output.amount]` (ledger.py `_sign_blinded_messages`) leaks as **400 `{"detail":"63","code":0}`** — opaque identity, F5-class. Mint stays up, txn rolls back; wallets never trigger it (they split to denominations) — same invisibility class as the registry's F5 `detail:"3"`. cashu-cf unaffected (per-amount keys on demand). Side observation: dict-form `{"kind":"P2PK",...}` secrets are NOT parsed as conditioned secrets — spent as plain (fail-open parse, cdk-parity). Evidence: `experiments/ns-main-identity-probes/FINDINGS.md` S5.
 
 ---
 
@@ -184,7 +189,7 @@ Legend: ✅ have / aligned · 🔶 diverges (document or decide) · ❌ gap · �
 
 ## 6. Follow-ups queued for existing lanes
 
-- When cdk 0.19 / ns 0.22 release: extend `conformance/` docker arms; add error-identity assertions for the new identities above (witness-parsed 11000, keyset-balance 11000, 422 secret-length, restore-empty 200, quote-pubkey omission on ns).
+- When cdk 0.19 / ns 0.22 release: extend `conformance/` docker arms; add error-identity assertions for the new identities above (witness-parsed 11000, keyset-balance 11000, 422 secret-length, restore-empty 200, quote-pubkey omission on ns). **ns-main identities already pinned as frozen predictions + wire evidence — the released-arm assertions can lift `experiments/ns-main-identity-probes/` verbatim (S1b/S2/S3/S4 rows; add S5 to the matrix as an ns-only opaque identity).**
 - cashu-shadow corpus: no changes required this cycle (all deltas unreleased); re-baseline after either release lands.
 - Host-header admin-path probe: **resolved, no lane needed** — static verification (this audit, §3.17) + the committed registry probe (`9b4361e`) both find Workers/cf immune to the ns `7a5a7ce` class.
 
