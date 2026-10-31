@@ -23,6 +23,7 @@ marked otherwise. Method: cashu-audit probes 2026-10-25/26.
 | Declared change amounts honored? | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored | ignored |
 | restore with `outputs: []` | 400 `at least one output` (14005) | 400 `no outputs provided` (code 0) | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 **50000 SQL-internals leak** | 400 14005 |
 | checkstate duplicate Ys | **400 duplicate-reject** | 200 both copies | 200 both copies | 200 both copies | 200 both copies | 200 both copies | 200 both copies | 200 both copies | **400 duplicate-reject** |
+| NUT-17 ws PAID-transition pushes | none | **×3 (triple-fire)** | ×3 | **×1 (spec-clean)** | ×1 | ×1 | ×1 | none | none |
 | quote state after successful mint | **PAID (never ISSUED — deploy vintage; main fixed, certifier leg armed)** | ISSUED | ISSUED | ISSUED | ISSUED | ISSUED | ISSUED | ISSUED | PAID (deploy vintage) |
 | checkstate batch cap (advertised/enforced) | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | 1000/1000 | **50**/1000 |
 

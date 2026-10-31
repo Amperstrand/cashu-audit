@@ -333,13 +333,18 @@ else park with the declaration fact recorded.
 Animated QR — client-side; not a mint surface. Park (note in
 wallet-audit contexts only).
 
-### NUT-17 — none
+### NUT-17 — measured 2026-10-31
 WebSockets (state updates #98; bolt12 kinds #298 2025-10; UUIDv7
-#383). Wire (2026-10-24): ns declares 3 commands, cdk 9, cashu-cf none
-— declaration fork already measured, behavior not.
-Next: subscription-event parity probe (quote state transitions vs
-REST polling verdicts on the same quote id); cdk-only events (6 of 9)
-are the likely wallet-compat fork.
+#383). Declaration fork (2026-10-24): ns 3, cdk 9, cashu-cf none.
+BEHAVIOR MEASURED (FINDINGS-nut17-ws.md, /v1/ws spec path): ns+cdk
+both 101 + subscribe-OK + immediate current-state push; on PAID
+transition ns TRIPLE-FIRES (3 identical pushes), cdk emits exactly 1
+(spec-clean); payload field drift ns expiry:null+pubkey:"" vs cdk
+expiry:int/no pubkey. cf absence compounds its never-ISSUED trap
+(polling wallets see PAID forever). bolt12 kinds untested (no
+backend). Version stability: re-run on 0.20.3/0.18.1 with FROZEN
+predictions first (this pass ran discovery-first — process slip
+recorded in the findings).
 
 ### NUT-18 — partial
 Hold: item-6 crossover findings (FINDINGS-2026-10-23). Gap:
