@@ -144,10 +144,18 @@ def main() -> int:
             proj = name  # WATCH_TARGETS keys are release_digest PROJECTS keys
             digested = []
             last_out = ""
+            prev_tags = seen.split(",")
             for tag in new_tags:
                 r = sh(["python3", "tools/release_digest.py",
                         "--project", proj, "--version", tag,
                         "--clone-dir", args.clone_dir])
+                if r.returncode != 0:
+                    # retry once with --prev from the state's tag set — the
+                    # fresh clone's tag list can lack older siblings (rc lines)
+                    r = sh(["python3", "tools/release_digest.py",
+                            "--project", proj, "--version", tag,
+                            "--prev", prev_tags[0],
+                            "--clone-dir", args.clone_dir])
                 if r.returncode != 0:
                     events.append(f"CHANGE: {name} release {tag} but digest "
                                   f"FAILED: {r.stderr[-150:]}")
