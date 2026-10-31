@@ -38,3 +38,10 @@ on identical proof shapes: `experiments/fresh-must-wave/locktime0_diff.mjs`
 Keys/secrets generated per-run via SDK exports; C is a random curve
 point (verification is spending-condition-local — no mint involved).
 Script: experiments/fresh-must-wave/locktime0_diff.mjs.
+
+## Corroboration (2026-10-31, v5.0.0-rc.12 release notes)
+cashu-ts rc.12 notes state: "P2PK: a locktime of 0 reads as expired, and
+a lock expires only once the clock is past its locktime, matching
+NUT-11 and both mints." The 4.11→4.13 flip we measured is DELIBERATE
+and now documented by the SDK itself — the pool vectors pin the
+settled semantic. (#1324 class closed as intended-behavior.)
