@@ -1,0 +1,41 @@
+{
+ "target": "cdk main 3523c8a9 (mintd+FakeWallet :8739)",
+ "predictions": "PREDICTIONS.md (frozen 2026-10-31)",
+ "results": [
+  {
+   "id": "C5",
+   "prediction": "2xx, method=bolt11, pubkey key ABSENT",
+   "status": 200,
+   "body": "{\"quote\":\"01a19246-7379-76f4-a1a1-dbad6d1ebac6\",\"request\":\"lnbc20n1p4wta2adqqpp5evz0wjmprxnhq4l57yq9nc3qka3h87k09l7d39p39z20yz7up5jqsp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysfhvx4lqgj86a8ygw8a7s7jcf40lex58cvr6g4f7aujpzk59adm0n8tqrefg694szeav7vylrh4uhx05apx",
+   "verdict": "PASS"
+  },
+  {
+   "id": "C0",
+   "prediction": "200 swap",
+   "status": 200,
+   "body": "{\"signatures\":[{\"amount\":2,\"id\":\"01df97b6fb8a572a718d7df7fcbf4387e2d455134ea8004c9c8c51e1b3391f909e\",\"C_\":\"02e1a7f409dbea7c56166f908c675f82983f854b9c0f3b3215a3c858c6bee26cd1\",\"dleq\":{\"e\":\"3ef2d81b6164d21b52f0e56940d71b7b5141605484d2ab6689924df867b370bc\",\"s\":\"36f788dbfe38b6f5d74ce",
+   "verdict": "PASS"
+  },
+  {
+   "id": "C1",
+   "prediction": "200 {\"outputs\":[],\"signatures\":[]}",
+   "status": 200,
+   "body": "{\"outputs\":[],\"signatures\":[]}",
+   "verdict": "PASS"
+  },
+  {
+   "id": "C2",
+   "prediction": "200 ACCEPT (was 20008 on 0.18.x)",
+   "status": 200,
+   "body": "{\"signatures\":[{\"amount\":2,\"id\":\"01df97b6fb8a572a718d7df7fcbf4387e2d455134ea8004c9c8c51e1b3391f909e\",\"C_\":\"0364f3fc75aa65d8c1d5a9a33a9082345bca5721e4a983abcaec445af912cfb8b8\",\"dleq\":{\"e\":\"74f9001088a69ec349d218656a61bb358291c60d46e2217a1a5d451bdc4874c6\",\"s\":\"001c53398be49bb4272ae",
+   "verdict": "PASS"
+  },
+  {
+   "id": "C2b",
+   "prediction": "400 reject (identity recorded)",
+   "status": 400,
+   "body": "{\"code\":50000,\"detail\":\"Secret is not a HTLC secret\"}",
+   "verdict": "PASS"
+  }
+ ]
+}
