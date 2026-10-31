@@ -26,3 +26,13 @@ tier (kali); recorded as the next corpus pass.
   witness-less shape
 - M4: potentially re-ordered if the saga remap touches verification
   order (it should not — only numeric codes changed)
+
+## Invoice-validation ladder (3x3, added same night — cf#110)
+| Shape | cf (testnut) | ns-0.21.0 | cdk-0.18.3 |
+|---|---|---|---|
+| plain garbage | 400 14005 | 400 "Bech32 string is not valid" | 400 50000 "Invalid payment method" |
+| bech32-MALFORMED (lnbcrt1p+hex) | **200 quote created** | 400 bech32 | 400 50000 |
+| bech32-valid NON-invoice | **200 quote, amount invented =1** | 400 "Too short to contain signature" | 400 50000 |
+
+cf's gate is a weak shape heuristic; both references structurally parse.
+Filed as Amperstrand/cashu-cf#110.
