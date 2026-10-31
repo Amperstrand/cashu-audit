@@ -239,7 +239,13 @@ Gap: exact cf swap-input wire confirmation; melt-path caps.
 Next: melt outputs cap (cheapest remaining cell).
 
 ### NUT-07 — partial
-Hold: checkstate shape issue, witness-field violations (cashu-cf);
+Wire matrix (FINDINGS-nut07-states.md): cf fakewallet pays quotes AT
+CREATION (UNPAID unobservable) and NEVER reports ISSUED after minting
+(wallet trap: state-polling wallets conclude not-yet-minted forever and
+retry into 11003) — ns+cdk report ISSUED correctly; PENDING unobservable
+on every fakewallet (needs holding backend = kali tier); unknown-quote
+identity forks 404/14005 vs 400/code-0 vs 400/50000. cf ISSUED fix
+queued behind deploy creds.Hold: checkstate shape issue, witness-field violations (cashu-cf);
 fresh-must-wave side finding 2026-10-24: **cdk curve-validates Ys at
 checkstate** (422 "malformed public key" on non-point hex) — cf/ns
 accept arbitrary hex; ns accepts ONLY the Ys shape (outputs-shape →
