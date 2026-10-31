@@ -197,3 +197,28 @@ lessons; finding details live in the findings docs + registry.
 - **Check the other lanes' commits before writing anything** — two of
   this arc's conclusions were already being consumed/extended by
   parallel lanes; reading HEAD first avoided duplicated work twice.
+
+## 2026-10-31 — NUT-18 payload lane + NUT-13 verification lessons
+
+- **Composed-behavior source notes can be locally true and wrong
+  composed**: "to_dict emits full66" was accurate in isolation, but
+  the CLI's payload build routes through a V4 token whose proofs are
+  short-spelled — the live wire capture said SHORT. For any
+  emission claim, capture the wire; source reading alone mispredicts
+  compositions (frozen prediction P9 was wrong exactly this way).
+- **Verify absence claims against the upstream file at HEAD before
+  drafting**: the NUT-13 "no V2 vectors" premise was false for 7
+  months before it was written — the filing draft, the #443 comment
+  text, and an evidence JSON all inherited it. `git log <file>` on
+  the clone is a 10-second falsification check; run it before any
+  "the repo ships no X" sentence enters a staged text.
+- **Surprising-FAIL triage found the second divergence for free**:
+  the crafted full66 payload passed cashu-ts settlement but the REAL
+  cdk capture failed — cdk emits `"memo": null` (no
+  skip_serializing_if) where the crafted body simply omitted it.
+  Probing with captured wire bodies, not just crafted variants,
+  closes that gap.
+- cdk type-name trap: `SecretKey` in cdk's nut13.rs is the BLINDING
+  FACTOR type, not a P2PK key — the entire retracted NUT-13 claim
+  chain started there. When a name sounds like domain X, check the
+  type's actual consumers before filing prose about it.
