@@ -51,3 +51,15 @@ Read the digest, then the tracker cards it names.
 
 - CHANGE: cashu-ts release v5.0.0-rc.12 but digest FAILED: cannot infer --prev for v5.0.0-rc.12; pass it explicitly
 
+
+## Run 2026-11-01 04:47 UTC
+
+- CHANGE: cashu-ts release(s) v5.0.0-rc.12 (published 2026-10-29) — OK research/releases/cashu-ts-5.0.0-rc.12.md: 404 commits, NUTs: NUT-01, NUT-02, NUT-04, NUT-05, NUT-06, NUT-07, NUT-08, NUT-09, NUT-10, NUT-11, NUT-12, NUT-13, NUT-14, NUT-17, NUT-18, NUT-19, NUT-20, NUT-23, NUT-25, NUT-26, NUT-27, NUT-28, NUT-29, NUT-30
+
+### cashu-ts v5.0.0-rc.12
+
+```
+OK research/releases/cashu-ts-5.0.0-rc.12.md: 404 commits, NUTs: NUT-01, NUT-02, NUT-04, NUT-05, NUT-06, NUT-07, NUT-08, NUT-09, NUT-10, NUT-11, NUT-12, NUT-13, NUT-14, NUT-17, NUT-18, NUT-19, NUT-20, NUT-23, NUT-25, NUT-26, NUT-27, NUT-28, NUT-29, NUT-30
+```
+Read the digest, then the tracker cards it names.
+
