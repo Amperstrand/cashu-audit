@@ -1,0 +1,194 @@
+{
+  "config": {
+    "cashu_cf_root": "/root/src/cashu-cf",
+    "backends": {
+      "A": {
+        "kind": "cf",
+        "name": "cashu-cf@6cd249e"
+      },
+      "B": {
+        "kind": "http",
+        "name": "gonuts-v0.16.0",
+        "url": "http://127.0.0.1:4470"
+      }
+    },
+    "proxy": false
+  },
+  "rows": [
+    {
+      "scenario": "R4 keys/{bogus}",
+      "label": "keys-bogus",
+      "a": {
+        "status": 400,
+        "code": null,
+        "error": "not_found",
+        "detail": "not_found"
+      },
+      "b": {
+        "status": 400,
+        "code": 12001,
+        "error": "unknown keyset",
+        "detail": "unknown keyset"
+      },
+      "note": ""
+    },
+    {
+      "scenario": "R5 checkstate malformed-Y",
+      "label": "checkstate-malformed",
+      "a": {
+        "status": 200,
+        "code": null,
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": null,
+        "error": null
+      },
+      "note": ""
+    },
+    {
+      "scenario": "H1 mint + DLEQ",
+      "label": "mint-dleq",
+      "a": {
+        "status": 200,
+        "code": "true",
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": "true",
+        "error": null
+      },
+      "note": ""
+    },
+    {
+      "scenario": "A1 swap forged off-curve C",
+      "label": "swap-forged",
+      "a": {
+        "status": 400,
+        "code": 14005,
+        "error": "invalid_request",
+        "detail": "Proof verification failed at index 0: Invalid proof signature at index 0"
+      },
+      "b": {
+        "status": 400,
+        "code": 10003,
+        "error": "invalid proof",
+        "detail": "invalid proof"
+      },
+      "note": ""
+    },
+    {
+      "scenario": "A2 swap duplicate proof",
+      "label": "swap-duplicate",
+      "a": {
+        "status": 400,
+        "code": 14008,
+        "error": "duplicate_proof",
+        "detail": "Duplicate proof secret: shadow-a-9da75ff…"
+      },
+      "b": {
+        "status": 400,
+        "code": 11007,
+        "error": "duplicate inputs",
+        "detail": "duplicate inputs"
+      },
+      "note": ""
+    },
+    {
+      "scenario": "A3 swap P2PK witness-less",
+      "label": "swap-p2pk-witnessless",
+      "a": {
+        "status": 403,
+        "code": 30006,
+        "error": "spending_condition_not_met",
+        "detail": "No witness in proof"
+      },
+      "b": {
+        "status": 400,
+        "code": 30001,
+        "error": "invalid witness",
+        "detail": "invalid witness"
+      },
+      "note": ""
+    },
+    {
+      "scenario": "A6b mint replay same-outputs",
+      "label": "mint-replay",
+      "a": {
+        "status": 200,
+        "code": null,
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": null,
+        "error": null
+      },
+      "note": "a-identical=true b-identical=true"
+    },
+    {
+      "scenario": "A7 fee-aware swap + checkstate SPENT",
+      "label": "swap-checkstate",
+      "a": {
+        "status": 200,
+        "code": "ppk:0 swap:200 state:SPENT",
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": "ppk:0 swap:200 state:SPENT",
+        "error": null
+      },
+      "note": ""
+    },
+    {
+      "scenario": "A8 happy melt + HTLC unlock (PAID paths)",
+      "label": "happy-melt",
+      "a": {
+        "status": 200,
+        "code": "state:PAID",
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": "state:PAID",
+        "error": null
+      },
+      "note": ""
+    },
+    {
+      "scenario": "A8 happy melt + HTLC unlock (PAID paths)",
+      "label": "htlc-unlock",
+      "a": {
+        "status": 200,
+        "code": "state:PAID",
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": "state:PAID",
+        "error": null
+      },
+      "note": ""
+    },
+    {
+      "scenario": "SIG_ALL unlock (canonical message)",
+      "label": "sigall-unlock",
+      "a": {
+        "status": 200,
+        "code": "state:PAID",
+        "error": null
+      },
+      "b": {
+        "status": 200,
+        "code": "state:PAID",
+        "error": null
+      },
+      "note": ""
+    }
+  ],
+  "proxyFaithful": [],
+  "drift": null
+}

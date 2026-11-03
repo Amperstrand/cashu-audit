@@ -225,3 +225,28 @@ Every cell locked across cashu-cf, nutshell 0.20.3, CDK 0.18.1 —
 rejection identities + unlock paths + the two wire rules (witness as
 JSON string; SIG_ALL message = canonical concat + quoteId, schnorr over
 sha256).
+
+## Regen (2026-11-04): gonuts v0.16.0 as the fourth arm — SIG_ALL green everywhere
+
+Audit #68 item C: same corpus re-run via `tools/cashu-shadow` with the
+gonuts arm current (tag `v0.16.0`, commit `e3dfc63`; the #59 fix train —
+melt/mint CAS, SIG_ALL spec alignment, NUT-19 melt replay). Full matrix
++ captures: `research/FINDINGS-2026-11-04-shadow-matrix-regen.md`.
+
+**Four-way spending-condition matrix (adds gonuts):**
+
+| Condition | Rejection | Unlock |
+|---|---|---|
+| P2PK (SIG_INPUTS) | ✓ ×4 | ✓ PAID ×4 |
+| HTLC | ✓ ×4 | ✓ PAID ×4 |
+| SIG_ALL | ✓ ×4 (30006/11000/20008/30001) | ✓ PAID ×4 |
+
+- The v0.15.0 gonuts signed-melt failure family is closed: SIG_ALL
+  melts verify, HTLC/P2PK unlock, happy melt PAID, replay cached
+  byte-identical (joins cf+cdk vs ns — the F1 fork is now 3-vs-1).
+- New catalogue: gonuts emits **verifiable NUT-12 DLEQ** (H1 `true`);
+  R4 400/12001 ≡ nutshell; cashu-cf **accepts the legacy no-quoteId
+  SIG_ALL message on the melt path** (wire capture of the §3.22 compat
+  window — the other three reject it).
+- Reference arms (cf/ns 0.20.3/cdk 0.18.1) reproduced the locked table
+  with zero drift.

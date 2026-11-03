@@ -1,0 +1,100 @@
+{
+  "probe": "A4 SIG_ALL melt, witness over wrong (legacy no-quoteId) message",
+  "rows": [
+    {
+      "arm": "cashu-cf@6cd249e",
+      "identity": "Nutshell-CF/0.0.1",
+      "a4_wrong_message": {
+        "legacy_no_quote": {
+          "status": 200,
+          "code": null,
+          "error": null
+        },
+        "garbage_suffix": {
+          "status": 403,
+          "code": "30006",
+          "error": "spending_condition_not_met",
+          "detail": "SIG_ALL verification failed: no candidate message verified"
+        },
+        "quote_first": {
+          "status": 403,
+          "code": "30006",
+          "error": "spending_condition_not_met",
+          "detail": "SIG_ALL verification failed: no candidate message verified"
+        }
+      }
+    },
+    {
+      "arm": "gonuts-v0.16.0",
+      "identity": "gonuts/0.4.0",
+      "a4_wrong_message": {
+        "legacy_no_quote": {
+          "status": 400,
+          "code": 30001,
+          "error": "not enough valid signatures provided",
+          "detail": "not enough valid signatures provided"
+        },
+        "garbage_suffix": {
+          "status": 400,
+          "code": 30001,
+          "error": "not enough valid signatures provided",
+          "detail": "not enough valid signatures provided"
+        },
+        "quote_first": {
+          "status": 400,
+          "code": 30001,
+          "error": "not enough valid signatures provided",
+          "detail": "not enough valid signatures provided"
+        }
+      }
+    },
+    {
+      "arm": "nutshell-0.20.3",
+      "identity": "Nutshell/0.20.3",
+      "a4_wrong_message": {
+        "legacy_no_quote": {
+          "status": 400,
+          "code": 11000,
+          "error": "signature threshold not met. 0 < 1.",
+          "detail": "signature threshold not met. 0 < 1."
+        },
+        "garbage_suffix": {
+          "status": 400,
+          "code": 11000,
+          "error": "signature threshold not met. 0 < 1.",
+          "detail": "signature threshold not met. 0 < 1."
+        },
+        "quote_first": {
+          "status": 400,
+          "code": 11000,
+          "error": "signature threshold not met. 0 < 1.",
+          "detail": "signature threshold not met. 0 < 1."
+        }
+      }
+    },
+    {
+      "arm": "cdk-0.18.1",
+      "identity": "cdk-mintd/0.18.1",
+      "a4_wrong_message": {
+        "legacy_no_quote": {
+          "status": 400,
+          "code": 20008,
+          "error": "P2PK spend conditions are not met",
+          "detail": "P2PK spend conditions are not met"
+        },
+        "garbage_suffix": {
+          "status": 400,
+          "code": 20008,
+          "error": "P2PK spend conditions are not met",
+          "detail": "P2PK spend conditions are not met"
+        },
+        "quote_first": {
+          "status": 400,
+          "code": 20008,
+          "error": "P2PK spend conditions are not met",
+          "detail": "P2PK spend conditions are not met"
+        }
+      }
+    }
+  ]
+}
