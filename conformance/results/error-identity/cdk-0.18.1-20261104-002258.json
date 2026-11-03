@@ -1,0 +1,134 @@
+{
+  "label": "cdk-0.18.1",
+  "url": "http://127.0.0.1:4464",
+  "identity": {
+    "name": null,
+    "version": "cdk-mintd/0.18.1"
+  },
+  "captured_at": "2026-11-04T00:22:33+0100",
+  "probes": {
+    "P01_swap_unknown_keyset": {
+      "http": 400,
+      "code": 12001,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Unknown Keyset"
+    },
+    "P02_swap_duplicate_inputs": {
+      "http": 400,
+      "code": 11007,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Duplicate Inputs"
+    },
+    "P04_swap_underfunded": {
+      "http": 400,
+      "code": 11005,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Inputs: 8, Outputs: 16, expected_fee: 0. Transaction inputs should equal outputs less fee"
+    },
+    "P00_swap_control_ok": {
+      "http": 200,
+      "code": null,
+      "envelope": [
+        "signatures"
+      ],
+      "detail": "{'signatures': [{'amount': 8, 'id': '01df97b6fb8a572a718d7df7fcbf4387e2d455134ea8004c9c8c51e1b3391f909e', 'C_': '0398ed32c612768528b08f789a6ef83d4d9a7c2547b3b4f"
+    },
+    "P05_swap_spent_proofs": {
+      "http": 400,
+      "code": 11001,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Token Already Spent"
+    },
+    "P06_swap_outputs_already_signed": {
+      "http": 400,
+      "code": 11008,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Duplicate outputs"
+    },
+    "P07_swap_forged_C": {
+      "http": 422,
+      "code": null,
+      "envelope": [
+        "<non-dict>"
+      ],
+      "detail": "Failed to deserialize the JSON body into the target type: inputs[0].C: malformed public key at line 1 column 177"
+    },
+    "P08_swap_nonhex_C": {
+      "http": 422,
+      "code": null,
+      "envelope": [
+        "<non-dict>"
+      ],
+      "detail": "Failed to deserialize the JSON body into the target type: inputs[0].C: Invalid public key size: expected=33, found=7 at line 1 column 125"
+    },
+    "P09_mint_quote_unit_unsupported": {
+      "http": 400,
+      "code": 11013,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Unit unsupported"
+    },
+    "P10_mint_quote_zero_amount": {
+      "http": 400,
+      "code": 11006,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Amount must be between `1` and `500000` is `0`"
+    },
+    "P11_mint_bogus_quote": {
+      "http": 400,
+      "code": 50000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Unknown quote"
+    },
+    "P12_p2pk_wrong_witness": {
+      "http": 400,
+      "code": 20008,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "P2PK spend conditions are not met"
+    },
+    "P13_htlc_wrong_preimage": {
+      "http": 400,
+      "code": 50000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Preimage does not match"
+    },
+    "P14_melt_quote_nonbolt11": {
+      "http": 400,
+      "code": 50000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Invalid payment method"
+    }
+  }
+}

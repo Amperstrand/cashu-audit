@@ -1,6 +1,8 @@
 {
-  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
+  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body — error-identity class (wire shape), version fact",
   "mint_info_nut19_supported": "VERSION FACT: nutshell 0.21.0 does not advertise NUT-19 in nuts list",
-  "swap_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching \u2014 nutshell rejects replays (11001 proofs already spent) while cf+cdk return cached byte-identical 200s; measured 2026-10-25, FINDINGS-nut19.md; spec-position scenario until nutshell adopts caching",
-  "melt_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching \u2014 nutshell rejects melt replays (20006) while cf+cdk cache; measured 2026-10-25, FINDINGS-nut19.md"
+  "swap_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching — nutshell rejects replays (11001 proofs already spent) while cf+cdk return cached byte-identical 200s; measured 2026-10-25, FINDINGS-nut19.md; spec-position scenario until nutshell adopts caching",
+  "melt_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching — nutshell rejects melt replays (20006) while cf+cdk cache; measured 2026-10-25, FINDINGS-nut19.md",
+  "errid_swap_unknown_keyset_code_12001": "CODE: swap path raises bare TransactionError 11000 ('keyset id unknown.') — the typed KeysetNotFoundError/12001 class exists in core/errors.py but only /v1/keys/{id} uses it (verification.py:196 vs router.py:316); measured 2026-11-04, research/FINDINGS-2026-11-04-error-identity.md",
+  "errid_swap_underfunded_code_11005": "CODE: unbalanced swap raises bare TransactionError 11000 — TransactionNotBalancedError/11005 is defined but never raised (verification.py:308); measured 2026-11-04, research/FINDINGS-2026-11-04-error-identity.md"
 }

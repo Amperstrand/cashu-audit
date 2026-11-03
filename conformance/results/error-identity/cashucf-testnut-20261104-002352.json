@@ -1,0 +1,154 @@
+{
+  "label": "cashucf-testnut",
+  "url": "https://testnut.cashu.exchange",
+  "identity": {
+    "name": "Testnut mint",
+    "version": "Nutshell-CF/0.0.1"
+  },
+  "captured_at": "2026-11-04T00:23:28+0100",
+  "probes": {
+    "P01_swap_unknown_keyset": {
+      "http": 400,
+      "code": 14005,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Invalid output keyset id: 0000000000000000"
+    },
+    "P02_swap_duplicate_inputs": {
+      "http": 400,
+      "code": 14008,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Duplicate proof secret: 91f54abfae5a3416\u2026"
+    },
+    "P04_swap_underfunded": {
+      "http": 400,
+      "code": 11001,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "inputs (8) - outputs (16) available for fees (-8) is less than required (1)."
+    },
+    "P00_swap_control_ok": {
+      "http": 200,
+      "code": null,
+      "envelope": [
+        "signatures"
+      ],
+      "detail": "{'signatures': [{'id': '008e808b89acc141', 'amount': 1, 'C_': '0252a48a65a6984dbe4938a899baf7a2428512d655e8f54cef456edd6051763930', 'dleq': {'e': '72068b7223cf5"
+    },
+    "P05_swap_spent_proofs": {
+      "http": 400,
+      "code": 30001,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Proof already spent: 0261662bd4513bb3..."
+    },
+    "P06_swap_outputs_already_signed": {
+      "http": 200,
+      "code": null,
+      "envelope": [
+        "signatures"
+      ],
+      "detail": "{'signatures': [{'id': '008e808b89acc141', 'amount': 1, 'C_': '0252a48a65a6984dbe4938a899baf7a2428512d655e8f54cef456edd6051763930', 'dleq': {'e': '72068b7223cf5"
+    },
+    "P07_swap_forged_C": {
+      "http": 400,
+      "code": 14005,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Proof verification failed at index 0: Invalid proof signature at index 0"
+    },
+    "P08_swap_nonhex_C": {
+      "http": 400,
+      "code": 14005,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Proof verification failed at index 0: Input string must contain hex characters in even length"
+    },
+    "P09_mint_quote_unit_unsupported": {
+      "http": 200,
+      "code": null,
+      "envelope": [
+        "amount",
+        "amount_issued",
+        "amount_paid",
+        "expiry",
+        "method",
+        "quote",
+        "request",
+        "state",
+        "unit",
+        "updated_at"
+      ],
+      "detail": "{'quote': '01a1a3b9-c8c3-7359-8108-c049bb5a0011', 'request': 'lnbc640n1qyqqqqzqjwqxj8aj6a7rdfls7j7njjsj73mcn6dnf96csprcjfdpprg8paxx46ndqqqzlrg5', 'state': 'UNPA"
+    },
+    "P10_mint_quote_zero_amount": {
+      "http": 400,
+      "code": 11006,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Amount must be a positive integer"
+    },
+    "P11_mint_bogus_quote": {
+      "http": 404,
+      "code": 14005,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Quote not found"
+    },
+    "P12_p2pk_wrong_witness": {
+      "http": 403,
+      "code": 30006,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Signature threshold not met. 0 < 1"
+    },
+    "P13_htlc_wrong_preimage": {
+      "http": 403,
+      "code": 30006,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "HTLC preimage does not match"
+    },
+    "P14_melt_quote_nonbolt11": {
+      "http": 400,
+      "code": 14005,
+      "envelope": [
+        "code",
+        "detail",
+        "error"
+      ],
+      "detail": "Invalid BOLT11 invoice format"
+    }
+  }
+}

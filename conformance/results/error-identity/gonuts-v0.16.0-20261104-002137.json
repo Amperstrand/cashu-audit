@@ -1,0 +1,136 @@
+{
+  "label": "gonuts-v0.16.0",
+  "url": "http://127.0.0.1:4460",
+  "identity": {
+    "name": "",
+    "version": "gonuts/0.4.0"
+  },
+  "captured_at": "2026-11-04T00:21:16+0100",
+  "probes": {
+    "P01_swap_unknown_keyset": {
+      "http": 400,
+      "code": 12001,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "unknown keyset"
+    },
+    "P02_swap_duplicate_inputs": {
+      "http": 400,
+      "code": 11007,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "duplicate inputs"
+    },
+    "P04_swap_underfunded": {
+      "http": 400,
+      "code": 11002,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "amount of input proofs is below amount needed for transaction"
+    },
+    "P00_swap_control_ok": {
+      "http": 200,
+      "code": null,
+      "envelope": [
+        "signatures"
+      ],
+      "detail": "{'signatures': [{'amount': 8, 'C_': '02b5200f3b146d8301c93e96311607b0d6684c0c5bd62e929be4af81cc2f32e12a', 'id': '00f7d392fdda28db', 'dleq': {'e': '9f622a6330c32"
+    },
+    "P05_swap_spent_proofs": {
+      "http": 400,
+      "code": 11001,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "proof already used"
+    },
+    "P06_swap_outputs_already_signed": {
+      "http": 400,
+      "code": 10002,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "blinded message already signed"
+    },
+    "P07_swap_forged_C": {
+      "http": 400,
+      "code": 10000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "invalid public key: x coordinate 1b77c0681e84e5be8ea4ad99855fab77d3b812df2f64fe332b30b691c7a3cbb1 is not on the secp256k1 curve"
+    },
+    "P08_swap_nonhex_C": {
+      "http": 400,
+      "code": 10000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "invalid C: encoding/hex: invalid byte: U+006E 'n'"
+    },
+    "P09_mint_quote_unit_unsupported": {
+      "http": 400,
+      "code": 11005,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "unit 'usd' not supported"
+    },
+    "P10_mint_quote_zero_amount": {
+      "http": 400,
+      "code": 20010,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "quote amount must be a positive integer"
+    },
+    "P11_mint_bogus_quote": {
+      "http": 400,
+      "code": 20009,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "quote does not exist"
+    },
+    "P12_p2pk_wrong_witness": {
+      "http": 400,
+      "code": 30001,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "not enough valid signatures provided"
+    },
+    "P13_htlc_wrong_preimage": {
+      "http": 400,
+      "code": 30004,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Invalid preimage for HTLC"
+    },
+    "P14_melt_quote_nonbolt11": {
+      "http": 400,
+      "code": 20009,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "invalid invoice: invalid bolt11 invoice"
+    }
+  }
+}

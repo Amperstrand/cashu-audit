@@ -1,0 +1,148 @@
+{
+  "label": "nutshell-0.21.0",
+  "url": "http://127.0.0.1:4462",
+  "identity": {
+    "name": "Cashu mint",
+    "version": "Nutshell/0.21.0"
+  },
+  "captured_at": "2026-11-04T00:21:45+0100",
+  "probes": {
+    "P01_swap_unknown_keyset": {
+      "http": 400,
+      "code": 11000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "keyset id unknown."
+    },
+    "P02_swap_duplicate_inputs": {
+      "http": 400,
+      "code": 11007,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Duplicate inputs provided"
+    },
+    "P04_swap_underfunded": {
+      "http": 400,
+      "code": 11000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "input amounts (8) less than output amounts (16)."
+    },
+    "P00_swap_control_ok": {
+      "http": 200,
+      "code": null,
+      "envelope": [
+        "signatures"
+      ],
+      "detail": "{'signatures': [{'id': '016b480edd813afe8b6bb88b8c6d3adf5e381327507247b100b2c1b261fe9475bd', 'amount': 1, 'C_': '022e19a241bd0e69f55232cf96e9223f1cbd53b24e18847"
+    },
+    "P05_swap_spent_proofs": {
+      "http": 400,
+      "code": 11001,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "proofs already spent"
+    },
+    "P06_swap_outputs_already_signed": {
+      "http": 400,
+      "code": 11003,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "outputs already signed"
+    },
+    "P07_swap_forged_C": {
+      "http": 400,
+      "code": 0,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "The public key could not be parsed or is invalid."
+    },
+    "P08_swap_nonhex_C": {
+      "http": 400,
+      "code": 0,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "non-hexadecimal number found in fromhex() arg at position 0"
+    },
+    "P09_mint_quote_unit_unsupported": {
+      "http": 400,
+      "code": 11013,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "unit 'usd' not supported in any keyset."
+    },
+    "P10_mint_quote_zero_amount": {
+      "http": 422,
+      "code": null,
+      "envelope": [
+        "detail"
+      ],
+      "detail": [
+        {
+          "type": "greater_than",
+          "loc": [
+            "body",
+            "amount"
+          ],
+          "msg": "Input should be greater than 0",
+          "input": 0,
+          "ctx": {
+            "gt": 0
+          }
+        }
+      ]
+    },
+    "P11_mint_bogus_quote": {
+      "http": 400,
+      "code": 0,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "quote not found"
+    },
+    "P12_p2pk_wrong_witness": {
+      "http": 400,
+      "code": 11000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "signature threshold not met. 0 < 1."
+    },
+    "P13_htlc_wrong_preimage": {
+      "http": 400,
+      "code": 11000,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "HTLC preimage does not match."
+    },
+    "P14_melt_quote_nonbolt11": {
+      "http": 400,
+      "code": 0,
+      "envelope": [
+        "code",
+        "detail"
+      ],
+      "detail": "Bech32 string is not valid."
+    }
+  }
+}

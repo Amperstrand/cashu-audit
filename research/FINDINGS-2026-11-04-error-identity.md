@@ -1,0 +1,150 @@
+# Error-Identity Matrix — spec codes × 4 implementations (2026-11-04)
+
+Audit #68 item A. Every error code/shape the Cashu NUTs define (NUT-00
+envelope + `nuts/error_codes.md`), against what four implementations
+actually emit on the wire for the same malformed-shaped requests.
+
+**Arms (identity captured at run start, #40 rule):**
+
+| Arm | Identity (`/v1/info` version) | Provenance |
+|---|---|---|
+| gonuts v0.16.0 | `gonuts/0.4.0` | local build, `/root/src/gonuts-fix` @ `d0fd3b0` (zero content diff vs tag `v0.16.0`), FakeBackend, :4460 |
+| nutshell 0.21.0 | `Nutshell/0.21.0` | docker `cashubtc/nutshell:0.21.0`, FakeWallet, :4462 |
+| cdk 0.18.1 | `cdk-mintd/0.18.1` | docker `cashubtc/mintd:0.18.1`, fakewallet, :4464 |
+| cashu-cf | `Nutshell-CF/0.0.1` (testnut) | deployed `https://testnut.cashu.exchange`; local source `cashu-cf@6cd249e` re-verified via `experiments/miniflare-spend-matrix` (12/12 PASS incl. error locks) |
+
+Also verified for seed accuracy: nutshell 0.20.3, cdk 0.18.2, cdk
+0.18.3 (see "Version deltas"). Raw captures:
+`conformance/results/error-identity/*.json` (probe battery:
+`conformance/error_identity_probe.py`, frozen predictions in header).
+Scenario verdicts: `conformance/scenarios/nut00_error_identity.py`.
+
+## Spec inventory (cashubtc/nuts `error_codes.md` + NUT-00)
+
+Envelope (NUT-00 §"Errors"): HTTP **400** + `{"detail": <string>,
+"code": <int>}`. Codes: **10001** proof verification failed;
+**11001–11017** transaction classes (spent/pending/signed-outputs/
+pending-outputs/unbalanced/limit/dup-inputs/dup-outputs/multi-unit/
+unit-mismatch/amountless/amount-mismatch/unit-unsupported/max-inputs/
+max-outputs/dup-quote-ids/max-batch); **12001–12003** keyset unknown/
+inactive/expired; **20001–20009** quote classes (unpaid/issued/minting-
+disabled/LN-failed/pending/invoice-paid/expired/mint-sig-invalid/
+pubkey-required); **30001–30002** NUT-21 clear auth; **31001–31004**
+NUT-22 blind auth. NUT-19 mandates cached-endpoint replay semantics but
+assigns no error code; NUT-11 witness/condition failures have **no
+assigned code** (measured below as the widest divergence field).
+
+## Wire matrix (same request → four answers)
+
+| Failure class (spec) | Spec | gonuts v0.16.0 | cdk 0.18.1 | nutshell 0.21.0 | cashu-cf (testnut) |
+|---|---|---|---|---|---|
+| P01 unknown keyset in swap | 12001 | ✅ 12001 | ✅ 12001 | ❌ **11000** `keyset id unknown.` | ❌ **14005** |
+| P02 duplicate inputs | 11007 | ✅ 11007 | ✅ 11007 | ✅ 11007 | ❌ **14008** |
+| P04 underfunded swap | 11005 | ❌ **11002** | ✅ 11005 | ❌ **11000** `input amounts (8) less than output amounts (16).` | ❌ **11001**@400 `available for fees (-8)` |
+| P05 spent proofs | 11001 | ✅ 11001 | ✅ 11001 | ✅ 11001 | ❌ **30001**@400 |
+| P06 fresh inputs + already-signed outputs | 11003 | ❌ **10002** | ❌ **11008** `Duplicate outputs` | ✅ 11003 | ❌ **200 + identical sigs** (restore path, no error) |
+| P07 forged C (valid keyset) | 10001 | ❌ **10000/10003**¹ | ❌ **422 + non-NUT text**² | ❌ **code 0** `public key could not be parsed` | ❌ **14005** `Proof verification failed at index 0` |
+| P08 non-hex C | NUT envelope | ✅ 10000 `{detail,code}` | ❌ **422 + non-NUT text**² | ✅ code 0 `{detail,code}` | ✅ 14005 `{error,detail,code}`³ |
+| P09 mint quote unit `usd` | 11013 | ❌ **11005** | ✅ 11013 | ✅ 11013 | ❌ **200 — quote created, unit ignored**⁴ |
+| P10 mint quote amount 0 | 400+envelope | ❌ **20010** (non-spec) | ✅ 11006 `between 1 and 500000` | ❌ **422 pydantic array** (non-NUT) | ✅ 11006 `positive integer` |
+| P11 mint w/ bogus quote id | (none assigned) | ❌ **20009** `quote does not exist`⁵ | ❌ **50000** | ❌ **code 0** `quote not found` | ❌ **404 + 14005** |
+| P12 P2PK wrong witness | (none assigned) | ❌ **30001** `not enough valid signatures`⁶ | ⚠️ **20008** `P2PK spend conditions are not met`⁷ | ⚠️ **11000** `signature threshold not met` | ❌ **30006@403** |
+| P13 HTLC wrong preimage | (none assigned) | ❌ **30004** `Invalid preimage for HTLC`⁶ | ❌ **50000** `Preimage does not match` | ⚠️ 11000 `HTLC preimage does not match` | ❌ **30006@403** |
+| P14 melt quote non-BOLT11 | 400+envelope | ❌ **20009** `invalid invoice`⁵ | ❌ **50000** `Invalid payment method` | ⚠️ code 0 `Bech32 string is not valid` | ✅ 14005 |
+| P15 exact swap replay (NUT-19) | cached 200 | ✅ 200 byte-identical sigs | ✅ 200 byte-identical sigs | ❌ 400 11001 `proofs already spent` | ✅ 200 identical sigs |
+
+¹ payload-dependent: unparseable point → 10000 `invalid public key`;
+   parseable-but-wrong point → 10003 `invalid proof` (both non-spec;
+   spec 10001).
+² axum `JsonRejection` plain-text body — a `{code,detail}` parser gets
+   nothing; HTTP 422 not 400.
+³ envelope carries an extra `error` field and duplicates `code` in a
+   response header (super-set of NUT-00; noted, not fatal).
+⁴ testnut keysets are `sat`-only, yet `unit:"usd"` returns a sat invoice
+   — the mint-quote path ignores `unit` entirely (no rejection at all).
+⁵ gonuts collapses all melt/quote lookup failures onto 20009, which the
+   spec assigns to NUT-20 "pubkey required for mint quote" — a wallet
+   branching on 20009 misdiagnoses.
+⁶ gonuts' spending-condition codes 30001 (NUT-11) / 30004 (NUT-14)
+   predate the spec's NUT-21/22 allocation of the 3xxxx range —
+   **gonuts 30001 ≠ spec 30001 ≠ cashu-cf 30001** (three meanings:
+   witness failure / clear-auth-required / token-spent).
+⁷ cdk maps *all* NUT-11 failures (and NUT-20 quote-sig failures) onto
+   20008 (`map_nut11_error`, cdk-common/src/error.rs) — the spec's 20008
+   is the NUT-20 mint-quote signature; stretching it to swap witnesses
+   is defensible-but-unilateral. Registry-vs-wire: cdk's wire
+   BlindedMessageAlreadySigned case (11003) was NOT reachable in P06 —
+   the cross-request duplicate-output check (11008) fires first.
+
+## Static registry facts (source-level, cross-checked with wire)
+
+- **gonuts** (`cashu/cashu.go` + `cashu/nuts/nut11,14`): hybrid legacy
+  scheme — 10000 general, 10002 outputs-signed, 10003 invalid-proof,
+  10004 secret-too-long, plus spec-aligned 11001/11006/11007/11008/
+  11016/12001/12002/20001–20008, plus own 11002 (insufficient amount —
+  collides with spec "pending"), 11003 (payment method — collides with
+  spec "outputs already signed"), 11005 (unit — collides with spec "not
+  balanced"), 20009 (generic melt-quote — collides with spec NUT-20),
+  20010 (zero-amount, non-spec), 30001 (NUT-11) / 30004 (NUT-14)
+  spending conditions. `ProofPendingErr` reuses **11001** — spent and pending
+  are indistinguishable to a gonuts wallet. Missing entirely: 11004,
+  11009–11015, 11017, 12003, 20007.
+- **cdk** (`cdk-common/src/error.rs`): complete spec table incl.
+  11014/11015/11017/12003/20007/30001-2/31001-4, plus `Unknown(50000)`
+  internal family (on the wire for unknown-quote, bad-preimage,
+  non-bolt11) and serde-level 422s that bypass the envelope.
+- **nutshell** (`core/errors.py`): complete spec table, but the swap
+  path raises bare `TransactionError` (11000) for keyset-unknown and
+  unbalanced (typed classes 12001/11005 exist and are never raised
+  there); `SecretTooLong`/`WitnessTooLong` → 11000; an untyped
+  `CashuError` family surfaces as **code 0** (forged C, quote-not-found,
+  bech32 parse); 11014/11015 (max inputs/outputs) not defined.
+- **cashu-cf**: three registries. `src/core/errors.ts` is fully
+  spec-aligned (used by mint-quote endpoints); `src/utils/error-
+  handling.ts` `CashuErrorCodes`/`CommonErrors` (melt/swap paths)
+  invents 14005/14008, re-maps spent→30001, pending→30002, invalid-
+  proof→30003, insufficient→30004@402, spending-condition→30006@403,
+  witness→30007, HTLC→30008 (30008 measured NOT emitted — 30006 is),
+  unit→11005, invoice-already-paid→40003 (spec 20006), lightning→40001;
+  `src/config/constants.ts` `ERROR_CODES` is a **dead** fourth registry
+  (zero references) with yet another mapping. Same mint, same NUT range,
+  two live meanings + one dead one.
+
+## Version deltas (measured)
+
+- nutshell 0.20.3 → 0.21.0: unsupported-unit fixed 10000 → 11013.
+- cdk 0.18.1 → 0.18.3: no change on any row above.
+- cashu-cf local (`6cd249e`) vs deployed testnut: no change on any row
+  above (miniflare locks S1/S3/S4/S8/S9/S10 all re-verified PASS).
+- nutshell 0.22.0 (released 2026-11-03, per the repo's upstream-watch):
+  no docker image published as of this run — not probeable; the 0.21.0
+  rows above are the latest wire-measured.
+
+## What was and wasn't verified
+
+- **Identity-verified**: all four arms via `/v1/info` at run start
+  (headers in each capture); gonuts tree equality vs tag `v0.16.0`
+  (`git diff v0.16.0 HEAD` empty).
+- **Wire-verified**: every matrix cell above is a live response, not a
+  static guess; envelope key-sets recorded in the JSON captures.
+- **Static-only (not wire-probed)**: pending-proofs identities (11002
+  spec meaning) — needs an in-flight melt to stage; keyset-inactive
+  (12002) and keyset-expired (12003) — needs a rotated keyset arm;
+  NUT-21/22 auth codes (30001/30002/31001-4 as spec'd) — no auth-enabled
+  arm. These rows rest on source analysis only and are marked ⚠️ in
+  registry facts, not in the wire matrix.
+- **Mutation-checked**: the scenario suite's red cells were each
+  observed live (per-arm runs above); no scenario passes vacuously —
+  cdk's two FAILs and cashu-cf's six FAILs are the suite failing on
+  real divergences, and the seed rows document exactly those cells.
+
+## Convergence targets (what a wallet can rely on today)
+
+Only three identities are identical across all four implementations on
+the wire: duplicate-inputs is *rejected* (code agrees only gonuts/cdk/
+nutshell: 11007; cf 14008), spent-proofs is rejected (11001 except cf
+30001 — so not even that), and every arm rejects the P2PK wrong-witness
+spend with a reasoned detail. **No numeric error code in the probed set
+is emitted identically by all four implementations.** The practically
+parseable subset: 400+`{detail,code}` envelope (gonuts, nutshell, cf
+superset) with cdk's 422 serde escapes as the outlier class.
