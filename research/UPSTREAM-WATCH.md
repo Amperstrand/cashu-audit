@@ -63,3 +63,15 @@ OK research/releases/cashu-ts-5.0.0-rc.12.md: 404 commits, NUTs: NUT-01, NUT-02,
 ```
 Read the digest, then the tracker cards it names.
 
+
+## Run 2026-11-03 04:47 UTC
+
+- CHANGE: nutshell release(s) 0.22.0 (published 2026-11-03) — OK research/releases/nutshell-0.22.0.md: 120 commits, NUTs: NUT-18, NUT-26, NUT-28
+
+### nutshell 0.22.0
+
+```
+OK research/releases/nutshell-0.22.0.md: 120 commits, NUTs: NUT-18, NUT-26, NUT-28
+```
+Read the digest, then the tracker cards it names.
+
