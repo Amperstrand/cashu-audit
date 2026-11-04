@@ -1,0 +1,50 @@
+# Hostile repro run — 2026-11-02T23:37:17Z
+# target: OpenTollGate/gonuts-tollgate PR #46 head 74254915bb17e70e2ec11183e903cb6bc1946aa5 (branch pr-46)
+# go go1.25.8 linux/amd64
+
+=== RUN   TestHostileV1ForeignQuotePaidAccepted
+2026/11/03 00:37:18 wallet: pending op 2ebc64180abc1bc0c20c6d106e1de197 recovered 1 sats from http://127.0.0.1:40499 via NUT-09 melt change restore
+    hostile_nut08_recovery_test.go:220: V1 CONFIRMED: foreign quote id "e771b3ac-1234-4000-8000-00000000046x" answered the GET for "bolt11"; wallet credited 1 sat, marked OUR quote PAID, retired the intent. Wire answer: {"amount":21,"expiry":0,"fee_reserve":1,"quote":"e771b3ac-1234-4000-8000-00000000046x","request":"lnbc210n1z4t2y63dqqpp5qy39vf3kmlwwhurnyfjtu6dv2vhajq5sny3hwet2gr9q04fl2qessp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysrdrq80m032wwtra90v3e7duer0w8s6wv37f373l9h7rs8e9t6z7htal05wx0hsrqcpc2ad9ca6ys4wq6hcptwr0enuyw03pshcuhh6cp7fja96","state":"PAID","unit":"sat","updated_at":0}
+--- PASS: TestHostileV1ForeignQuotePaidAccepted (0.18s)
+=== RUN   TestHostileV1bForeignPaidDestroysUnspentInputs
+2026/11/03 00:37:18 wallet: pending op 7f412ada20da64b4a7608671d803f38c recovered 0 sats from http://127.0.0.1:36635 via NUT-09 melt change restore
+    hostile_nut08_recovery_test.go:258: V1b CONFIRMED: invoice never paid (0 melt POSTs), yet quote bolt11 marked PAID and 22 sats of unspent inputs deleted from the wallet with err=nil. Wire answer: {"amount":21,"expiry":0,"fee_reserve":1,"quote":"e771b3ac-1234-4000-8000-00000000046x","request":"lnbc210n1z4t2y63dqqpp5qy39vf3kmlwwhurnyfjtu6dv2vhajq5sny3hwet2gr9q04fl2qessp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysrdrq80m032wwtra90v3e7duer0w8s6wv37f373l9h7rs8e9t6z7htal05wx0hsrqcpc2ad9ca6ys4wq6hcptwr0enuyw03pshcuhh6cp7fja96","state":"PAID","unit":"sat","updated_at":0}
+--- PASS: TestHostileV1bForeignPaidDestroysUnspentInputs (0.17s)
+=== RUN   TestHostileV2ForeignChangeSignatureStoredAsBalance
+2026/11/03 00:37:18 wallet: pending op 2e863c020273814e2ae7292c68c13916 recovered 64 sats from http://127.0.0.1:32893
+    hostile_nut08_recovery_test.go:314: V2 CONFIRMED: 64-sat signature over a foreign point credited (balance 42→106); stored C=038b53d930a682c067163b12a1d12eee220f8f88e322848fcae2e982689e7ffa55 but a valid proof would be 0381538133b5a3c9106bd94782e35fc62f27a73dc1acf435d9cd7907b8fad7520a — unspendable at any verifying mint. Wire answer: {"amount":21,"change":[{"amount":64,"C_":"02ccbad675195333cef666f7a421457177ff122098f9f8bc73c5e8d8716830bd8d","id":"005bfb85e8f031bd"}],"expiry":0,"fee_reserve":1,"quote":"e771b3ac-1234-4000-8000-00000000046x","request":"lnbc210n1z4t2y63dqqpp5qy39vf3kmlwwhurnyfjtu6dv2vhajq5sny3hwet2gr9q04fl2qessp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysrdrq80m032wwtra90v3e7duer0w8s6wv37f373l9h7rs8e9t6z7htal05wx0hsrqcpc2ad9ca6ys4wq6hcptwr0enuyw03pshcuhh6cp7fja96","state":"PAID","unit":"sat","updated_at":0}
+--- PASS: TestHostileV2ForeignChangeSignatureStoredAsBalance (0.18s)
+=== RUN   TestHostileV3OverCeilingValidChangeAccepted
+2026/11/03 00:37:18 wallet: pending op 685bfdb39d914878664a8d3f03a47962 recovered 64 sats from http://127.0.0.1:46367
+    hostile_nut08_recovery_test.go:359: V3 CONFIRMED: change 64 accepted against stored fee_reserve=1 — no total-value bound enforced anywhere. Wire answer: {"amount":21,"change":[{"amount":64,"C_":"027bb5ef94d08b88ba1d336eede42e52157a897a3c6a05c7dc699b5f976ab066b2","id":"0011b17423a9e891"}],"expiry":0,"fee_reserve":1,"quote":"bolt11","request":"lnbc210n1z4t2y63dqqpp5qy39vf3kmlwwhurnyfjtu6dv2vhajq5sny3hwet2gr9q04fl2qessp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysrdrq80m032wwtra90v3e7duer0w8s6wv37f373l9h7rs8e9t6z7htal05wx0hsrqcpc2ad9ca6ys4wq6hcptwr0enuyw03pshcuhh6cp7fja96","state":"PAID","unit":"sat","updated_at":0}
+--- PASS: TestHostileV3OverCeilingValidChangeAccepted (0.17s)
+=== RUN   TestHostileV4EmptyChangeArraySkipsRestore
+2026/11/03 00:37:18 wallet: pending op 782ec206b5d1c2f48bb0f4abcf790d29 recovered 0 sats from http://127.0.0.1:39417
+    hostile_nut08_recovery_test.go:387: V4 CONFIRMED: mint answered PAID with "change":[] while holding a real 1-sat signature; wallet retired the intent without asking NUT-09. Balance stayed 42. Wire answer: {"amount":21,"change":[],"expiry":0,"fee_reserve":1,"quote":"bolt11","request":"lnbc210n1z4t2y63dqqpp5qy39vf3kmlwwhurnyfjtu6dv2vhajq5sny3hwet2gr9q04fl2qessp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysrdrq80m032wwtra90v3e7duer0w8s6wv37f373l9h7rs8e9t6z7htal05wx0hsrqcpc2ad9ca6ys4wq6hcptwr0enuyw03pshcuhh6cp7fja96","state":"PAID","unit":"sat","updated_at":0}
+--- PASS: TestHostileV4EmptyChangeArraySkipsRestore (0.17s)
+=== RUN   TestHostileV5HonestControl
+2026/11/03 00:37:19 wallet: pending op 5e945975416e444e910335ad22f83c64 recovered 1 sats from http://127.0.0.1:35727
+    hostile_nut08_recovery_test.go:406: V5 control: honest recovery works through the proxy (balance 42→43, 1 melt POST)
+--- PASS: TestHostileV5HonestControl (0.17s)
+=== RUN   TestHostileV6CheckMeltQuoteStateForeignPaid
+    hostile_nut08_recovery_test.go:463: V6 CONFIRMED (corrected): CheckMeltQuoteState accepted "e771b3ac-1234-4000-8000-00000000046x"'s PAID for quote bolt11 — settled the quote (SettledAt=1793662639, preimage set) and deleted pending inputs — while never persisting State=Paid (stays PENDING). Wire answer: {"amount":21,"change":[{"C_":"03ca46a52eac73a97dff6944286e670dda5b9b7140b372fcca6bb31515436d9b46","amount":1,"id":"0011b17423a9e891"}],"expiry":0,"fee_reserve":1,"quote":"e771b3ac-1234-4000-8000-00000000046x","request":"lnbc210n1z4t2y63dqqpp5qy39vf3kmlwwhurnyfjtu6dv2vhajq5sny3hwet2gr9q04fl2qessp59g4z52329g4z52329g4z52329g4z52329g4z52329g4z52329g4q9qrsgqcqzysrdrq80m032wwtra90v3e7duer0w8s6wv37f373l9h7rs8e9t6z7htal05wx0hsrqcpc2ad9ca6ys4wq6hcptwr0enuyw03pshcuhh6cp7fja96","state":"PAID","unit":"sat","updated_at":0}
+--- PASS: TestHostileV6CheckMeltQuoteStateForeignPaid (0.18s)
+PASS
+ok  	github.com/OpenTollGate/gonuts-tollgate/wallet	1.227s
+
+# race pass:
+ok  	github.com/OpenTollGate/gonuts-tollgate/wallet	3.767s
+
+# full battery:
+ok  	github.com/OpenTollGate/gonuts-tollgate/cashu	0.010s
+ok  	github.com/OpenTollGate/gonuts-tollgate/cashu/nuts/nut10	0.006s
+ok  	github.com/OpenTollGate/gonuts-tollgate/cashu/nuts/nut11	0.019s
+ok  	github.com/OpenTollGate/gonuts-tollgate/cashu/nuts/nut12	0.020s
+ok  	github.com/OpenTollGate/gonuts-tollgate/cashu/nuts/nut13	0.027s
+ok  	github.com/OpenTollGate/gonuts-tollgate/cashu/nuts/nut20	0.019s
+ok  	github.com/OpenTollGate/gonuts-tollgate/crypto	0.025s
+ok  	github.com/OpenTollGate/gonuts-tollgate/mint	1.611s
+ok  	github.com/OpenTollGate/gonuts-tollgate/mint/storage/sqlite	7.885s
+ok  	github.com/OpenTollGate/gonuts-tollgate/wallet	95.946s
+ok  	github.com/OpenTollGate/gonuts-tollgate/wallet/client	21.719s
+ok  	github.com/OpenTollGate/gonuts-tollgate/wallet/storage	3.515s
