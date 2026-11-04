@@ -75,3 +75,15 @@ OK research/releases/nutshell-0.22.0.md: 120 commits, NUTs: NUT-18, NUT-26, NUT-
 ```
 Read the digest, then the tracker cards it names.
 
+
+## Run 2026-11-04 04:47 UTC
+
+- CHANGE: nutshell release(s) 0.22.1 (published 2026-11-03) — OK research/releases/nutshell-0.22.1.md: 5 commits, NUTs: none
+
+### nutshell 0.22.1
+
+```
+OK research/releases/nutshell-0.22.1.md: 5 commits, NUTs: none
+```
+Read the digest, then the tracker cards it names.
+
