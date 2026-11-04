@@ -1,15 +1,16 @@
 {
   "p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend": "POSITIONED: ns 0.20.3 uniquely requires a witness post-expiry; 0.21.0 + all zoo cdk accept as anyone-can-spend (DIVERGENCE-REGISTRY 'settled by convergence'; re-check on 0.21.x arms)",
-  "htlc_sigall_preimage_only_no_pubkeys_succeeds": "POSITIONED: SIG_ALL/HTLC witness semantics — nutshell requires preimage+signature, suite's frozen prediction encodes the cdk-side reading (registry: cdk#2252 item 6 territory)",
+  "htlc_sigall_preimage_only_no_pubkeys_succeeds": "POSITIONED: SIG_ALL/HTLC witness semantics \u2014 nutshell requires preimage+signature, suite's frozen prediction encodes the cdk-side reading (registry: cdk#2252 item 6 territory)",
   "htlc_sigall_requires_preimage_and_transaction_signature": "POSITIONED: same SIG_ALL/HTLC witness split as above",
   "htlc_sigall_locktime_after_expiry_refund_succeeds": "POSITIONED: same SIG_ALL/HTLC witness split as above",
   "htlc_sigall_multisig_2of3": "POSITIONED: same SIG_ALL/HTLC witness split as above",
   "htlc_sigall_receiver_path_after_locktime": "POSITIONED: same SIG_ALL/HTLC witness split as above",
-  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body — error-identity class (wire shape), version fact",
+  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
   "mint_info_nut19_supported": "VERSION FACT: nutshell 0.20.3 does not advertise NUT-19 in nuts list",
-  "swap_replay_returns_cached_response": "POSITIONED: same as 0.21.0 — no NUT-19 caching in nutshell (11001)",
-  "melt_replay_returns_cached_response": "POSITIONED: same as 0.21.0 — no NUT-19 caching (20006)",
-  "errid_swap_unknown_keyset_code_12001": "CODE: swap path raises bare TransactionError 11000 ('keyset id unknown.') — typed KeysetNotFoundError/12001 only on /v1/keys/{id}; same as 0.21.0; measured 2026-11-04",
-  "errid_swap_underfunded_code_11005": "CODE: unbalanced swap raises bare TransactionError 11000 — TransactionNotBalancedError/11005 defined but never raised; same as 0.21.0; measured 2026-11-04",
-  "errid_mint_quote_unit_unsupported_code_11013": "CODE: 0.20.3 returns NotAllowedError 10000 for unsupported unit — fixed to spec 11013 in 0.21.0 (UnitNotSupportedError); version fact measured 2026-11-04"
+  "swap_replay_returns_cached_response": "POSITIONED: same as 0.21.0 \u2014 no NUT-19 caching in nutshell (11001)",
+  "melt_replay_returns_cached_response": "POSITIONED: same as 0.21.0 \u2014 no NUT-19 caching (20006)",
+  "errid_swap_unknown_keyset_code_12001": "CODE: swap path raises bare TransactionError 11000 ('keyset id unknown.') \u2014 typed KeysetNotFoundError/12001 only on /v1/keys/{id}; same as 0.21.0; measured 2026-11-04",
+  "errid_swap_underfunded_code_11005": "CODE: unbalanced swap raises bare TransactionError 11000 \u2014 TransactionNotBalancedError/11005 defined but never raised; same as 0.21.0; measured 2026-11-04",
+  "errid_mint_quote_unit_unsupported_code_11013": "CODE: 0.20.3 returns NotAllowedError 10000 for unsupported unit \u2014 fixed to spec 11013 in 0.21.0 (UnitNotSupportedError); version fact measured 2026-11-04",
+  "ws_mint_quote_unknown_quote_rejected": "POSITIONED: NUT-17 ws subscribe for a nonexistent quote acks OK (no pre-validation of filters) while gonuts+cdk reject with a JSON-RPC error; measured 2026-11-04, research/FINDINGS-2026-11-04-gonuts-residue.md (B2)"
 }

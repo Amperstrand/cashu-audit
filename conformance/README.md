@@ -26,8 +26,9 @@ python3 run_matrix.py --mint https://testnut.cashu.exchange
 | NUT-19 | 3 | Cache headers + swap/melt replay caching (2026-10-25) |
 | NUT-20 | 4 | Quote signature validation |
 | NUT-26 | 2 | Bech32m payment request encoding |
+| NUT-17 | 3 | Websocket mint-quote subscribe/unsubscribe (2026-11-04) |
 | NUT-29 | 3 | Batch mint/check operations |
-| **Total** | **107** | |
+| **Total** | **128** | |
 
 ## Adding Scenarios
 

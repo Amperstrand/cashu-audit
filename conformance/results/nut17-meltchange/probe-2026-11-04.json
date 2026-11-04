@@ -1,0 +1,226 @@
+{
+ "started": "2026-11-04T00:37:06Z",
+ "arms": {
+  "gonuts-sigall-branch": {
+   "url": "http://127.0.0.1:4430",
+   "identity": "gonuts-sigall-branch / gonuts/0.4.0",
+   "nut17_kinds": {
+    "bolt11_mint_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "bolt11_melt_quote": {
+     "ack": false,
+     "error": {
+      "code": 1000,
+      "message": "invalid request method"
+     },
+     "notification": false,
+     "notif_subId": null
+    },
+    "proof_state": {
+     "ack": false,
+     "error": {
+      "code": 1000,
+      "message": "invalid request method"
+     },
+     "notification": false,
+     "notif_subId": null
+    }
+   },
+   "melt_change": {
+    "quote_fee_reserve": 0,
+    "inputs_total": 8,
+    "invoice_amount": 2,
+    "blank_outputs": 1,
+    "http": 200,
+    "state": "PAID",
+    "change": null,
+    "change_len": 0,
+    "error_body": null
+   }
+  },
+  "ns-0.21.0": {
+   "url": "http://127.0.0.1:4440",
+   "identity": "Cashu mint / Nutshell/0.21.0",
+   "nut17_kinds": {
+    "bolt11_mint_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "bolt11_melt_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "proof_state": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    }
+   },
+   "melt_change": {
+    "quote_fee_reserve": 2,
+    "inputs_total": 8,
+    "invoice_amount": 2,
+    "blank_outputs": 1,
+    "http": 200,
+    "state": "PAID",
+    "change": [
+     {
+      "id": "010b9361cba1a55a6efec0893de06385fa79cde27315f5a11d196c017c910b43bf",
+      "amount": 4,
+      "C_": "02a4a7e73c13a6c61466192b26335a80d69931549de75c69709a67d0f881d9d1b1",
+      "dleq": {
+       "e": "9f978a344dc99199d249dd78bf7a883490cdafbc6671a6628ef5b4928fabff81",
+       "s": "cd8cc85cd6a27b13d54c1ffbe7de34eedec78d4f1074575231b32b8940e67820"
+      }
+     }
+    ],
+    "change_len": 1,
+    "error_body": null
+   }
+  },
+  "cdk-0.18.3": {
+   "url": "http://127.0.0.1:4442",
+   "identity": "unnamed / cdk-mintd/0.18.3",
+   "nut17_kinds": {
+    "bolt11_mint_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "bolt11_melt_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "proof_state": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    }
+   },
+   "melt_change": {
+    "quote_fee_reserve": 2,
+    "inputs_total": 8,
+    "invoice_amount": 2,
+    "blank_outputs": 1,
+    "http": 200,
+    "state": "PAID",
+    "change": [
+     {
+      "amount": 4,
+      "id": "01df97b6fb8a572a718d7df7fcbf4387e2d455134ea8004c9c8c51e1b3391f909e",
+      "C_": "03b97f5d7db01a5be4806eac6f6b8840004de7f45a7ab97532ec33edf5984e6886",
+      "dleq": {
+       "e": "25f1d1832df2e0766c345542fce046d6d707f43f72b61446c4064cf06fbd5bfe",
+       "s": "fbc643b260eda66207f438a1634f65ffcb3dbed6d7ac38d1ade005c1b7bc6d3b"
+      }
+     }
+    ],
+    "change_len": 1,
+    "error_body": null
+   }
+  },
+  "cdk-0.18.1": {
+   "url": "http://127.0.0.1:4446",
+   "identity": "unnamed / cdk-mintd/0.18.1",
+   "nut17_kinds": {
+    "bolt11_mint_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "bolt11_melt_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "proof_state": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    }
+   },
+   "melt_change": {
+    "quote_fee_reserve": 2,
+    "inputs_total": 8,
+    "invoice_amount": 2,
+    "blank_outputs": 1,
+    "http": 200,
+    "state": "PAID",
+    "change": [
+     {
+      "amount": 4,
+      "id": "01df97b6fb8a572a718d7df7fcbf4387e2d455134ea8004c9c8c51e1b3391f909e",
+      "C_": "03efdf6da45d62841f5a06b14bd261f09c324fcffffc3187b71d0812dc18519d21",
+      "dleq": {
+       "e": "54dae5177ae9417af4acc660180c58f0f11dcbb0a6ed53bd03e06a9043fc50f4",
+       "s": "16345761f9a2ebdb487f4ef6cb320c4672f8b3b1af27f124e589f475d65cf62b"
+      }
+     }
+    ],
+    "change_len": 1,
+    "error_body": null
+   }
+  },
+  "ns-0.20.3": {
+   "url": "http://127.0.0.1:4444",
+   "identity": "Cashu mint / Nutshell/0.20.3",
+   "nut17_kinds": {
+    "bolt11_mint_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "bolt11_melt_quote": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    },
+    "proof_state": {
+     "ack": true,
+     "error": null,
+     "notification": false,
+     "notif_subId": null
+    }
+   },
+   "melt_change": {
+    "quote_fee_reserve": 0,
+    "inputs_total": 8,
+    "invoice_amount": 2,
+    "blank_outputs": 1,
+    "http": 200,
+    "state": "PAID",
+    "change": [
+     {
+      "id": "016ab53400ecc4e088ac10501cd88e604eea75e816ef8c42ae99358aa12ea29089",
+      "amount": 4,
+      "C_": "02dfcc2e8b669fb062fa02482d0a6e76e6962fb01e95799a321a0e0c494e3e912e",
+      "dleq": {
+       "e": "92f87b851c76ef42adf47c67896bc30c834cf911264970f22f8d5408a3f0f65d",
+       "s": "42cc3b9175054dbcaea1e2b6fb1bad4c71fbb18a4c18d17edc37b38bf1f328ee"
+      }
+     }
+    ],
+    "change_len": 1,
+    "error_body": null
+   }
+  }
+ }
+}

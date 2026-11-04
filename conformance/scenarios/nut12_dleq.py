@@ -379,6 +379,68 @@ def _(mint: MintClient) -> ScenarioResult:
     )
 
 
+@scenario("dleq_proof_in_restore_response", CAT)
+def _(mint: MintClient) -> ScenarioResult:
+    """NUT-09 /v1/restore replays signatures with their DLEQ proofs.
+
+    Mints outputs, then asks /v1/restore for the same B_ values — the
+    #866-lineage recovery path. When the restore response carries DLEQ,
+    each proof must verify; when the mint replates signatures without
+    DLEQ the row SKIPs (restore DLEQ is a SHOULD, not a MUST).
+    """
+    name = "dleq_proof_in_restore_response"
+    builder = ProofBuilder(mint)
+    outputs, signatures = _mint_with_raw_sigs(builder, mint, 8)
+    if not signatures:
+        return ScenarioResult(name, CAT, Result.FAIL, "no signatures returned from mint")
+
+    api_outputs = [
+        {"amount": out.amount, "B_": out.B_, "id": signatures[0].get("id", "")}
+        for out in outputs
+    ]
+    resp = mint.session.post(
+        f"{mint.base_url}/v1/restore", json={"outputs": api_outputs}, timeout=mint.timeout
+    )
+    if resp.status_code != 200:
+        return ScenarioResult(
+            name, CAT, Result.FAIL, f"restore HTTP {resp.status_code}: {resp.text[:120]}",
+        )
+    try:
+        restored = resp.json().get("signatures", [])
+    except ValueError:
+        return ScenarioResult(name, CAT, Result.FAIL, "restore response is not JSON")
+
+    if len(restored) != len(outputs):
+        return ScenarioResult(
+            name, CAT, Result.FAIL,
+            f"restore returned {len(restored)} signatures for {len(outputs)} outputs",
+        )
+
+    if not all(_has_dleq(s) for s in restored):
+        return ScenarioResult(
+            name, CAT, Result.SKIP, "restore replays signatures without DLEQ proofs",
+        )
+
+    _, keys = builder.get_active_keyset()
+    for sig, out in zip(restored, outputs):
+        amt = sig.get("amount", out.amount)
+        a_hex = keys.get(amt, keys.get(1, ""))
+        if not a_hex:
+            return ScenarioResult(
+                name, CAT, Result.FAIL, f"no mint pubkey for amount {amt}",
+            )
+        dleq = sig["dleq"]
+        if not _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex):
+            return ScenarioResult(
+                name, CAT, Result.FAIL,
+                f"restore DLEQ verification failed for amount {amt}",
+            )
+    return ScenarioResult(
+        name, CAT, Result.PASS,
+        f"{len(restored)} restore-response DLEQ proofs verified",
+    )
+
+
 @scenario("hash_e_test_vector_verification", CAT)
 def _(mint: MintClient) -> ScenarioResult:
     """Verify hash_e and DLEQ verification against official NUT-12 test vectors.
