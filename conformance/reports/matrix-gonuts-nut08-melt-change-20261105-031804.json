@@ -1,0 +1,685 @@
+{
+ "http://127.0.0.1:4432": [
+  {
+   "name": "invoice_description_truncated_quote_id",
+   "result": "SKIP",
+   "note": "no BOLT11 decoder available or decode failed"
+  },
+  {
+   "name": "melt_change_returned_for_overpay",
+   "result": "PASS",
+   "note": "14 sats change returned, unblinded and re-spent (3 sigs for 4 blanks)"
+  },
+  {
+   "name": "melt_change_omitted_without_outputs",
+   "result": "PASS",
+   "note": "PAID without outputs, no change claimed"
+  },
+  {
+   "name": "errid_swap_unknown_keyset_code_12001",
+   "result": "PASS",
+   "note": "want 12001, got http=400 code=12001: code=12001 detail='unknown keyset'"
+  },
+  {
+   "name": "errid_swap_duplicate_inputs_code_11007",
+   "result": "PASS",
+   "note": "want 11007, got http=400 code=11007: code=11007 detail='duplicate inputs'"
+  },
+  {
+   "name": "errid_swap_underfunded_code_11005",
+   "result": "FAIL",
+   "note": "want 11005, got http=400 code=11002: code=11002 detail='amount of input proofs is below amount needed for transaction'"
+  },
+  {
+   "name": "errid_swap_spent_proofs_code_11001",
+   "result": "PASS",
+   "note": "want 11001, got http=400 code=11001: code=11001 detail='proof already used'"
+  },
+  {
+   "name": "errid_swap_outputs_already_signed_code_11003",
+   "result": "FAIL",
+   "note": "want 11003, got http=400 code=10002: code=10002 detail='blinded message already signed'"
+  },
+  {
+   "name": "errid_mint_quote_unit_unsupported_code_11013",
+   "result": "FAIL",
+   "note": "want 11013, got http=400 code=11005: code=11005 detail=\"unit 'usd' not supported\""
+  },
+  {
+   "name": "errid_validation_error_nut00_envelope",
+   "result": "PASS",
+   "note": "want 400+{detail,code}, got http=400 code=10000: code=10000 detail=\"invalid C: encoding/hex: invalid byte: U+006E 'n'\""
+  },
+  {
+   "name": "errid_p2pk_wrong_witness_reasoned_rejection",
+   "result": "PASS",
+   "note": "got 400: code=30001 detail='not enough valid signatures provided'"
+  },
+  {
+   "name": "secret_encoding_control_spendable",
+   "result": "PASS",
+   "note": "utf8(hex-string) convention mints and swaps cleanly"
+  },
+  {
+   "name": "secret_encoding_entropy_trap_rejected",
+   "result": "PASS",
+   "note": "rejected with HTTP 400 (non-standard error body \u2014 verify manually): {'detail': 'invalid proof', 'code': 10003}"
+  },
+  {
+   "name": "secret_encoding_forged_c_rejected",
+   "result": "PASS",
+   "note": "forged C rejected (400: {'detail': 'invalid proof', 'code': 10003})"
+  },
+  {
+   "name": "keysets_returns_active_keyset",
+   "result": "PASS",
+   "note": "1 active sat keyset(s)"
+  },
+  {
+   "name": "keys_returns_pubkey_for_amount",
+   "result": "PASS",
+   "note": "60 amount\u2192pubkey mappings"
+  },
+  {
+   "name": "keyset_has_correct_unit",
+   "result": "PASS",
+   "note": "unit=sat, id=00248ca180673085"
+  },
+  {
+   "name": "keyset_fee_ppk_present",
+   "result": "PASS",
+   "note": "input_fee_ppk=0"
+  },
+  {
+   "name": "multiple_keysets_unit_filter",
+   "result": "PASS",
+   "note": "1 active sat keyset(s) found"
+  },
+  {
+   "name": "keyset_keys_are_valid_pubkeys",
+   "result": "PASS",
+   "note": "60 pubkeys all valid compressed secp256k1"
+  },
+  {
+   "name": "mint_quote_has_accounting_fields",
+   "result": "PASS",
+   "note": "amount_paid=0, amount_issued=0, updated_at=1793848366"
+  },
+  {
+   "name": "mint_quote_uuid_v7",
+   "result": "PASS",
+   "note": "quote=01a1a9b1-d8a4-796c-9798-fde7518cac96"
+  },
+  {
+   "name": "mint_quote_accounting_after_payment",
+   "result": "PASS",
+   "note": "amount_paid=8 == amount=8"
+  },
+  {
+   "name": "mint_quote_accounting_after_mint",
+   "result": "PASS",
+   "note": "amount_issued=8 == amount=8"
+  },
+  {
+   "name": "mint_quote_updated_at_monotonic",
+   "result": "PASS",
+   "note": "1793848371 \u2192 1793848377 \u2192 1793848379"
+  },
+  {
+   "name": "fee_zero_ppk_swap_succeeds",
+   "result": "PASS",
+   "note": "fee_ppk=0, swapped 8 sats with 0 fee, 1 sigs returned"
+  },
+  {
+   "name": "fee_calculated_correctly",
+   "result": "PASS",
+   "note": "fee_ppk=0, 1 inputs, fee=0, output=8"
+  },
+  {
+   "name": "fee_insufficient_outputs_fails",
+   "result": "PASS",
+   "note": "rejected swap requesting 9 (max=8, fee=0)"
+  },
+  {
+   "name": "fee_exact_balance_succeeds",
+   "result": "PASS",
+   "note": "exact balance: input=8, fee=0, output=8"
+  },
+  {
+   "name": "fee_melt_quote_includes_fee_reserve",
+   "result": "PASS",
+   "note": "fee_reserve=2"
+  },
+  {
+   "name": "fee_per_proof_not_per_amount",
+   "result": "SKIP",
+   "note": "fee_ppk=0, cannot distinguish per-proof vs per-amount"
+  },
+  {
+   "name": "melt_p2pk_unsigned_fails",
+   "result": "PASS",
+   "note": "unsigned melt rejected"
+  },
+  {
+   "name": "melt_p2pk_signed_succeeds",
+   "result": "PASS",
+   "note": "signed melt paid"
+  },
+  {
+   "name": "melt_p2pk_sigall_unsigned_fails",
+   "result": "PASS",
+   "note": "unsigned SIG_ALL melt rejected"
+  },
+  {
+   "name": "melt_htlc_preimage_only_no_pubkeys_succeeds",
+   "result": "PASS",
+   "note": "HTLC preimage melt paid"
+  },
+  {
+   "name": "melt_htlc_preimage_only_fails",
+   "result": "PASS",
+   "note": "wrong preimage rejected"
+  },
+  {
+   "name": "melt_htlc_signature_only_fails",
+   "result": "PASS",
+   "note": "missing preimage rejected"
+  },
+  {
+   "name": "melt_htlc_preimage_and_signature_succeeds",
+   "result": "PASS",
+   "note": "preimage + sig melt paid"
+  },
+  {
+   "name": "melt_htlc_sigall_preimage_and_transaction_signature_succeeds",
+   "result": "PASS",
+   "note": "HTLC SIG_ALL melt paid"
+  },
+  {
+   "name": "melt_p2pk_post_locktime_anyone_can_spend",
+   "result": "PASS",
+   "note": "anyone-can-spend melt paid"
+  },
+  {
+   "name": "melt_p2pk_before_locktime_wrong_key_fails",
+   "result": "PASS",
+   "note": "wrong key rejected"
+  },
+  {
+   "name": "melt_p2pk_before_locktime_correct_key_succeeds",
+   "result": "PASS",
+   "note": "correct key melt paid"
+  },
+  {
+   "name": "p2pk_sigall_requires_transaction_signature",
+   "result": "PASS",
+   "note": "rejected"
+  },
+  {
+   "name": "p2pk_sigall_sig_inputs_fail",
+   "result": "PASS",
+   "note": "rejected"
+  },
+  {
+   "name": "p2pk_sigall_multisig_2of3",
+   "result": "PASS",
+   "note": "2-of-3 accepted"
+  },
+  {
+   "name": "p2pk_sigall_wrong_signer_fails",
+   "result": "PASS",
+   "note": "rejected"
+  },
+  {
+   "name": "p2pk_sigall_duplicate_signatures_fail",
+   "result": "PASS",
+   "note": "duplicate rejected"
+  },
+  {
+   "name": "p2pk_sigall_locktime_before_expiry_primary_only",
+   "result": "PASS",
+   "note": "primary works, refund blocked"
+  },
+  {
+   "name": "p2pk_sigall_locktime_after_expiry_primary_still_works",
+   "result": "PASS",
+   "note": "primary works after expiry"
+  },
+  {
+   "name": "p2pk_sigall_locktime_after_expiry_no_refund_anyone_can_spend",
+   "result": "PASS",
+   "note": "anyone-can-spend"
+  },
+  {
+   "name": "p2pk_sigall_multisig_locktime_primary_still_works",
+   "result": "PASS",
+   "note": "multisig primary works after locktime"
+  },
+  {
+   "name": "p2pk_sigall_mixed_proofs_different_data_fail",
+   "result": "PASS",
+   "note": "mixed data rejected"
+  },
+  {
+   "name": "p2pk_sigall_mixed_proofs_different_kind_fail",
+   "result": "PASS",
+   "note": "mixed kind rejected"
+  },
+  {
+   "name": "p2pk_sigall_mixed_proofs_different_tags_fail",
+   "result": "PASS",
+   "note": "mixed tags rejected"
+  },
+  {
+   "name": "p2pk_sigall_multisig_before_locktime",
+   "result": "PASS",
+   "note": "2-of-3 before locktime accepted"
+  },
+  {
+   "name": "p2pk_sigall_more_signatures_than_required",
+   "result": "PASS",
+   "note": "extra sigs accepted"
+  },
+  {
+   "name": "p2pk_sigall_refund_multisig_2of2",
+   "result": "PASS",
+   "note": "2-of-2 refund accepted"
+  },
+  {
+   "name": "p2pk_sigall_output_amounts_swapped_fail",
+   "result": "PASS",
+   "note": "tampered outputs rejected"
+  },
+  {
+   "name": "p2pk_swap_unsigned_fails",
+   "result": "PASS",
+   "note": "rejected"
+  },
+  {
+   "name": "p2pk_swap_signed_succeeds",
+   "result": "PASS",
+   "note": "succeeded"
+  },
+  {
+   "name": "p2pk_wrong_signer_fails",
+   "result": "PASS",
+   "note": "rejected"
+  },
+  {
+   "name": "p2pk_locktime_after_expiry_primary_still_works",
+   "result": "PASS",
+   "note": "primary works after expiry"
+  },
+  {
+   "name": "p2pk_locktime_after_expiry_refund_succeeds",
+   "result": "PASS",
+   "note": "refund works after expiry"
+  },
+  {
+   "name": "p2pk_multisig_2of3",
+   "result": "PASS",
+   "note": "2-of-3 accepted"
+  },
+  {
+   "name": "p2pk_partial_signatures_fail",
+   "result": "PASS",
+   "note": "partial rejected"
+  },
+  {
+   "name": "p2pk_duplicate_signatures_fail",
+   "result": "PASS",
+   "note": "duplicate rejected"
+  },
+  {
+   "name": "p2pk_locktime_before_expiry_refund_blocked",
+   "result": "PASS",
+   "note": "refund blocked before expiry"
+  },
+  {
+   "name": "p2pk_locktime_after_expiry_no_refund_anyone_can_spend",
+   "result": "PASS",
+   "note": "anyone-can-spend"
+  },
+  {
+   "name": "dleq_proofs_present_in_mint_response",
+   "result": "PASS",
+   "note": "1/1 signatures have dleq"
+  },
+  {
+   "name": "dleq_proof_valid",
+   "result": "PASS",
+   "note": "1 DLEQ proofs verified"
+  },
+  {
+   "name": "dleq_proof_absent_graceful",
+   "result": "SKIP",
+   "note": "mint provides DLEQ \u2014 absent-case not applicable"
+  },
+  {
+   "name": "dleq_proof_in_signature_response",
+   "result": "PASS",
+   "note": "1 swap-response DLEQ proofs verified"
+  },
+  {
+   "name": "dleq_invalid_proof_rejected",
+   "result": "PASS",
+   "note": "tampered e and s both correctly rejected"
+  },
+  {
+   "name": "dleq_proof_in_restore_response",
+   "result": "PASS",
+   "note": "1 restore-response DLEQ proofs verified"
+  },
+  {
+   "name": "hash_e_test_vector_verification",
+   "result": "PASS",
+   "note": "hash_e + 2 DLEQ test vectors verified"
+  },
+  {
+   "name": "htlc_preimage_only_no_pubkeys_succeeds",
+   "result": "PASS",
+   "note": "preimage accepted"
+  },
+  {
+   "name": "htlc_preimage_only_fails",
+   "result": "PASS",
+   "note": "wrong preimage rejected"
+  },
+  {
+   "name": "htlc_signature_only_fails",
+   "result": "PASS",
+   "note": "signature without preimage rejected"
+  },
+  {
+   "name": "htlc_swap_preimage_and_signature_succeeds",
+   "result": "PASS",
+   "note": "preimage + signature accepted"
+  },
+  {
+   "name": "htlc_wrong_preimage_fails",
+   "result": "PASS",
+   "note": "wrong preimage with valid sig rejected (reason: preimage)"
+  },
+  {
+   "name": "htlc_locktime_after_expiry_refund_succeeds",
+   "result": "PASS",
+   "note": "refund works after expiry"
+  },
+  {
+   "name": "htlc_multisig_2of3",
+   "result": "PASS",
+   "note": "2-of-3 multisig + preimage accepted"
+  },
+  {
+   "name": "htlc_receiver_path_after_locktime",
+   "result": "PASS",
+   "note": "receiver path works after locktime"
+  },
+  {
+   "name": "htlc_sigall_preimage_only_no_pubkeys_succeeds",
+   "result": "PASS",
+   "note": "preimage accepted (SIG_ALL)"
+  },
+  {
+   "name": "htlc_sigall_preimage_only_fails",
+   "result": "PASS",
+   "note": "wrong preimage rejected (SIG_ALL)"
+  },
+  {
+   "name": "htlc_sigall_signature_only_fails",
+   "result": "PASS",
+   "note": "signature without preimage rejected (SIG_ALL)"
+  },
+  {
+   "name": "htlc_sigall_requires_preimage_and_transaction_signature",
+   "result": "PASS",
+   "note": "preimage + SIG_ALL signature accepted"
+  },
+  {
+   "name": "htlc_sigall_wrong_preimage_fails",
+   "result": "PASS",
+   "note": "wrong preimage with valid sig rejected (SIG_ALL)"
+  },
+  {
+   "name": "htlc_sigall_locktime_after_expiry_refund_succeeds",
+   "result": "PASS",
+   "note": "refund works after expiry (SIG_ALL)"
+  },
+  {
+   "name": "htlc_sigall_multisig_2of3",
+   "result": "PASS",
+   "note": "2-of-3 multisig + preimage accepted (SIG_ALL)"
+  },
+  {
+   "name": "htlc_sigall_receiver_path_after_locktime",
+   "result": "PASS",
+   "note": "receiver path works after locktime (SIG_ALL)"
+  },
+  {
+   "name": "nut13_keyset_id_integer",
+   "result": "PASS",
+   "note": "test vector verified; 1 mint keyset(s) computed: 00248ca1\u2026\u219211553224"
+  },
+  {
+   "name": "nut13_secret_derivation",
+   "result": "PASS",
+   "note": "secrets for counter 0 and 1 derived correctly from test mnemonic"
+  },
+  {
+   "name": "nut13_restore_works",
+   "result": "PASS",
+   "note": "1 signature(s) restored, C_ values match originals"
+  },
+  {
+   "name": "ws_mint_quote_subscribe_initial_state",
+   "result": "PASS",
+   "note": "ack + initial state=PAID for quote 01a1a9b5-6fe\u2026"
+  },
+  {
+   "name": "ws_mint_quote_unsubscribe_ok",
+   "result": "PASS",
+   "note": "unsubscribe acked OK"
+  },
+  {
+   "name": "ws_mint_quote_unknown_quote_rejected",
+   "result": "PASS",
+   "note": "rejected with error code 1000"
+  },
+  {
+   "name": "nut18_payment_request_decode",
+   "result": "PASS",
+   "note": "decoded successfully: id=7f4a2b39, unit=sat, 1 mint(s)"
+  },
+  {
+   "name": "nut18_payment_request_amount",
+   "result": "PASS",
+   "note": "amount=10 sat decoded correctly"
+  },
+  {
+   "name": "nut20_locked_quote_requires_signature",
+   "result": "PASS",
+   "note": "mint without sig rejected (400)"
+  },
+  {
+   "name": "nut20_locked_quote_valid_signature_succeeds",
+   "result": "PASS",
+   "note": "1 signatures minted with valid sig"
+  },
+  {
+   "name": "nut20_locked_quote_wrong_signature_fails",
+   "result": "PASS",
+   "note": "wrong sig rejected (400)"
+  },
+  {
+   "name": "nut20_quote_echoes_pubkey",
+   "result": "PASS",
+   "note": "pubkey echoed: 03472d2570592a871f59..."
+  },
+  {
+   "name": "nut26_encode_token_v4",
+   "result": "PASS",
+   "note": "minimal and description test vectors encoded correctly"
+  },
+  {
+   "name": "nut26_decode_token_v4",
+   "result": "PASS",
+   "note": "minimal + description vectors decoded: id=7f4a2b39, amount=100, desc=Test payment descrip"
+  },
+  {
+   "name": "batch_check_returns_quotes",
+   "result": "PASS",
+   "note": "states=['PAID', 'PAID']"
+  },
+  {
+   "name": "batch_check_rejects_too_many",
+   "result": "SKIP",
+   "note": "Exception: AttributeError: 'int' object has no attribute 'lower'"
+  },
+  {
+   "name": "batch_mint_rejects_too_many_outputs",
+   "result": "SKIP",
+   "note": "Exception: AttributeError: 'int' object has no attribute 'lower'"
+  },
+  {
+   "name": "swap_valid_proofs_succeeds",
+   "result": "PASS",
+   "note": "1 signatures returned"
+  },
+  {
+   "name": "swap_already_spent_fails",
+   "result": "PASS",
+   "note": "double-spend rejected (400)"
+  },
+  {
+   "name": "swap_wrong_keyset_fails",
+   "result": "PASS",
+   "note": "wrong keyset rejected"
+  },
+  {
+   "name": "mint_quote_creates_invoice",
+   "result": "PASS",
+   "note": "invoice starts with lntbs1"
+  },
+  {
+   "name": "mint_quote_zero_amount_fails",
+   "result": "PASS",
+   "note": "zero amount rejected"
+  },
+  {
+   "name": "mint_tokens_after_quote",
+   "result": "PASS",
+   "note": "1 signatures minted"
+  },
+  {
+   "name": "melt_quote_creates_quote",
+   "result": "PASS",
+   "note": "amount=4, fee=2"
+  },
+  {
+   "name": "melt_valid_proofs_succeeds",
+   "result": "PASS",
+   "note": "melt settled PAID"
+  },
+  {
+   "name": "checkstate_unspent_returns_unspent",
+   "result": "PASS",
+   "note": "1/1 UNSPENT"
+  },
+  {
+   "name": "checkstate_spent_returns_spent",
+   "result": "PASS",
+   "note": "1/1 SPENT"
+  },
+  {
+   "name": "restore_returns_signatures",
+   "result": "PASS",
+   "note": "1 signatures restored"
+  },
+  {
+   "name": "token_v3_parses",
+   "result": "PASS",
+   "note": "V3 token parsed: 1 proofs"
+  },
+  {
+   "name": "token_v4_parses",
+   "result": "PASS",
+   "note": "V4 token parsed: 1 proofs with DLEQ"
+  },
+  {
+   "name": "mint_info_nut19_supported",
+   "result": "PASS",
+   "note": "nut19: {'ttl': 300, 'cached_endpoints': [{'method': 'POST', 'path': '/v1/mint/bolt11'}, {'method': 'POST', "
+  },
+  {
+   "name": "mint_info_returns_required_fields",
+   "result": "PASS",
+   "note": "name=gonuts-nut08-branch, version=gonuts/0.4.0"
+  },
+  {
+   "name": "swap_never_signs_keyless_amount",
+   "result": "PASS",
+   "note": "rejected (400): code=10000 detail='invalid amount in blinded message'"
+  },
+  {
+   "name": "mint_never_signs_keyless_amount",
+   "result": "PASS",
+   "note": "rejected (400): code=10000 detail='invalid amount in blinded message'"
+  },
+  {
+   "name": "swap_replay_returns_cached_response",
+   "result": "PASS",
+   "note": "cached: byte-identical 200"
+  },
+  {
+   "name": "melt_replay_returns_cached_response",
+   "result": "PASS",
+   "note": "cached 200 (identical)"
+  },
+  {
+   "name": "concurrent_double_melt_rejected",
+   "result": "PASS",
+   "note": "exactly one melt paid; loser rejected with HTTP 400"
+  },
+  {
+   "name": "sequential_double_melt_rejected",
+   "result": "PASS",
+   "note": "first melt paid; second rejected with HTTP 400"
+  }
+ ],
+ "http://127.0.0.1:4436": [
+  {
+   "name": "melt_change_returned_for_overpay",
+   "result": "FAIL",
+   "note": "no change returned for a 16-sat melt of a 2-sat invoice with blank outputs (NUT-08/NUT-23 divergence)"
+  },
+  {
+   "name": "melt_change_omitted_without_outputs",
+   "result": "PASS",
+   "note": "PAID without outputs, no change claimed"
+  }
+ ],
+ "http://127.0.0.1:57063": [
+  {
+   "name": "melt_change_returned_for_overpay",
+   "result": "PASS",
+   "note": "12 sats change returned, unblinded and re-spent (2 sigs for 4 blanks)"
+  },
+  {
+   "name": "melt_change_omitted_without_outputs",
+   "result": "PASS",
+   "note": "PAID without outputs, no change claimed"
+  }
+ ],
+ "http://127.0.0.1:47417": [
+  {
+   "name": "melt_change_returned_for_overpay",
+   "result": "PASS",
+   "note": "13 sats change returned, unblinded and re-spent (3 sigs for 4 blanks)"
+  },
+  {
+   "name": "melt_change_omitted_without_outputs",
+   "result": "PASS",
+   "note": "PAID without outputs, no change claimed"
+  }
+ ]
+}
