@@ -77,3 +77,19 @@ rejections, replay 200s, all unlock paths PAID). The one diff is config
 mechanizes the "greens certify a build, not a commit" lesson: run it
 after any deploy to prove the deployed worker behaves as the built
 code.
+
+## Version matrix: nutshell 0.22.1 (2026-11-05)
+
+Full corpus vs cashu-cf — **identical to the 0.21.0 matrix** on every
+error-identity cell (14005/14008/30006 vs 10001/11007/11000). 0.22.1
+is a patch release (spark regtest fix, settings) with zero
+NUT-referencing commits — the 0.22.0 changes (multi-mint V3 fix) are
+in but the DLEQ bypass `return` is STILL PRESENT (wallet.py:1001,
+verified from the 0.22.1 tag). Disclosure day 8, no reply, no fix.
+
+| Finding | 0.20.3 | 0.21.0 | 0.22.1 |
+|---|---|---|---|
+| A3 P2PK witness-less | 400/**code 0** | 400/11000 | 400/11000 |
+| DLEQ bypass | present | present | **present** |
+| Multi-mint V3 | broken | broken (main fixed) | **fixed** (in 0.22.0) |
+| A6b mint replay | 400/11003 | ? | need to verify |

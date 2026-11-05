@@ -11,9 +11,9 @@
       },
       "b": {
         "status": 400,
-        "code": null,
-        "error": "not_found",
-        "detail": "not_found"
+        "code": 12001,
+        "error": "keyset not found: decafbaddecafbad",
+        "detail": "keyset not found: decafbaddecafbad"
       },
       "note": ""
     },
@@ -58,9 +58,9 @@
       },
       "b": {
         "status": 400,
-        "code": 14005,
-        "error": "invalid_request",
-        "detail": "Proof verification failed at index 0: Invalid proof signature at index 0"
+        "code": 10001,
+        "error": "proofs could not be verified",
+        "detail": "proofs could not be verified"
       },
       "note": ""
     },
@@ -71,13 +71,13 @@
         "status": 400,
         "code": 14008,
         "error": "duplicate_proof",
-        "detail": "Duplicate proof secret: shadow-a-a0e6db5…"
+        "detail": "Duplicate proof secret: shadow-a-4d759a7…"
       },
       "b": {
         "status": 400,
-        "code": 14008,
-        "error": "duplicate_proof",
-        "detail": "Duplicate proof secret: shadow-b-801fe84…"
+        "code": 11007,
+        "error": "Duplicate inputs provided",
+        "detail": "Duplicate inputs provided"
       },
       "note": ""
     },
@@ -91,10 +91,10 @@
         "detail": "No witness in proof"
       },
       "b": {
-        "status": 403,
-        "code": 30006,
-        "error": "spending_condition_not_met",
-        "detail": "No witness in proof"
+        "status": 400,
+        "code": 11000,
+        "error": "no signatures in proof.",
+        "detail": "no signatures in proof."
       },
       "note": ""
     },
@@ -123,7 +123,7 @@
       },
       "b": {
         "status": 200,
-        "code": "ppk:10 swap:200 state:SPENT",
+        "code": "ppk:100 swap:200 state:SPENT",
         "error": null
       },
       "note": ""
