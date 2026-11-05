@@ -1,4 +1,17 @@
-# ns-main identity probes — FINDINGS (2026-10-31)
+# ns-main identity probes — FINDINGS (2026-10-31; released-arm re-run 2026-11-05)
+
+## Released-arm verification (2026-11-05): nutshell 0.22.1 — 7/7 PASS, identical
+
+Re-ran this probe verbatim against **released tag 0.22.1** (fresh venv, :8740,
+`RESULTS-0.22.1.json`): every identity below is byte-identical on the release —
+S1a/S1b witness fork, S2 keyset-balance 11000, S3 422 string_too_long @1024,
+S4 pubkey omitted, and **S5 (opaque `{"detail":"63","code":0}` KeyError leak)
+is now RELEASED behavior** (0.22.0 shipped it; 0.22.1 unchanged). The
+conformance-v2 0.22.x arm can adopt these assertions as-is.
+(0.22.0 release digest: research/releases/nutshell-0.22.0.md — range
+0.21.0..0.22.0 = 120 commits, i.e. the audited 70 + ~50 later; NUTs touched 18/26/28.)
+
+## Original run (2026-10-31): nutshell main @ ac1c2e0 — 7/7 PASS
 
 Target: **nutshell main @ ac1c2e0** (unreleased, 0.21.0+70), FakeWallet, :8738,
 venv `pip install -e` (no patches needed on main — spark wheel resolves,

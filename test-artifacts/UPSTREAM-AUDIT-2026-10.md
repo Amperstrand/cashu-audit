@@ -75,9 +75,10 @@ Release status per item: **[0.18.0]** = already in our baseline arms, **[0.18.2]
 
 ---
 
-## 2. Nutshell changes since 0.21.0 (70 commits, all main-only / unreleased)
+## 2. Nutshell changes since 0.21.0 (70 commits, all main-only / unreleased at audit time)
 
 **Wire-verified 2026-10-31 against a local main @ ac1c2e0 FakeWallet mint — `experiments/ns-main-identity-probes/` (7/7 exact-identity PASS). Rows 2.2–2.5 and the new 2.10 carry observed identities.**
+**RELEASE-VERIFIED 2026-11-05: shipped essentially unchanged in nutshell 0.22.0 (2026-11-02) + 0.22.1 — the same 7/7 probe run against released 0.22.1 is byte-identical (`RESULTS-0.22.1.json`), including the S5 opaque KeyError. Release digests: research/releases/nutshell-0.22.{0,1}.md. cashu-cf follow-up status: P1 #99 (NUT-19 success-only) CLOSED — implemented in cashu-cf `d614afd` with 7 regression locks.**
 
 ### 2.1 Multi-mint V3 token decoding — `e5500d9` (+`ad607fa`)
 Confirms our staged finding's dead-code diagnosis, but the fix **bypasses** rather than repairs it: `from_tokenv3` still raises plain `Exception` (base.py:1427) and the `except ValueError` fallback stays dead; instead `deserialize_token_from_string` short-circuits — `len(mints) > 1 → return tokenV3Obj` (helpers.py:109-110) — and `redeem_universal` dispatches per-mint sequential redemption (`Wallet.with_db` per entry). **Multi-mint V3 is now receivable by nutshell-wallet main**; cdk wallet still `Unsupported token`; cashu-ts intentionally rejects. Our staged nutshell issue draft (`private/UPSTREAM-nutshell-multimint-fallback.md`) is **moot as written** — re-scope to "fixed on main, unreleased; 0.21.0-and-older strand senders" or drop. Registry updated.
@@ -172,8 +173,8 @@ Legend: ✅ have / aligned · 🔶 diverges (document or decide) · ❌ gap · �
 12. **Dead code cleanup** → **cashu-cf#103**: `Nut19Metrics` (never wired), swap journal dead write, `LedgerLimit`/`LedgerCache`/`LedgerConditions`, BIP32 stub, `MELT_SAGA_V2` guard; plus NUT-15 advertise-or-reject alignment.
 
 ### Watch list (triggers for the next audit cycle)
-- **cdk 0.19 cut** (0.18.3 is sqlite/ffi-only — no arms change needed) → add 0.19 arm to conformance-v2; re-run must-gap + spend-matrix against: sig-only HTLC (cf already OK — expect green), Paid-gated melt, restore-empty-200, null-id WS errors, bstr-`pe` V4 (wallet-side; n/a for cf mint).
-- **nutshell 0.22 cut** → add arm; new identities to pin: "witness could not be parsed." (11000), keyset-balance 11000, secret>1024 422 shape, quote-pubkey omission, multi-mint V3 per-mint redemption (wallet side — affects our token corpus, `lifecycle/v3_v2_*`).
+- **ns 0.22 TRIGGER EXECUTED 2026-11-05:** 0.22.0 (2026-11-02) + 0.22.1 (2026-11-03) shipped; the probe suite re-ran against released 0.22.1 — **7/7 identical** (`experiments/ns-main-identity-probes/RESULTS-0.22.1.json`). Remaining for the conformance lane: add the 0.22.x docker arm + lift the assertions. cashu-cf follow-up: **#99 CLOSED** (implemented `d614afd`, success-only cache store + 7 regression locks); #100–#103, #105 open.
+- **cdk 0.19 cut** (0.18.3 still tip as of 2026-11-05) → add 0.19 arm to conformance-v2; re-run must-gap + spend-matrix against: sig-only HTLC (cf already OK — expect green), Paid-gated melt, restore-empty-200, null-id WS errors, bstr-`pe` V4 (wallet-side; n/a for cf mint).
 - **cdk#2252** — item 6 now fixed on main; our posted comment stays accurate; expect maintainer close → watch script flags.
 - **cashu-ts v5 line** (rc.12 on the upstream-watch lane) — when stable, the ISSUE-110 canary lane handles it; this audit's findings don't change.
 - **nuts repo** — 19.md params wording and 29.md per-endpoint caps remain open structural questions our staged rows track.

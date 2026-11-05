@@ -1,0 +1,55 @@
+{
+ "target": "nutshell main ac1c2e0 (FakeWallet :8738)",
+ "predictions": "PREDICTIONS.md (frozen 2026-10-31)",
+ "results": [
+  {
+   "id": "S4",
+   "prediction": "2xx, \"pubkey\" key ABSENT",
+   "status": 200,
+   "body": "{\"quote\":\"01a1a963-7b65-7e41-9d2d-dd4a99863ec0\",\"request\":\"lnbc640n1p4whcql9qypqqqdqqxqrrsssp58e8wn7c2ur5tzdy5c0m5cm58cm2v7mefn4ugaktvprnuwrymymyspp5scwdeey0zty3rkr90qv0yqg8zay7hfqm0rlvst5gxgjqfdghdlgq60m4mgz37pkthzefp97w9hy4qp87ysa4z3698fedffxe55lqdapxd4cqpcdngxml6ev5872tf2fswmt",
+   "verdict": "PASS"
+  },
+  {
+   "id": "S0",
+   "prediction": "200 swap",
+   "status": 200,
+   "body": "{\"signatures\":[{\"id\":\"01f25d51165da27cba4eb0f502c3fa146a36d2fbba266c37c28a1078414c394800\",\"amount\":32,\"C_\":\"02adff9b44fe0216b44674f40299b9ab5457316579e2dfc01a4cddbb16c8e16aac\",\"dleq\":{\"e\":\"5dfd98aedd6d549e63e54324f0b5092db162843465dbae8361b9a7fe63b281cc\",\"s\":\"fd09cd428611dc0c218c",
+   "verdict": "PASS"
+  },
+  {
+   "id": "S5",
+   "prediction": "400 {\"detail\":\"63\",\"code\":0} (KeyError leak)",
+   "status": 400,
+   "body": "{\"detail\":\"63\",\"code\":0}",
+   "verdict": "PASS"
+  },
+  {
+   "id": "S1a",
+   "prediction": "400 {\"detail\":\"no signatures in proof.\",\"code\":11000}",
+   "status": 400,
+   "body": "{\"detail\":\"no signatures in proof.\",\"code\":11000}",
+   "verdict": "PASS"
+  },
+  {
+   "id": "S1b",
+   "prediction": "400 {\"detail\":\"witness could not be parsed.\",\"code\":11000}",
+   "status": 400,
+   "body": "{\"detail\":\"witness could not be parsed.\",\"code\":11000}",
+   "verdict": "PASS"
+  },
+  {
+   "id": "S2",
+   "prediction": "400 {\"detail\":\"keyset balance is insufficient...\",\"code\":11000}",
+   "status": 400,
+   "body": "{\"detail\":\"keyset balance is insufficient for redemption\",\"code\":11000}",
+   "verdict": "PASS"
+  },
+  {
+   "id": "S3",
+   "prediction": "422 string_too_long @ inputs[0].secret, no code field",
+   "status": 422,
+   "body": "{\"detail\":[{\"type\":\"string_too_long\",\"loc\":[\"body\",\"inputs\",0,\"secret\"],\"msg\":\"String should have at most 1024 characters\",\"ctx\":{\"max_length\":1024}}]}",
+   "verdict": "PASS"
+  }
+ ]
+}
