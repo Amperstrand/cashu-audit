@@ -222,3 +222,11 @@ lessons; finding details live in the findings docs + registry.
   FACTOR type, not a P2PK key — the entire retracted NUT-13 claim
   chain started there. When a name sounds like domain X, check the
   type's actual consumers before filing prose about it.
+
+### 2026-11-07 addendum — read the linked deliverables before rebuilding
+- The "read HEAD before writing" rule extends to research DOCS: an
+  issue's ecosystem context (a filed issue referencing
+  `research/FINDINGS-…`) is the first place to look before launching a
+  duplicate matrix build. Cost when skipped: ~2h re-deriving an
+  existing deliverable; the saving grace was landing only the delta
+  (4 new vectors) instead of re-landing the matrix.
