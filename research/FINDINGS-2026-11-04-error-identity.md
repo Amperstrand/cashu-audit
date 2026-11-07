@@ -257,3 +257,25 @@ New divergence notes (owner-gated registry candidates):
 - melt-quote unit-unsupported: gonuts 11013 (spec-aligned) vs cdk
   50000 (unspec'd catch-all) vs nutshell code-0 — same fork shape as
   P09 but on the melt side; cashu-cf row TBD (needs the testnut leg).
+
+### Addendum 2 (2026-11-07 evening): melt-quote-unit cf cell + the ⚠️ keyset-state rows measured
+
+- **melt-quote/unsupported-unit — four-way, no two alike**: gonuts
+  `11013` (spec) / cdk `50000` / nutshell `code 0` / **cashu-cf
+  (testnut, Nutshell-CF/0.0.1) `400 14005` "Only sat and usd units
+  are supported"**. Same fork shape as P09 on the melt side; garbage
+  invoice re-confirmed `14005` (matches P14).
+- **12002 inactive-keyset output — CONVERGENT row**: cdk 0.18.2
+  `400 12002 "Inactive Keyset"` · nutshell 0.21.0 `400 12002
+  "keyset is inactive, cannot sign messages"` · gonuts@24d9da8
+  `400 12002 "requested signature from inactive keyset"` (staged via
+  `mint-cli rotatekeyset`, admin socket). All three spec-aligned with
+  distinct detail strings.
+- **12003 expired-keyset — three-way split, one structural absence**:
+  cdk `400 12003 "Keyset has expired"` (spec-aligned) · nutshell
+  **`200` — signs; no expiry enforcement** (wire-confirmed Oct-2026
+  finding) · **gonuts: structurally N/A** — no `ExpiredKeyset` code /
+  no `final_expiry` concept anywhere in `cashu/cashu.go` · cashu-cf:
+  not constructible today (no keyset in testnut `/v1/keysets` carries
+  `final_expiry`; all null). Raw rows:
+  `private/error-identity/rows-addendum2.json`.
