@@ -1,0 +1,20 @@
+{
+ "id": "nut18probe1",
+ "memo": "spelling probe",
+ "mint": "http://127.0.0.1:28086",
+ "unit": "sat",
+ "proofs": [
+  {
+   "amount": 2,
+   "id": "0115f753f486af11d63cd977295c3fbb82df3e6799022e3f9acc1f30a0eaa919ab",
+   "secret": "59161a541f431e03d053a602aa1fe9998b872a6f1dc04e0cdda4a669f1913d85",
+   "C": "02e81e55f105635dfaacb63927ecec35146644f564dff5720c412dab4ce3bac5f6"
+  },
+  {
+   "amount": 4,
+   "id": "0115f753f486af11",
+   "secret": "fe0debce95e5508e3a1dc9978fb777e36c4e16833ff3433dc02046ea4da3a1db",
+   "C": "02ea8944ba9ef6e519b2dd39ec2d8958addf2b0035e30b52024a9249bb40b4205c"
+  }
+ ]
+}

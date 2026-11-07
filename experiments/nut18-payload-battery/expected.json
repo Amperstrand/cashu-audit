@@ -1,0 +1,60 @@
+{
+  "comment": "Frozen expected verdicts — nut18-payload-battery. Exact error identities (status + detail + code) asserted verbatim; family regexes forbidden. Sources: FINDINGS-2026-10-31-nut18-payload-spelling.md (P1-P12, 2026-10-31), SURVEY-2026-10-31 (PN1-PN5), FINDINGS-2026-11-01 (PE1-PE4), 0.22.1 checkpoint (PR-A..D, 2026-11-07). Update ONLY with a frozen-prediction probe run recorded in the mirror.",
+  "versions": {
+    "cdk": "0.18.2 (=0.18.3; payload struct unchanged on main 8006cc30)",
+    "cashu-ts": "v5.0.0-rc.9 (v4.11.0 has no runtime payload consumer)",
+    "nutshell": "0.20.3/0.21.0/0.22.1 (all cells re-verified on 0.22.1)"
+  },
+  "payload_parse_matrix": {
+    "runner": "runners/run_cdk_parse.sh + runners/run_ts_decode.mjs",
+    "fixtures": ["payload_full66.json", "payload_short16.json", "payload_v1era16.json", "payload_overlong18.json", "payload_mixed.json", "payload_nullfields.json"],
+    "cdk": {
+      "payload_full66.json": "PASS",
+      "payload_short16.json": "FAIL NUT02: ID length invalid, expected 8 bytes (short/v1) or 33 bytes (v2)",
+      "payload_v1era16.json": "PASS (V1-era Id boundary)",
+      "payload_overlong18.json": "FAIL NUT02: ID length invalid, expected 8 bytes (short/v1) or 33 bytes (v2)",
+      "payload_mixed.json": "FAIL NUT02: ID length invalid, expected 8 bytes (short/v1) or 33 bytes (v2)",
+      "payload_nullfields.json": "PASS (Option<String> accepts null)"
+    },
+    "cashu_ts_decodePayload": {
+      "payload_full66.json": "PASS",
+      "payload_short16.json": "PASS (shape-only; id any string)",
+      "payload_v1era16.json": "PASS",
+      "payload_overlong18.json": "PASS",
+      "payload_mixed.json": "PASS",
+      "payload_nullfields.json": "FAIL invalid payment payload: id must be a string (memo:null variant: 'memo must be a string')"
+    }
+  },
+  "settlement_matrix": {
+    "runner": "runners/run_ts_settlement.mjs (needs live arm for keysets)",
+    "cashu_ts_isPaymentRequestSatisfied": {
+      "short16": "THROW Proof has unrecognised keyset. '<short16>' is not a sat keyset from this mint",
+      "full66": "TRUE (fee-aware: sum - inputFees >= request + mf)",
+      "capture_nutshell_wire_0210.json": "THROW Proof has unrecognised keyset (emission carries short ids)",
+      "capture_nutshell_wire_0221.json": "THROW Proof has unrecognised keyset",
+      "capture_cdk_wire.json": "THROW invalid payment payload: memo must be a string (cdk emits memo:null)"
+    }
+  },
+  "mint_side_spelling": {
+    "runner": "runners/mint_side_probe.py (needs live arm)",
+    "nutshell_0210_0221": {
+      "inputs_full66": "200",
+      "inputs_short16": "400 detail='keyset <id> unknown' code=0",
+      "outputs_short16": "400 detail='keyset id unknown.' code=11000",
+      "checkstate": "200 (Y-only wire shape; id spelling not consultable; extra fields ignored)"
+    },
+    "cdk_mintd": "full required (src: verification.rs exact HashSet<Id>) — inputs+outputs refused",
+    "cashu_cf": "full required (src: fee-resolver registry exact match; 404-vs-400 outlier rowed)"
+  },
+  "expiry_cells": {
+    "runner": "runners/expiry_recipe.md (needs live arm with mgmt-RPC)",
+    "rotation_past_expiry": "accepted; listed active:true, fee as given (0.21.0 AND 0.22.1)",
+    "mint_signs_expired_active": "200 + signatures",
+    "cashu_ts_bound_mint": "SUCCEEDS (expiry = preference-sort input only; gate is isActive)",
+    "cdk_cli_unprompted_mint": "SUCCEEDS on cheapest keyset — assert selected keyset via sent token i (covered upstream: cdk#2755 + PR #2800)"
+  },
+  "emission_watch": {
+    "nutshell_cli_pay_payload": "SHORT 16-hex ids + no dleq on the wire (0.20.3-0.22.1; mechanism: cli.py V4-token round-trip, TokenV4Token.proofs id=i.hex())",
+    "cdk_cli_pay_request_payload": "FULL 66-hex ids + dleq; id/memo serialized as JSON null when unset"
+  }
+}
