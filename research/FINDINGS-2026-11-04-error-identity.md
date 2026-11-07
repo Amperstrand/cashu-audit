@@ -186,3 +186,44 @@ same-day pristine-main baseline):
   cashu-cf 2/8 on this family); with gonuts green the family's first
   fully-spec-aligned arm exists, and the P04/P05/P06/P01/P02 identities
   now agree gonuts↔cdk on codes.
+
+## UPDATE 2026-11-07 (ii) — cashu-cf arm fixed on branch (PR #116)
+
+The cashu-cf column is fixed on `Amperstrand/cashu-cf` branch
+`fix/error-identity-audit68`
+([PR #116](https://github.com/Amperstrand/cashu-cf/pull/116), ISSUE-148,
+off main `2e3c5cf9` — which already carries ISSUE-138 phases 1+2, so the
+branch starts from 3/8 locally, not the audit snapshot's 2/8).
+Wire-verified on a local `wrangler dev` FakeWallet arm shaped like the
+deployed testnut (`ENABLE_USD_BACKEND=true` overlay, sat-only keysets;
+identity `Nutshell-CF/0.0.1` checked at run start; capture
+`conformance/results/error-identity/cashucf-errid-local-20261107-*.json`;
+report `conformance/reports/matrix-cashucf-fix-error-identity-2026-11-07.md`):
+
+- **Spec-aligned**: P01 unknown keyset 14005→**12001**; P04 underfunded
+  10000 (audit: 11001)→**11005**; P05 spent 14005-on-the-live-path (the
+  T1-locked `setPendingBatch` wrapper hid the ProofStateError from the
+  router's instanceof branch; audit measured 30001 pre-phase-1)→**11001**;
+  P06 fresh-inputs+signed-outputs 200-restore-replay→**400/11003** with
+  the restore now gated on inputs-consumed (retry/concurrent-duplicate
+  replay unchanged; inputs provably not burned — cashu-cf spend-matrix
+  S13b); P09 unit-usd 200-sat-invoice→**400/11013** by validating the
+  quote unit against ACTIVE KEYSETS, not just `ENABLE_USD_BACKEND` (the
+  deployed testnut's flag-on/keysets-sat-only mismatch is ISSUE-014's
+  class; ISSUE-148 documents the tension and the config-side follow-up
+  instead of silently deciding). Bonus same-class alignment: P07/P08
+  forged/non-hex C 14005→**10001** (envelope shape unchanged).
+- **Unaffected**: P02 11007 and P15 exact-replay 200 byte-identical
+  (NUT-19 cache, untouched); detail messages and legacy `error` slugs
+  frozen everywhere (characterization suites green unmodified).
+- **Scenario suite**: nut00_error_identity family **8/8** on the branch
+  (pristine-main same-env baseline **3/8**); full 130-row suite run on
+  BOTH arms — row-identical except exactly the five errid rows clearing
+  (the baseline arm is the mutation-check red side). Cashu-cf-side locks:
+  spend-matrix 18/18 (S1/S2 re-locked to 10001; new S11–S14), unit
+  families for every changed verdict.
+- Fleet score after gonuts PR #55 + this PR: **two arms fully green on
+  the errid family** (gonuts, cashu-cf); cdk 6/8 and nutshell 6/8 remain
+  (cdk's P07/P08 422-serde escape class; nutshell's P01/P04 bare-11000
+  class). Post-deploy re-verification of the DEPLOYED testnut arm is
+  queued in cashu-cf ISSUE-148 (Open Question).

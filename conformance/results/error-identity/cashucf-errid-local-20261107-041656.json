@@ -1,0 +1,125 @@
+{
+ "label": "cashucf-errid-local",
+ "url": "http://127.0.0.1:8799 (wrangler dev --env local, FakeWallet, MINT_PRIVATE_KEY-derived keysets, sat-only; --var ENABLE_USD_BACKEND:true to mirror deployed testnut)",
+ "identity": {
+  "name": "Local Dev Mint",
+  "version": "Nutshell-CF/0.0.1"
+ },
+ "captured_at": "2026-11-07T04:16:56",
+ "provenance": {
+  "main_baseline": "Amperstrand/cashu-cf origin/main @ 2e3c5cf9 (post ISSUE-138 phases 1+2)",
+  "branch": "Amperstrand/cashu-cf fix/error-identity-audit68 @ 28f08ca5 (PR #116, ISSUE-148)",
+  "driver": "conformance/scenarios/nut00_error_identity.py via one-off family runner (same execute path as run_filtered.py)",
+  "env_note": "testnut-shaped: USD env flag ON, keysets sat-only \u2014 the deployed P09 divergence shape. NUT19 cache OFF locally (env.local default)."
+ },
+ "family": {
+  "main_baseline": {
+   "errid_swap_unknown_keyset_code_12001": {
+    "verdict": "FAIL",
+    "note": "want 12001, got http=400 code=14005: error='invalid_request' code=14005 detail='Invalid output keyset id: 0000000000000000'"
+   },
+   "errid_swap_duplicate_inputs_code_11007": {
+    "verdict": "PASS",
+    "note": "want 11007, got http=400 code=11007: error='duplicate_proof' code=11007 detail='Duplicate proof secret: 3658890968d36d71\u2026'"
+   },
+   "errid_swap_underfunded_code_11005": {
+    "verdict": "FAIL",
+    "note": "want 11005, got http=400 code=10000: error='invalid_amount' code=10000 detail='inputs (8) - outputs (16) available for fees (-8) is less than required (0).'"
+   },
+   "errid_swap_spent_proofs_code_11001": {
+    "verdict": "FAIL",
+    "note": "want 11001, got http=400 code=14005: error='invalid_request' code=14005 detail='Failed to batch set proofs to PENDING: ProofStateError: Cannot change state of a spent proof.'"
+   },
+   "errid_swap_outputs_already_signed_code_11003": {
+    "verdict": "FAIL",
+    "note": "want 11003, got http=200 code=no-code ({'signatures': [{'id': '009681fdda1842b8', 'amount': 8, 'C_'):  rest={'signatures': [{'id': '009681fdda1842b8', 'amount': 8, 'C_': '02e5956c901542585612d252cedbc501a98bf4d25719a649a"
+   },
+   "errid_mint_quote_unit_unsupported_code_11013": {
+    "verdict": "FAIL",
+    "note": "want 11013, got http=200 code=no-code ({'quote': '01a1b3ee-8bb0-77d2-9473-50a473f43314', 'request':): state='UNPAID' rest={'quote': '01a1b3ee-8bb0-77d2-9473-50a473f43314', 'request': 'lnbc640n1qyqqqqzql9yd336lnva690ffevh"
+   },
+   "errid_validation_error_nut00_envelope": {
+    "verdict": "PASS",
+    "note": "want 400+{detail,code}, got http=400 code=14005: error='invalid_request' code=14005 detail='Proof verification failed at index 0: Input string must contain hex characters in even length'"
+   },
+   "errid_p2pk_wrong_witness_reasoned_rejection": {
+    "verdict": "PASS",
+    "note": "got 403: error='spending_condition_not_met' code=30006 detail='Signature threshold not met. 0 < 1'"
+   }
+  },
+  "branch": {
+   "errid_swap_unknown_keyset_code_12001": {
+    "verdict": "PASS",
+    "note": "want 12001, got http=400 code=12001: error='invalid_request' code=12001 detail='Invalid output keyset id: 0000000000000000'"
+   },
+   "errid_swap_duplicate_inputs_code_11007": {
+    "verdict": "PASS",
+    "note": "want 11007, got http=400 code=11007: error='duplicate_proof' code=11007 detail='Duplicate proof secret: faa1e3d762f6ed8c\u2026'"
+   },
+   "errid_swap_underfunded_code_11005": {
+    "verdict": "PASS",
+    "note": "want 11005, got http=400 code=11005: error='invalid_amount' code=11005 detail='inputs (8) - outputs (16) available for fees (-8) is less than required (0).'"
+   },
+   "errid_swap_spent_proofs_code_11001": {
+    "verdict": "PASS",
+    "note": "want 11001, got http=400 code=11001: error='token_already_spent' code=11001 detail='Failed to batch set proofs to PENDING: ProofStateError: Cannot change state of a spent proof.'"
+   },
+   "errid_swap_outputs_already_signed_code_11003": {
+    "verdict": "PASS",
+    "note": "want 11003, got http=400 code=11003: error='outputs_already_signed' code=11003 detail='Outputs have already been signed before: 0269ea2efa351a87...'"
+   },
+   "errid_mint_quote_unit_unsupported_code_11013": {
+    "verdict": "PASS",
+    "note": "want 11013, got http=400 code=11013: error='unsupported_unit' code=11013 detail='No active keyset for unit \"usd\". Active units: sat'"
+   },
+   "errid_validation_error_nut00_envelope": {
+    "verdict": "PASS",
+    "note": "want 400+{detail,code}, got http=400 code=10001: error='invalid_request' code=10001 detail='Proof verification failed at index 0: Input string must contain hex characters in even length'"
+   },
+   "errid_p2pk_wrong_witness_reasoned_rejection": {
+    "verdict": "PASS",
+    "note": "got 403: error='spending_condition_not_met' code=30006 detail='Signature threshold not met. 0 < 1'"
+   }
+  },
+  "totals": {
+   "main_baseline": "3/8",
+   "branch": "8/8"
+  }
+ },
+ "full_suite_130": {
+  "totals": {
+   "main_baseline": "112 PASS / 11 FAIL / 130",
+   "branch": "117 PASS / 6 FAIL / 130"
+  },
+  "only_rows_differing": {
+   "errid_mint_quote_unit_unsupported_code_11013": {
+    "main": "FAIL",
+    "branch": "PASS"
+   },
+   "errid_swap_outputs_already_signed_code_11003": {
+    "main": "FAIL",
+    "branch": "PASS"
+   },
+   "errid_swap_spent_proofs_code_11001": {
+    "main": "FAIL",
+    "branch": "PASS"
+   },
+   "errid_swap_underfunded_code_11005": {
+    "main": "FAIL",
+    "branch": "PASS"
+   },
+   "errid_swap_unknown_keyset_code_12001": {
+    "main": "FAIL",
+    "branch": "PASS"
+   }
+  },
+  "residual_branch_fails_preexisting_on_main": [
+   "melt_replay_returns_cached_response",
+   "mint_info_nut19_supported",
+   "mint_never_signs_keyless_amount",
+   "secret_encoding_entropy_trap_rejected",
+   "swap_never_signs_keyless_amount",
+   "swap_replay_returns_cached_response"
+  ]
+ }
+}
