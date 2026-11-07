@@ -86,6 +86,24 @@ resolution is wallet-side at token decode, token.rs:319/455).
   0.18.3 unchanged.
 - main (8006cc30): `Id`/serde region unchanged.
 
+## nutshell 0.22.1 checkpoint (2026-11-07, live)
+
+New-release re-verification (frozen PR-A–D, all confirmed; two probe
+artifacts triaged, one non-finding): same mnemonic → same boot keyset
+id; short-id INPUTS still 400 `keyset <id> unknown` code 0; short-id
+OUTPUTS still 400 `keyset id unknown.` code 11000 (earlier
+divergent-looking identities were probe artifacts — garbage-C inputs
+hit the input pubkey-parse first, and a sig-pairing slip; real-Cs
+redo reproduces the 0.21.0 identity exactly); CLI `pay` payload still
+carries SHORT 16-hex ids + no dleq on the wire (707B capture). A
+rotated keyset's id differing across arms triaged to NON-finding:
+`final_expiry` is in the NUT-02 preimage and the two rotations used
+different past timestamps (live confirmation the id hashes the
+expiry). Past-expiry rotation passthrough persists (listed
+`active: true`, fee 0). No payee-side payload consumer added.
+Version spans above now read "0.20.3/0.21.0/0.22.1" for every
+nutshell row.
+
 ## Survey verdicts (what #43 asked, answered)
 
 1. V3 spelling per wallet: cdk short, nutshell full (V3 path) /

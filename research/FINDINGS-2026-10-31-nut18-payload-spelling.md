@@ -12,6 +12,12 @@ and harnesses: `private/nut18-live/`, `private/nut13-verify/`
 settlement interop divergences only, publishable per the 2026-10-27
 rule.
 
+**nutshell 0.22.1 checkpoint (2026-11-07, live):** all findings
+re-verified on the released tag — payload emission still SHORT ids
++ no dleq (wire capture), mint-side identities identical (code 0
+inputs / 11000 outputs), past-expiry rotation passthrough persists,
+no payee-side payload consumer added. Version span: 0.20.3–0.22.1.
+
 ## 1. NUT-18 payload `proofs` id-spelling — live matrix (prediction-gated)
 
 Frozen predictions P1–P12 written before any run (mirror doc). Results:
