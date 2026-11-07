@@ -227,3 +227,33 @@ report `conformance/reports/matrix-cashucf-fix-error-identity-2026-11-07.md`):
   (cdk's P07/P08 422-serde escape class; nutshell's P01/P04 bare-11000
   class). Post-deploy re-verification of the DEPLOYED testnut arm is
   queued in cashu-cf ISSUE-148 (Open Question).
+
+## Addendum 2026-11-07 (overnight battery, fresh-capture confirmation + 4 new vectors)
+
+Independent re-run of the battery (private/error-identity/battery.py,
+24 vectors) against gonuts @ `24d9da8` (the remediation branch, post
+`fix(mint): error-identity alignment`), cdk-mintd 0.18.2, nutshell
+0.21.0 — all captured identities match the matrix above and the
+matrix-gonuts-fix-2026-11-07 run row-for-row (fresh reproduction of
+the fixed 11003/11005/11006/11013/41xxx identities on the branch).
+Raw rows: `private/error-identity/rows-*.json`.
+
+Four vectors outside the original battery (three-way fresh rows):
+
+| Vector | gonuts @24d9da8 | cdk 0.18.2 | nutshell 0.21.0 |
+|---|---|---|---|
+| checkstate/empty `{"Ys":[]}` | **connection closed, no HTTP response** (crash-class; cf. STREAM-STALL #32) | 400 `50000` `Empty IN clause for placeholder: ys` | **200, empty states** |
+| GET /v1/keys/{unknown 66-hex} | 400 `12001` unknown keyset | 400 **no code** (`Invalid URL: NUT02: ID length invalid…`) | 400 `12001` keyset not found |
+| swap oversized `B_` (64B hex) | 400 `10001` invalid proof | **422 deserialize-layer** | 400 `10001` proofs could not be verified |
+| melt/quote unsupported unit | 400 `11013` | **400 `50000` Invalid payment method** | 400 **code 0** `'xxx'` |
+
+New divergence notes (owner-gated registry candidates):
+- **gonuts empty-`Ys` connection-close** is a liveness class (no
+  response at all) — distinct from cdk's clean 400 and nutshell's
+  permissive 200-empty; three-way split on a spec-underspecified edge.
+- cdk emits **no `code`** on `/v1/keys/{id}` URL-level rejections
+  (detail string only) — the NUT-00 envelope {code,detail} is not
+  maintained on that path.
+- melt-quote unit-unsupported: gonuts 11013 (spec-aligned) vs cdk
+  50000 (unspec'd catch-all) vs nutshell code-0 — same fork shape as
+  P09 but on the melt side; cashu-cf row TBD (needs the testnut leg).
