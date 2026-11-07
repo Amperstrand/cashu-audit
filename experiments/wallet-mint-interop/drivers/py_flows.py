@@ -63,15 +63,7 @@ async def main():
         try:
             preimage = secrets.token_bytes(32).hex()
             hash_hex = hlib.sha256(bytes.fromhex(preimage)).hexdigest()
-            # Nutshell 0.20.3 has no native HTLC wallet API — construct the
-            # well-known secret manually (NUT-14: [" HASHLOCK", hash_hex])
-            htlc_secret = json.dumps([" HASHLOCK", hash_hex])
-            locked = await w.mint(64)  # get proofs to lock
-            # Send to self with HTLC lock via the swap endpoint
-            # (proper HTLC locking requires wallet support that Nutshell 0.20.3 lacks)
-            result.verdict = "SKIP"
-            result.reason = "Nutshell 0.20.3 has no create_htlc_lock — HTLC wallet flow requires manual proof construction"
-            finish(127)
+            locked = await w.create_htlc_lock(64, hash_hex)
             log("htlc locked:", type(locked).__name__)
             # spend with preimage
             unlocked = await w.add_htlc_preimage_to_proofs(locked, preimage)
@@ -86,23 +78,13 @@ async def main():
             preimage = secrets.token_bytes(32).hex()
             hash_hex = hlib.sha256(bytes.fromhex(preimage)).hexdigest()
             past_lock = 1700000000  # well in the past
-            result.verdict = "SKIP"
-            result.reason = "Nutshell 0.20.3 has no create_htlc_lock — HTLC refund flow requires manual proof construction"
-            finish(127)
+            locked = await w.create_htlc_lock(64, hash_hex, locktime=past_lock, refund_pubkey=None)
             log("htlc refund locked:", type(locked).__name__)
             result["verdict"] = "PASS"; finish(0)
         except TypeError as e:
             log("TYPE_ERR, trying without locktime:", repr(e)[:150])
             try:
-                # Nutshell 0.20.3 has no native HTLC wallet API — construct the
-            # well-known secret manually (NUT-14: [" HASHLOCK", hash_hex])
-            htlc_secret = json.dumps([" HASHLOCK", hash_hex])
-            locked = await w.mint(64)  # get proofs to lock
-            # Send to self with HTLC lock via the swap endpoint
-            # (proper HTLC locking requires wallet support that Nutshell 0.20.3 lacks)
-            result.verdict = "SKIP"
-            result.reason = "Nutshell 0.20.3 has no create_htlc_lock — HTLC wallet flow requires manual proof construction"
-            finish(127)
+                locked = await w.create_htlc_lock(64, hash_hex)
                 result["verdict"] = "PASS"; finish(0)
             except Exception as e2:
                 result.update(verdict="FAIL", reason=f"htlc_refund: {e2!r}"[:250]); finish(1)

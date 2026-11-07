@@ -1,8 +1,6 @@
 // cashu-ts v4 interop driver — correct API usage from probe
 // Contract: exit 0 PASS / 1 FAIL / 127 SKIP
-const bigIntSafe = (o) => JSON.stringify(o, (_, v) => typeof v === 'bigint' ? Number(v) : v);
 import { writeFileSync, appendFileSync, mkdirSync, readFileSync } from 'node:fs';
-const bigIntSafe = (o) => JSON.stringify(o, (_, v) => typeof v === 'bigint' ? Number(v) : v);
 import { generateKeyPairSync } from 'node:crypto';
 
 const MINT = process.env.MINT_URL;
@@ -71,7 +69,7 @@ async function main() {
       root._request = async (opts) => {
         const body = opts?.requestBody ?? opts?.body;
         if (body) {
-          const bodyStr = typeof body === 'string' ? body : bigIntSafe(body);
+          const bodyStr = typeof body === 'string' ? body : JSON.stringify(body);
           appendFileSync(ART + '/wire.ndjson', JSON.stringify({t: Date.now(), via: path, endpoint: opts?.endpoint ?? opts?.url ?? '?', method: opts?.method ?? 'POST', body: bodyStr}) + '\n');
         }
         return origReq(opts);
