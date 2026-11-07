@@ -59,6 +59,10 @@ async def main():
             result.update(verdict="FAIL", reason=f"p2pk: {e!r}"[:250]); finish(1)
 
     if flow == "htlc_receive":
+        if not hasattr(w, "create_htlc_lock"):
+            result.verdict = "SKIP"
+            result.reason = "Nutshell 0.20.3 has no create_htlc_lock API"
+            finish(127)
         proofs = await get_proofs(64)
         try:
             preimage = secrets.token_bytes(32).hex()
@@ -73,6 +77,10 @@ async def main():
             result.update(verdict="FAIL", reason=f"htlc: {e!r}"[:250]); finish(1)
 
     if flow == "htlc_refund":
+        if not hasattr(w, "create_htlc_lock"):
+            result.verdict = "SKIP"
+            result.reason = "Nutshell 0.20.3 has no create_htlc_lock API"
+            finish(127)
         proofs = await get_proofs(64)
         try:
             preimage = secrets.token_bytes(32).hex()
