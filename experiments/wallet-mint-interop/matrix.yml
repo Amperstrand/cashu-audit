@@ -1,9 +1,8 @@
-run_name: cashu-cf-interop-001
+run_name: cashu-cf-full-001
 max_parallel: 2
 
 mints:
   - {name: cashu-cf-testnut, family: url, url: "https://testnut.cashu.exchange"}
-  - {name: cdk-0.18.3, family: cdk, image: "cashubtc/mintd:0.18.3"}
 
 wallets:
   - {name: cashu-ts-v4, driver: node, image: "node:20-slim", install: "@cashu/cashu-ts@^4"}
@@ -12,4 +11,4 @@ wallets:
     image: "cashubtc/nutshell:0.20.3"
     install: "none"
 
-flows: [mint_swap, p2pk_send_spend]
+flows: [mint_swap, p2pk_send_spend, htlc_receive, htlc_refund]
