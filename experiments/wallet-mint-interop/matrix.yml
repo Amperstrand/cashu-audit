@@ -1,4 +1,4 @@
-run_name: cashu-cf-full-001
+run_name: cashu-cf-interop-fixed
 max_parallel: 2
 
 mints:
