@@ -58,3 +58,12 @@ main `Id`/keyset regions unchanged). Upstream NUTs frozen @ 1363de4
 Registry: row "final_expiry enforcement diverges mint-side…"
 updated with the three-family wallet-leg completion + the cdk
 selection trap.
+
+**nutshell 0.22.1 checkpoint (2026-11-07, live):** past-expiry
+rotation passthrough re-verified on the released tag (`next-keyset
+sat 0 8 <past>` → listed `active: true`, fee 0; mint signs
+expired-active); the rotated keyset's id differing from the 0.21.0
+arm's triaged to NON-finding — `final_expiry` is in the NUT-02 id
+preimage and the two rotations used different past timestamps
+(live confirmation rotation ids hash the expiry). Evidence:
+`PREDICTIONS-ns0221-checkpoint.md` (mirror).
