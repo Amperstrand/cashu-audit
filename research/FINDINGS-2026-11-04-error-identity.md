@@ -148,3 +148,41 @@ spend with a reasoned detail. **No numeric error code in the probed set
 is emitted identically by all four implementations.** The practically
 parseable subset: 400+`{detail,code}` envelope (gonuts, nutshell, cf
 superset) with cdk's 422 serde escapes as the outlier class.
+
+## UPDATE 2026-11-07 — gonuts arm fixed on branch (PR #55)
+
+The gonuts column's hybrid scheme is fixed on
+`OpenTollGate/gonuts-tollgate` branch `fix/error-identity`
+([PR #55](https://github.com/OpenTollGate/gonuts-tollgate/pull/55), off
+main `e3dfc63` = v0.16.0). Wire-verified on the branch arm
+(`conformance/results/error-identity/gonuts-errid-branch-*.json`;
+identity `gonuts/0.4.0` checked at run start; full-matrix reports
+`conformance/reports/matrix-gonuts-fix-error-identity-2026-11-07.md` +
+same-day pristine-main baseline):
+
+- **Spec-aligned**: P04 underfunded 11002→**11005**; P06 outputs-signed
+  10002→**11003**; P09 unit 11005→**11013**; P07 forged-C 10003→**10001**
+  (and the parse-luck 10000s — P08 non-hex C now also 10001, killing the
+  payload-dependent identity); P10 zero-amount 20010→**11006**; pending
+  proofs de-conflated from spent (11001→**11002** — spent and pending
+  are distinguishable for the first time).
+- **Vacated spec blocks**: the spec-unassigned classes moved to a
+  documented private 41xxx block outside every spec-allocated range —
+  41001 payment-method (was 11003), 41002 quote-not-exist (was 20009 =
+  NUT-20), 41003 melt-quote request validation incl. invalid invoice
+  (was 20009), 41004 melt-quote-exists (was 20009), 41011 NUT-11
+  witness (was 30001 = NUT-21 clear-auth), 41014 NUT-14 HTLC (was
+  30004). Details unchanged on every path.
+- **Unaffected**: P01 12001, P02 11007, P05 11001 as before; NUT-19
+  exact-replay still 200 byte-identical (P15).
+- **Scenario suite**: nut00_error_identity family **8/8** on the branch
+  (was 5/8); 130-row matrix row-by-row identical to the pristine-main
+  baseline except exactly the 3 errid rows clearing. Mutation-checked
+  both sides: the Go fence (revert UnitErrCode →
+  TestErrorCodesMatchSpecTable/Values red) and the rig (rebuilt mutant
+  mint → exactly errid_mint_quote_unit_unsupported_code_11013 red, other
+  7 green).
+- The other three arms' columns are unchanged (cdk 6/8, nutshell 6/8,
+  cashu-cf 2/8 on this family); with gonuts green the family's first
+  fully-spec-aligned arm exists, and the P04/P05/P06/P01/P02 identities
+  now agree gonuts↔cdk on codes.
