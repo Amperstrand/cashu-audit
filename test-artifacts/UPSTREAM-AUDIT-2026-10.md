@@ -206,4 +206,27 @@ Legend: ✅ have / aligned · 🔶 diverges (document or decide) · ❌ gap · �
 - **Incident note (handoff):** the first report draft + initial registry annotations (written ~2026-10-28/29 session) were **lost uncommitted** when the repo was pulled forward to `329878e` during the unattended window (working tree reset + clean; no stash; `experiments/keyset-rotation-rung/` appeared from the other lane — untouched). Recovered from session context; the rewrite incorporates the interim upstream events (cdk v0.18.3, `329878e` pe recheck, `9b4361e` Host-header probe). GitHub issues #99–#103 were server-side and unaffected. **Lesson for the next pass: commit or stash audit artifacts before yielding the session.**
 - Blocked-on-owner items (recorded, not blocking): decision memo for §4.8 (keyset-balance invariant); re-scope/drop decision for `private/UPSTREAM-nutshell-multimint-fallback.md`; the pe/`#2252` registry rows now say "fixed on main" — no owner action needed unless the owner wants the drafts deleted.
 
-*Evidence: cdk FETCH_HEAD=3523c8a9 (rechecked vs v0.18.3 via repo commit 329878e), ns main=ac1c2e0, cashu-cf=67285b2. Source-verified citations inline; no cashu-cf files were modified.*
+## 7. Surface addendum 2026-11-07 — NUT-12 DLEQ: fully converged, no divergence (good-news surface)
+
+First deep pass on NUT-12 (uncovered by §1–§6). **All four implementations share the identical DLEQ construction — challenge encoding, equations, AND the deterministic-nonce scheme.**
+
+**Construction identity (source-verified 2026-11-07):**
+- **Challenge:** `e = sha256(UTF-8(hex(R1_uncompressed) ‖ hex(R2_uncompressed) ‖ hex(A_uncompressed) ‖ hex(C′_uncompressed)))` — hex-STRING concat of uncompressed points:
+  - cashu-cf (via `@cashu/cashu-ts` 4.13.0): `hash_e` in lib/cashu-ts.es.js:1163-1166 (`toHex(!1).join("")`)
+  - nutshell 0.22.x: `cashu/core/crypto/b_dhke.py:120-126` (`hash_e`, `format(compressed=False).hex()`)
+  - cdk main: `crates/cashu/src/dhke.rs:70-82` (`to_uncompressed_bytes` + `hex::encode` + push_str)
+- **Equations:** `s = r + e·a`; verify via `R1 = sG − eA`, `R2 = sB′ − eC′` — identical everywhere (cashu-ts `dr`/`lr`; nutshell `step2_bob_dleq`/`alice_verify_dleq` b_dhke.py:160-186; cdk `calculate_dleq` nut12.rs:143-165).
+- **Deterministic nonce (all four):** `r = HMAC-SHA256(key=a, "Cashu_DLEQ_R_v1" ‖ A ‖ B′ ‖ C′ ‖ ctr)`, rejection-sampled to [1, n−1], ctr 0..255 — cashu-ts NUT12.ts (`sr = o("Cashu_DLEQ_R_v1")`, bundle:1742); nutshell `derive_dleq_nonce` (b_dhke.py:129-157); cdk `derive_deterministic_nonce` (nut12.rs:120-141). RNG-quality independence by construction.
+
+**cashu-cf coverage (origin/main, 2026-11-07):** dleq emitted on **every** signature path — mint (`src/cashu-signer.ts:101,139` createDLEQProof on both sign methods), swap (`src/mint/features.ts:758-759`), melt change (`src/melt/settle.ts:93` → `signBlindedMessagesWithTracking`, `src/mint/router.ts:206,240` same `createDLEQProof` import); persisted for restore replay (`src/database/schema.ts:404-405` `blinded_messages.dleq_e/dleq_s`); receive-side checks verify-if-present (`src/crypto/cashu-crypto.ts:143-161`, `verifyDLEQProof_reblind`). Matches cdk-mint/nutshell-mint behavior (always-dleq incl. NUT-08 change).
+
+**Notes (no action items):**
+- The construction is delegated wholesale to `@cashu/cashu-ts` — the **dependency version is load-bearing** for DLEQ correctness; any major bump should re-run the cross-impl verify (trivial now: one mint + one foreign verify).
+- Adjacent-but-orthogonal registry item unchanged: cdk's wallet-side dual DLEQ gates (verify-if-present vs `verify_token_dleq` requiring dleq, registry D3/`MissingDleqProof`) is **policy strictness, not construction** — convergence above does not resolve it; stays staged for the pe-serde pairing.
+- Deterministic-nonce spec status: nutshell's comment claims "Per NUT-12"; all four shipping the identical scheme (incl. cashu-ts 4.13.0) makes the DST de-facto normative regardless of 12.md wording — no venue action (already universal).
+
+*Method note: source-verified only this pass (the /tmp probe rigs were reclaimed during the session wedge); construction identity is byte-level decisive at source, and prior wire runs (experiments/ns-main-identity-probes S0 swaps, cdk-main C0/C2) exercised these code paths live.*
+
+---
+
+*Evidence: cdk FETCH_HEAD=3523c8a9 (rechecked vs v0.18.3 via repo commit 329878e), ns main=ac1c2e0, cashu-cf=67285b2 (§7 on origin/main 2026-11-07). Source-verified citations inline; no cashu-cf files were modified.*
