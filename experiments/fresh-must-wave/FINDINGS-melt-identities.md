@@ -36,3 +36,15 @@ tier (kali); recorded as the next corpus pass.
 
 cf's gate is a weak shape heuristic; both references structurally parse.
 Filed as Amperstrand/cashu-cf#110.
+
+## M5-M7 family completion attempt (2026-10-31, frozen-first) — GATED
+Predictions said ns/cdk would create melt quotes for a structurally
+valid bech32 invoice (104 all-'q' words + checksum). FALSIFIED at the
+semantic tier: ns parses the invoice and fails at the 35-bit timestamp
+read ("Cannot read 35 bits, only 0 available", code 0); cdk fakewallet
+rejects 50000 "Invalid payment method". Both references require
+SEMANTICALLY valid invoices (real timestamp+signature recovery), so the
+deep melt legs (M5/M6/M7 with live quotes, including the cdk
+witness-class identity with a genuinely-signed P2PK proof) are
+kali/regtest-tier gated, same as NUT-07 PENDING. Prediction kept
+honest: Q0 was wrong, legs not run. cf's earlier cells (M4/M5) stand.
