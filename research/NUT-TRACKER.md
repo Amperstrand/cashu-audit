@@ -38,7 +38,7 @@ Axes per NUT:
 | 09 | Restore signatures | optional | 2023-04-05→2026-10-20 | 13 | 2 | 1 | partial |
 | 10 | Spending conditions | optional | 2023-10-13→2026-10-20 | 12 | 15 | 0 | deep |
 | 11 | Pay to Public Key (P2PK) | optional | 2023-10-13→2026-10-20 | 21 | 25 | 20 | deep |
-| 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 2 | 0 | partial |
+| 12 | Offline ecash validation (DLEQ) | optional | 2023-11-05→2026-10-20 | 12 | 5 | 0 | deep |
 | 13 | Deterministic secrets | optional | 2024-03-22→2026-10-20 | 13 | 3 | 3 | partial |
 | 14 | HTLCs | optional | 2024-04-24→2026-10-20 | 11 | 12 | 10 | deep |
 | 15 | Partial multi-path payments | optional | 2024-04-24→2026-10-20 | 11 | 0 | 0 | none |
@@ -466,7 +466,8 @@ testnut≡local-main post-deploy certified. Remaining, ranked:
 4. NUT-07 UNSPENT/PENDING legs (needs a holding invoice backend —
    candidate for the kali-live box when reachable). Compounded by the
    cf never-ISSUED polling trap (deploy-vintage; certifier armed).
-5. NUT-12 DLEQ completeness acceptance matrix.
+5. ~~NUT-12 DLEQ completeness acceptance matrix~~ DONE 2026-10-31
+   (FULL three-way convergence; FINDINGS-nut12-dleq.md; card updated).
 6. ~~Multi-unit cdk arm~~ SOLVED 2026-10-31 ([[payment_backend]] per
    unit; matrix complete — see NUT-03 card). ns multi-unit n/m (low
    value).
