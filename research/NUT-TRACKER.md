@@ -298,11 +298,17 @@ Gap: locktime==now #440 (2026-09-14) — boundary-exact vectors
 deliberately avoided (nuts#431 row: "no boundary-exact data").
 Next: boundary probe if a venue opens; else parked.
 
-### NUT-12 — partial
-Hold: dleq-bypass evidence REDACTED to private/ (2026-10-27, undisclosed security finding); CHANNELS-nuts296 census;
-deterministic-nonce #368 + completeness MUST (2026-09-11) unmapped to
-arms. Gap: cdk dual-gate divergence (registry D3) unfiled.
-Next: nonce-derivation + all-or-nothing acceptance matrix.
+### NUT-12 — measured-converged (2026-10-31)
+Hold: dleq-bypass evidence REDACTED to private/ (2026-10-27, undisclosed security finding); CHANNELS-nuts296 census.
+ACCEPTANCE MATRIX DONE (FINDINGS-nut12-dleq.md, frozen-first, verifier
+selftested against spec vectors): cf/ns/cdk CONVERGE on every leg —
+nuts.12 advertised, dleq {e,s} on EVERY mint+swap BlindSignature
+(all-or-nothing holds), proofs verify per the spec hash_e (uncompressed
+ASCII-hex concat), dleq-bearing inputs accepted (200) everywhere. The
+registry D3 'cdk dual-gate' hint did not materialize on 0.18.3 wire.
+Deterministic-nonce DERIVATION (#368): not wire-observable; my local
+repro of the HMAC construction failed selftest — left untested, not
+claimed. No divergence row. Revisit only on a NUT-12 spec epoch change.
 
 ### NUT-13 — partial (intent-researched, claim corrected)
 Hold: intent research 2026-10-25 (research/NUT13-INTENT-RESEARCH-2026-10-25.md):
