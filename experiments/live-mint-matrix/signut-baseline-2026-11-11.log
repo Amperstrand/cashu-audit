@@ -1,0 +1,17 @@
+PASS  S5 no NUT-15 ad: nut15=absent
+PASS  S4 restore-empty -> 200 empty: 200 {"outputs":[],"signatures":[]}
+PASS  S6 mint/quotes 51 ids -> 400/11014: 400 {"detail":"Too many quote ids (51, max 50)","code":11014}
+PASS  S1 #118 check fields present (UNPAID): 200 ap=21 ai=0 ua=1794426598 state='UNPAID'
+PASS  S7 malformed-B_ on UNPAID quote -> recorded (ordering identity): 400 {"error":"invalid_request","detail":"Invalid B_: must be a 66-character hex compressed secp256k1 point","code"
+PASS  S11 payment rail pays 21-sat signut invoice: cln rail
+PASS  S11b quote reaches PAID: state=PAID
+PASS  S2 #118 check fields present (PAID): 200 ap=21 ai=0 ua=1794426600 state='PAID'
+FAIL  S3 GET accounting after full mint (fresh, not stale): mint=True ap=21 ai=0 ua=1794426600 state='PAID'
+FAIL  S10 updated_at bumps on issuance (check path): before=1794426600 after=1794426600 ai=21
+PASS  S8 mint_proofs (funded rail): 64 sat minted
+PASS  S8a balanced swap 200: 200 ok
+PASS  S8b swap replay cached 200 (byte-identical): 200 identical=True
+PASS  S9 self-payment fee_reserve == 1: 200 fee_reserve=1
+
+============================================================
+SIGNUT BASELINE: 12/14 PASS — RED legs: S3 GET accounting after full mint (fresh, not stale), S10 updated_at bumps on issuance (check path)
