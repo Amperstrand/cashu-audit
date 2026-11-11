@@ -53,6 +53,11 @@ def main():
     check("A2 mint/quotes 51 ids -> 400/11014", st == 400 and "11014" in b, f"{st} {b[:90]}")
 
     # NUT-04 (2026-10-31 finding): quote must read ISSUED after a successful mint
+    # NUT-04 (#118, 2026-11-11): the NUT-29 batch check endpoint (the one coco
+    # 2.0+ polls) MUST carry amount_paid/amount_issued/updated_at — coco
+    # claimability is amount_paid - amount_issued, state string not consulted;
+    # fields absent = PAID quote permanently unclaimable. Pre-deploy baseline
+    # banked in research/evidence/2026-11-11-coco-drill/wire.jsonl.
     st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": 4, "unit": "sat"})
     if st == 200:
         q3 = json.loads(b)["quote"]
@@ -60,14 +65,35 @@ def main():
             st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{q3}")
             if st == 200 and json.loads(b).get("state") == "PAID": break
             time.sleep(1)
+        st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11/check", {"quotes": [q3]})
+        ent = json.loads(b)[0] if st == 200 and b.startswith("[") else {}
+        check("NUT-04 #118 check fields present (PAID)",
+              st == 200 and ent.get("amount_paid") == 4 and ent.get("amount_issued") == 0
+              and isinstance(ent.get("updated_at"), int),
+              f"{st} ap={ent.get('amount_paid')!r} ai={ent.get('amount_issued')!r} ua={ent.get('updated_at')!r}")
         oK = out(4, kid)
         st, b = mg.http("POST", f"{base}/v1/mint/bolt11", {"quote": q3, "outputs": [oK]})
         mint_ok = st == 200
         st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{q3}")
-        s3 = json.loads(b).get("state") if st == 200 else f"err{st}"
-        check("NUT-04 quote ISSUED after mint", mint_ok and s3 == "ISSUED", f"mint={mint_ok} state={s3}")
+        g3 = json.loads(b) if st == 200 else {}
+        # Re-pinned 2026-11-11: NUT-04 PR #377 (2026-07-03) dropped the state
+        # enum as the contract — accounting is. Pre-deploy baseline (banked,
+        # research/evidence/2026-11-11-coco-drill/get-path-stale-accounting.txt):
+        # GET served state=PAID, amount_issued=0, updated_at unmoved after a
+        # full mint (stale). If this stays RED post-deploy, the staleness is
+        # live-on-main (own issue), not deploy-vintage.
+        check("NUT-04 #377-epoch GET accounting after full mint",
+              mint_ok and g3.get("amount_paid") == 4 and g3.get("amount_issued") == 4
+              and isinstance(g3.get("updated_at"), int),
+              f"mint={mint_ok} ap={g3.get('amount_paid')!r} ai={g3.get('amount_issued')!r} ua={g3.get('updated_at')!r} state={g3.get('state')!r}")
+        st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11/check", {"quotes": [q3]})
+        ent = json.loads(b)[0] if st == 200 and b.startswith("[") else {}
+        check("NUT-04 #118 check fields present (ISSUED)",
+              st == 200 and ent.get("amount_paid") == 4 and ent.get("amount_issued") == 4
+              and isinstance(ent.get("updated_at"), int),
+              f"{st} ap={ent.get('amount_paid')!r} ai={ent.get('amount_issued')!r} ua={ent.get('updated_at')!r}")
     else:
-        check("NUT-04 quote ISSUED after mint", False, f"quote create {st}")
+        check("NUT-04 #377-epoch GET accounting after full mint", False, f"quote create {st}")
 
     # B2: restore-empty -> 200 with empty arrays
     st, b = mg.http("POST", f"{base}/v1/restore", {"outputs": []})

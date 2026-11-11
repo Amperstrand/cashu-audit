@@ -1,0 +1,39 @@
+Pre-deploy identity of GET /v1/mint/quote/bolt11/{id} on testnut, banked
+2026-11-11 before the #118 deploy (probe: fresh 4-sat quote, fakewallet
+auto-pay, single full mint, then both read paths; timestamps verbatim).
+
+CREATE response and PAID-poll GET (identical accounting):
+  {"quote":"01a1cbe0-0138-767f-980b-d019f4dc9650",
+   "request":"lnbc40n1qyqqqqqylwfcupwr7dth9qm4da9xuzq9c6juz33mdner3g82lctn2luzptwx4a958yglljy",
+   "state":"PAID","amount":4,"unit":"sat","amount_paid":4,"amount_issued":0,
+   "updated_at":1794421817,"expiry":1794425417,"method":"bolt11"}
+
+POST /v1/mint/bolt11 (full mint of 4): 200, signatures served.
+
+POST-MINT GET (t+0, stable through t+5s in the delayed re-probe):
+  {"quote":"01a1cbe0-...","state":"PAID","amount":4,"unit":"sat",
+   "amount_paid":4,"amount_issued":0,"updated_at":1794421817,...}
+  -> accounting STALE: amount_issued not updated, updated_at unmoved,
+     state not transitioned, after a successful full mint.
+
+POST-MINT POST /v1/mint/quote/bolt11/check (pre-#118-fix vintage):
+  [{"quote":"01a1cbe0-...","amount":4,"unit":"sat","state":"ISSUED",
+    "expiry":1794425417}]
+  -> state ISSUED (the only path that sees issuance), accounting fields
+     stripped entirely (the #118 bug).
+
+Divergence shape pre-deploy: the two read paths disagree on BOTH axes
+(state: PAID vs ISSUED; accounting: present-but-stale vs absent).
+Current NUT-04 (#377 epoch, 2026-07-03) makes accounting the contract:
+mintable = amount_paid - amount_issued; amount_issued/updated_at MUST
+update on mint. Main's applyMintQuoteIssued (ledger/rules.ts) does all
+three in the stored quote, which the GET path serves — so the pending
+deploy is expected to unify both paths (GET: amount_issued=4,
+updated_at bumped; check: fields present). Certifier legs
+"NUT-04 #118 check fields present (PAID/ISSUED)" and
+"NUT-04 #377-epoch GET accounting after full mint" adjudicate; a
+post-deploy RED on the GET leg means the staleness is live-on-main,
+not deploy-vintage (file its own issue then).
+
+Note: coco 2.0+ polls the batch check path and never consults the
+state string, so this fork does not block the coco drill.
