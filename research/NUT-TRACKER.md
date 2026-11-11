@@ -223,7 +223,7 @@ Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
   rolled_back, replay byte-identical, no loss. Residues now live-on-main:
   GET path serves pre-mint accounting after full mint (certifier leg
   stays RED) + updated_at never bumps on issuance (coco anti-stale guard
-  discards post-mint observations) — cf issue filed, evidence in the
+  discards post-mint observations) — cf#119, evidence in the
   drill dir (wire-postfix.jsonl, run-postfix.log).
 mint-retry idempotency fork (registry, measured 2026-10-23 —
 shadow-proxy A6b); cdk-mintd duplicate-outputs ERROR IDENTITY bug

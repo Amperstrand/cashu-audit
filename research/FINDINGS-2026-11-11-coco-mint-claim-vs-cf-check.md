@@ -105,7 +105,7 @@ wrong and is retracted):
 1. GET /v1/mint/quote/bolt11/{id} still serves pre-mint accounting
    after a full mint (amount_issued=0, updated_at unmoved, state=PAID).
    Certifier leg "NUT-04 #377-epoch GET accounting after full mint"
-   stays RED. Separate cashu-cf issue filed.
+   stays RED. Filed as cashu-cf#119.
 2. updated_at is not bumped when issuance accounting changes even on
    the correct batch-check path: coco's NUT-04 anti-stale guard
    discards every post-mint quote observation ("conflicting accounting
