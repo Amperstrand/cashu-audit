@@ -30,7 +30,7 @@ Axes per NUT:
 | 01 | Mint public key exchange | mandatory | 2023-01-27→2026-10-20 | 12 | 0 | 6 | partial |
 | 02 | Keysets and fees | mandatory | 2023-01-27→2026-10-20 | 14 | 7 | 6 | deep |
 | 03 | Swap tokens | mandatory | 2023-01-27→2026-10-20 | 13 | 5 | 5 | partial |
-| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 4 | 5 | partial |
+| 04 | Mint tokens | mandatory | 2023-01-27→2026-10-20 | 31 | 9 | 5 | deep |
 | 05 | Melting tokens | mandatory | 2023-01-27→2026-10-20 | 32 | 5 | 3 | partial |
 | 06 | Mint information | mandatory | 2023-01-27→2026-08-15 | 18 | 6 | 6 | partial |
 | 07 | Token state check | optional | 2023-03-09→2026-10-20 | 17 | 6 | 2 | partial |
@@ -207,7 +207,11 @@ mixed-unit inputs 400/11009 "Cannot have multiple units" — cdk fully
 silently at boot (no logs) — needs per-unit backend config research;
 not a one-line change.
 
-### NUT-04 — partial
+### NUT-04 — deep
+(2026-11-11: partial→deep — fresh recount 9 research docs; three measured
+multi-version findings: cross-family accounting-fields matrix 2026-11-11,
+mint-retry idempotency fork 2026-10-23, cdk duplicate-outputs error
+identity 2026-10-29.)
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
   2026-11-11: check-path gap measured live — cashu-cf check_mint_quote DROPS the accounting fields
   (create/sibling endpoints serve them; NUT-04 MUST) so coco 2.0+ (claimability = amount_paid −
