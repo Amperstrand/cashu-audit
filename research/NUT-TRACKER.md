@@ -209,6 +209,10 @@ not a one-line change.
 
 ### NUT-04 — partial
 Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
+  2026-11-11: check-path gap measured live — cashu-cf check_mint_quote DROPS the accounting fields
+  (create/sibling endpoints serve them; NUT-04 MUST) so coco 2.0+ (claimability = amount_paid −
+  amount_issued) can never claim a PAID quote from cf mints; fix staged cashu-cf#118 f610bc43;
+  research/FINDINGS-2026-11-11-coco-mint-claim-vs-cf-check.md + wire baseline.
 mint-retry idempotency fork (registry, measured 2026-10-23 —
 shadow-proxy A6b); cdk-mintd duplicate-outputs ERROR IDENTITY bug
 (divergences/2026-10-29-cdk-mintd-duplicate-outputs-error-identity.md,
