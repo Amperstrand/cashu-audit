@@ -87,3 +87,15 @@ OK research/releases/nutshell-0.22.1.md: 5 commits, NUTs: none
 ```
 Read the digest, then the tracker cards it names.
 
+
+## Run 2026-11-11 04:47 UTC
+
+- CHANGE: cashu-ts release(s) v5.0.0-rc.13, v4.13.1 (published 2026-11-10) — OK research/releases/cashu-ts-4.13.1.md: 19 commits, NUTs: NUT-10, NUT-11, NUT-14
+
+### cashu-ts v5.0.0-rc.13, v4.13.1
+
+```
+OK research/releases/cashu-ts-4.13.1.md: 19 commits, NUTs: NUT-10, NUT-11, NUT-14
+```
+Read the digest, then the tracker cards it names.
+
