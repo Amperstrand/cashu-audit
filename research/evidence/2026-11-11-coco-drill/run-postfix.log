@@ -1,0 +1,69 @@
+# Post-fix drill run log (2026-11-11 ~20:40 CET, after #118 deploy)
+
+Harness: coco master @ 2d6aa583 (coco-sync clone, packages/core +
+sqlite-bun), logging proxy 127.0.0.1:8907 -> testnut.cashu.exchange.
+phase1: INJECT_FROM_SWAP=2 (every reclaim attempt 502'd, not forwarded).
+phase2: INJECT_OFF=1 (fresh proxy process), fresh wallet process, same
+sqlite db + persisted random seed. Artifacts: wire-postfix.jsonl,
+drill-postfix.ts, drill-proxy-postfix.ts (this dir).
+
+Driver deltas vs the banked pre-fix drill (the pre-fix pair never got
+past the mint block, so its back half was unvalidated): port 8899->8907
+(8899 was occupied by an unrelated lane's local mint), seed must be
+64 bytes (SeedService enforces), random-once-then-persisted seed
+(fixed seed + fresh db re-derives the same secrets -> "spent proof"
+400s from earlier runs), mint terminal state is 'finalized' (not
+'completed') and needs a wait loop (execute() returns pending; the
+claim happens via watcher/re-execute), public API is
+reclaim()/cancel() (no sendOps.rollback), cancel only works pre-
+execute, and the rollback path retries the reclaim internally (a
+single-shot injection lets the retry through -> inject ALL swaps >= 2
+for phase1).
+
+## phase1 (crash-mid-rollback)
+
+  [phase1] mint op terminal state: finalized
+  [phase1] balance after mint: {"spendable":"21","reserved":"0","total":"21","unit":"sat"}
+  [phase1] send prepared / send state after execute: pending
+  [coco:warn] Could not settle a failed Send reclaim; leaving it for recovery
+  [phase1] reclaim rejected as expected: bad response
+  [phase1] persisted send state: rolling_back
+  [coco:warn] Ignoring Mint Quote Observation with conflicting accounting
+              at unchanged Remote Quote Update Time   <-- cf residue, see below
+
+  swaps: #1 200 (send: in 16 -> out 1+2+4+8=15, 1 sat fee)
+         #2 INJECTED (reclaim: in 8+2 -> out 1+8=9)
+         #3 INJECTED (retry, byte-identical to #2)
+
+## phase2 (fresh process, injection off)
+
+  [phase2] state before recovery: rolled_back   <-- settled by STARTUP
+                                               auto-recovery (Manager boots
+                                               with ops.send.recovery.run());
+                                               no explicit command needed
+  [phase2] balance after recovery: {"spendable":"19",...,"total":"19"}
+
+  swap #4 200: replayed reclaim, reqBody byte-identical to the
+  interrupted #2/#3 (inputs [8,2] -> outputs [1,8]).
+
+  Economics: 21 -> 19 = exactly 2 x 1-sat swap fees (send + reclaim).
+  No loss. FIRST LIVE coco-mints-from-testnut proof is in this same
+  wire log (POST /v1/mint/bolt11 200, signatures 16+4+1, quote check
+  responses now carry amount_paid/amount_issued/updated_at).
+
+## The remaining cf residue this run exposed (live-on-main, NOT vintage)
+
+1. Certifier leg "NUT-04 #377-epoch GET accounting after full mint"
+   stays RED post-deploy: GET /v1/mint/quote/bolt11/{id} serves
+   amount_issued=0, updated_at unmoved, state=PAID after a successful
+   full mint (the stored write the batch-check path sees never reaches
+   the GET read path). Pre-registered in get-path-stale-accounting.txt
+   as "expected deploy-vintage" — that prediction was WRONG; verdict:
+   live-on-main. Filed as its own issue.
+2. updated_at is not bumped when issuance accounting changes, even on
+   the (correct) batch-check path: coco's NUT-04 anti-stale guard
+   ("MUST NOT replace quote data with a response whose updated_at is
+   lower / conflicting accounting at unchanged update time") discards
+   the post-mint observation every time. Benign for this flow (the op
+   finalizes from the mint response itself) but it makes every
+   spec-compliant wallet blind to cf issuance accounting.

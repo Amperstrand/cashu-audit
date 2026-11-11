@@ -83,3 +83,32 @@ cdk/ns mints unaffected.
 Finding verified (wire + source both sides + spec text). cashu-cf issue
 filed (see registry row). Registry row added. Tracker NUT-04 card sync
 + coverage recount queued (not done in this session).
+
+## Post-deploy verification (2026-11-11 evening — fix landed, cf#118 deployed)
+
+FIX VERIFIED END-TO-END, LIVE:
+- Certifier: both "#118 check fields present" legs PASS on testnut
+  (batch check serves amount_paid/amount_issued/updated_at, PAID and
+  post-mint). 11/12.
+- coco master @ 2d6aa583 mints from testnut LIVE — first proof
+  (research/evidence/2026-11-11-coco-drill/wire-postfix.jsonl:
+  POST /v1/mint/bolt11 200, 21 sat, balance 21). The full
+  crash-mid-rollback drill then completed: reclaim attempts 502'd ->
+  persisted rolling_back -> fresh process STARTUP auto-recovery (no
+  explicit command) -> rolled_back, replayed reclaim byte-identical to
+  the interrupted one, 21 -> 19 = exactly 2x1-sat swap fees, no loss.
+  Run log: run-postfix.log in the same dir.
+
+Two residues measured, both live-on-main (NOT deploy-vintage — the
+"expected: vintage" prediction in get-path-stale-accounting.txt was
+wrong and is retracted):
+1. GET /v1/mint/quote/bolt11/{id} still serves pre-mint accounting
+   after a full mint (amount_issued=0, updated_at unmoved, state=PAID).
+   Certifier leg "NUT-04 #377-epoch GET accounting after full mint"
+   stays RED. Separate cashu-cf issue filed.
+2. updated_at is not bumped when issuance accounting changes even on
+   the correct batch-check path: coco's NUT-04 anti-stale guard
+   discards every post-mint quote observation ("conflicting accounting
+   at unchanged Remote Quote Update Time"). Benign here (the op
+   finalizes from the mint response), but spec-compliant wallets are
+   blind to cf issuance accounting. Same issue thread.

@@ -217,6 +217,14 @@ Hold: accounting-fields pattern (divergences/NUT-04-ACCOUNTING...),
   (create/sibling endpoints serve them; NUT-04 MUST) so coco 2.0+ (claimability = amount_paid −
   amount_issued) can never claim a PAID quote from cf mints; fix staged cashu-cf#118 f610bc43;
   research/FINDINGS-2026-11-11-coco-mint-claim-vs-cf-check.md + wire baseline.
+  POST-DEPLOY 2026-11-11 evening: fix live on testnut, certifier legs
+  PASS, coco master mints from testnut LIVE (first proof) and the full
+  crash drill closed: rolling_back persisted -> startup auto-recovery ->
+  rolled_back, replay byte-identical, no loss. Residues now live-on-main:
+  GET path serves pre-mint accounting after full mint (certifier leg
+  stays RED) + updated_at never bumps on issuance (coco anti-stale guard
+  discards post-mint observations) — cf issue filed, evidence in the
+  drill dir (wire-postfix.jsonl, run-postfix.log).
 mint-retry idempotency fork (registry, measured 2026-10-23 —
 shadow-proxy A6b); cdk-mintd duplicate-outputs ERROR IDENTITY bug
 (divergences/2026-10-29-cdk-mintd-duplicate-outputs-error-identity.md,
