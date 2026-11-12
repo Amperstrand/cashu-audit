@@ -137,10 +137,27 @@ def _(mint: MintClient) -> ScenarioResult:
 
 @scenario("errid_mint_quote_unit_unsupported_code_11013", CATEGORY)
 def _(mint: MintClient) -> ScenarioResult:
-    """Mint quote for an unsupported unit — spec: 11013 unit not supported."""
-    code, body = mint._post("/v1/mint/quote/bolt11", {"amount": 64, "unit": "usd"})
+    """Mint quote for an unsupported unit — spec: 11013 unit not supported.
+
+    Env-aware (2026-11-12): multi-unit mints (testnut serves usd) inverted
+    the old hardcoded 'usd' premise into a false FAIL. Pick a unit absent
+    from the mint's keysets; if every candidate is supported, SKIP loudly
+    (nothing unsupported to test) rather than pin a wrong premise.
+    """
+    try:
+        units = {k.get("unit") for k in mint.get_keys().get("keysets", []) if k.get("unit")}
+    except Exception:
+        units = {"sat"}
+    candidates = ["eth", "eur", "xau", "usd"]
+    unsupported = next((u for u in candidates if u not in units), None)
+    if unsupported is None:
+        return ScenarioResult(
+            "errid_mint_quote_unit_unsupported_code_11013", CATEGORY, Result.SKIP,
+            f"all candidate units supported by this mint ({sorted(units)}) — no unsupported-unit leg possible",
+        )
+    code, body = mint._post("/v1/mint/quote/bolt11", {"amount": 64, "unit": unsupported})
     ok = expect_code(11013)(code, body)
-    return _note("errid_mint_quote_unit_unsupported_code_11013", ok, code, body, "11013")
+    return _note("errid_mint_quote_unit_unsupported_code_11013", ok, code, body, f"11013 (unit={unsupported})")
 
 
 @scenario("errid_validation_error_nut00_envelope", CATEGORY)
