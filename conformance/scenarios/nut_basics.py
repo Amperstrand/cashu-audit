@@ -649,21 +649,24 @@ def _(mint: MintClient) -> ScenarioResult:
             Result.FAIL, f"first melt failed ({s1}): {fmt_body(b1)[:90]}",
         )
     s2, b2 = mint.melt(quote["quote"], inputs, outputs)
-    # 2026-11-12 (murdawkmedia): the name says CACHED, so the verdict must
-    # require an identical body — any second 200 used to pass, which a
-    # non-identical synthetic answer proved false-positive. The swap twin
-    # already demanded equality.
-    if s2 == 200 and b2 == b1:
+    # 2026-11-12 (murdawkmedia, two rounds): the name says CACHED, so the
+    # verdict must require an identical body — any second 200 used to pass;
+    # then plain dict equality was shown to accept JSON true-vs-1 and
+    # 1-vs-1.0 (Python True == 1). Type-aware canonical comparison now.
+    def canon(doc):
+        import json as _json
+        return _json.dumps(doc, sort_keys=True, separators=(",", ":"))
+    if s2 == 200 and canon(b1) == canon(b2):
         return ScenarioResult(
             "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
             Result.PASS,
-            "cached 200 (identical body)",
+            "cached 200 (identical decoded body, type-aware)",
         )
     if s2 == 200:
         return ScenarioResult(
             "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
             Result.FAIL,
-            f"second 200 with a NON-identical body — answered, not cached: {fmt_body(b2)[:90]}",
+            f"second 200 with a non-identical body — answered, not cached: {fmt_body(b2)[:90]}",
         )
     return ScenarioResult(
         "melt_replay_returns_cached_response", "NUT-19 Replay Caching",

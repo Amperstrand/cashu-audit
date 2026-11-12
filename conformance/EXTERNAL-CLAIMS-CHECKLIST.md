@@ -22,7 +22,7 @@ coverage tables) must pass:
    scenario whose verdict will be cited externally.)
 3. **Enumerate the money math completely.** For any amount bounds/divergence:
    list every protocol component of both sides — `amount`, `fee_reserve`,
-   NUT-02 `input_fee_ppk` (ceiling-rounded per input), unit — and show the
+   NUT-02 `input_fee_ppk` (aggregate across inputs then ceil — NOT per-input rounding; murdawkmedia correction), unit — and show the
    arithmetic with the *live target's actual metadata* (e.g. pull the keyset
    fee; never assume 0).
 4. **A/B against a known-good control.** The claim should hold on the target
