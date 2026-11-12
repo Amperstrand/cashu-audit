@@ -110,7 +110,9 @@ def wait_ready(url: str, timeout: int = 240) -> str:
     deadline = time.time() + timeout
     while time.time() < deadline:
         try:
-            with urllib.request.urlopen(f"{url}/v1/info", timeout=3) as r:
+            req = urllib.request.Request(
+                f"{url}/v1/info", headers={"User-Agent": "cashu-conformance-lane/1.0"})
+            with urllib.request.urlopen(req, timeout=3) as r:
                 return json.load(r).get("version", "?")
         except Exception:
             time.sleep(5)

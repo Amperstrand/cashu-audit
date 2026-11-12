@@ -59,13 +59,22 @@ def main() -> int:
     if args.expected_fail:
         expected_fail = json.loads(Path(args.expected_fail).read_text())
 
-    target = parse_arm_spec(args.target, "docker")
+    # URL arms: --target NAME=url:https://host — remote mint, no bring-up
+    # (kind="url" in parse_arm_spec); docker arms unchanged.
+    kind = "url" if args.target.split("=", 1)[1].startswith("url:") else "docker"
+    target = parse_arm_spec(args.target, kind)
     target.host_network = args.host_network
 
     # Oracle: same-family scratch mint, exists only to issue invoices the
     # target mint has never seen (see nut11_melt._create_melt_quote).
-    oracle = Arm(f"{target.name}-oracle", target.family)
-    oracle.image = target.image
+    # URL (remote) targets get a local cdk oracle: its only job is issuing
+    # invoices the target mint has never seen.
+    if target.url_spec:
+        oracle = Arm(f"{target.name}-oracle", "cdk")
+        oracle.image = "cashubtc/mintd:0.18.3"
+    else:
+        oracle = Arm(f"{target.name}-oracle", target.family)
+        oracle.image = target.image
     oracle.host_network = args.host_network
 
     import concurrent.futures as cf
