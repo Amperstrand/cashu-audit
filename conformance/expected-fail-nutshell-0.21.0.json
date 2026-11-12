@@ -1,9 +1,9 @@
 {
-  "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
-  "mint_info_nut19_supported": "VERSION FACT: nutshell 0.21.0 does not advertise NUT-19 in nuts list",
-  "swap_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching \u2014 nutshell rejects replays (11001 proofs already spent) while cf+cdk return cached byte-identical 200s; measured 2026-10-25, FINDINGS-nut19.md; spec-position scenario until nutshell adopts caching",
-  "melt_replay_returns_cached_response": "POSITIONED: NUT-19 replay caching \u2014 nutshell rejects melt replays (20006) while cf+cdk cache; measured 2026-10-25, FINDINGS-nut19.md",
-  "errid_swap_unknown_keyset_code_12001": "CODE: swap path raises bare TransactionError 11000 ('keyset id unknown.') \u2014 the typed KeysetNotFoundError/12001 class exists in core/errors.py but only /v1/keys/{id} uses it (verification.py:196 vs router.py:316); measured 2026-11-04, research/FINDINGS-2026-11-04-error-identity.md",
-  "errid_swap_underfunded_code_11005": "CODE: unbalanced swap raises bare TransactionError 11000 \u2014 TransactionNotBalancedError/11005 is defined but never raised (verification.py:308); measured 2026-11-04, research/FINDINGS-2026-11-04-error-identity.md",
-  "ws_mint_quote_unknown_quote_rejected": "POSITIONED: NUT-17 ws subscribe for a nonexistent quote acks OK (no pre-validation of filters) while gonuts+cdk reject with a JSON-RPC error; measured 2026-11-04, research/FINDINGS-2026-11-04-gonuts-residue.md (B2)"
+ "errid_swap_underfunded_code_11005": "POSITIONED: ns error-identity fork for underfunded swaps (registry error-identity catalogue).",
+ "errid_swap_unknown_keyset_code_12001": "POSITIONED: ns shape/identity fork on unknown keyset.",
+ "melt_replay_returns_cached_response": "POSITIONED: ns refuses settled-melt replays (20006) \u2014 the family fork the gonuts #46 contract's UNPAID-only replay layer is built on.",
+ "mint_info_nut19_supported": "VERSION FACT: nutshell 0.21.0 does not advertise NUT-19 in nuts list",
+ "mint_quote_zero_amount_fails": "SHAPE: nutshell returns FastAPI 422 pydantic detail, not a NUT-19 error body \u2014 error-identity class (wire shape), version fact",
+ "swap_replay_returns_cached_response": "POSITIONED: ns has no NUT-19 caching \u2014 identical swap re-POST is refused (11001); the cf/cdk side returns byte-identical 200s (fork row, registry).",
+ "ws_mint_quote_unknown_quote_rejected": "POSITIONED: NUT-18 surface divergence on unknown-quote subscribe (ns)."
 }
