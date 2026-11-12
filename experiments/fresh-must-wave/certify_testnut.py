@@ -124,6 +124,98 @@ def main():
         st, b = mg.http("POST", f"{base}/v1/swap", {"inputs": p2, "outputs": [out(63, kid), out(1, kid)]})
         check("regression: keyless still rejected", st != 200, f"{st} {b[:70]}")
 
+    # Standing coco crash-drill leg (owner-approved 2026-11-11): drive a
+    # REAL coco wallet against this mint — mint, crash mid-rollback (proxy
+    # 502s every reclaim attempt), fresh-process startup auto-recovery.
+    # Proven harness; requires bun + a pinned coco checkout (default
+    # ~/src/upstream-cache/coco @ 2d6aa583). SKIPs (recorded, never silent)
+    # when the toolchain is absent — a missing drill tool is not a mint
+    # regression.
+    import glob as _glob
+    import os as _os
+    import re as _re
+    import shutil as _shutil
+    import socket as _socket
+    import subprocess as _sp
+    import tempfile as _tempfile
+    import time as _time
+
+    def _drill_leg():
+        bun = _shutil.which("bun")
+        coco = _os.path.expanduser(_os.environ.get("COCO_DIR", "~/src/upstream-cache/coco"))
+        harness = _os.path.join(_os.path.dirname(__file__), "..", "live-mint-matrix", "coco-crash-drill")
+        if not bun or not _os.path.exists(_os.path.join(coco, "packages", "core", "index.ts")):
+            return ("coco crash-drill (standing)", False,
+                    f"SKIP-class: toolchain absent (bun={'yes' if bun else 'no'}, coco clone={'yes' if _os.path.exists(coco) else 'no'})")
+        run = _tempfile.mkdtemp(prefix="coco-drill-")
+        proxy = None
+        try:
+            _shutil.copy(_os.path.join(harness, "drill.ts"), run)
+            _shutil.copy(_os.path.join(harness, "drill-proxy.ts"), run)
+            _os.symlink(coco, _os.path.join(run, "coco"))
+            with _socket.socket() as s:
+                s.bind(("127.0.0.1", 0)); port = s.getsockname()[1]
+            env = {**_os.environ, "DRILL_PORT": str(port), "DRILL_UPSTREAM": base}
+            proxy = _sp.Popen([bun, "drill-proxy.ts"], cwd=run, env=env,
+                              stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+            for _ in range(40):
+                try:
+                    with _socket.create_connection(("127.0.0.1", port), timeout=1):
+                        break
+                except OSError:
+                    _time.sleep(0.25)
+            else:
+                return ("coco crash-drill (standing)", False, "proxy never listened")
+            p1 = _sp.run([bun, "drill.ts", "phase1"], cwd=run, env=env,
+                         capture_output=True, text=True, timeout=300)
+            out = p1.stdout + p1.stderr
+            m = _re.search(r"SEND_ID=(\S+)", out)
+            send_id = m.group(1) if m else None
+            persisted = "persisted send state: rolling_back" in out
+            minted = 'balance after mint: {"spendable":"21"' in out
+            if not (p1.returncode == 0 and minted and persisted and send_id):
+                return ("coco crash-drill (standing)", False,
+                        f"phase1 failed (rc={p1.returncode}, minted={minted}, persisted={persisted}): {out[-300:]}")
+            proxy.terminate(); proxy.wait(timeout=10); proxy = None
+            env2 = {**env, "INJECT_OFF": "1"}
+            proxy = _sp.Popen([bun, "drill-proxy.ts"], cwd=run, env=env2,
+                              stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+            p2 = _sp.run([bun, "drill.ts", "phase2", send_id], cwd=run, env=env2,
+                         capture_output=True, text=True, timeout=300)
+            out2 = p2.stdout + p2.stderr
+            recovered = ("state after recovery.run(): rolled_back" in out2
+                         or "state before recovery: rolled_back" in out2)
+            balance19 = '"total":"19"' in out2
+            swaps = []
+            for line in open(_os.path.join(run, "wire.jsonl")):
+                e = json.loads(line)
+                if e.get("path") == "/v1/swap":
+                    swaps.append(e)
+            injected = [s_ for s_ in swaps if s_.get("injected")]
+            forwarded = [s_ for s_ in swaps if not s_.get("injected")
+                         and s_.get("status") == 200
+                         and len(json.loads(s_.get("reqBody", '{"inputs":[]}')).get("inputs", [])) == 2]
+            replay_identical = bool(injected) and bool(forwarded) and any(
+                f_["reqBody"] == i_["reqBody"] for f_ in forwarded for i_ in injected)
+            ok = recovered and balance19 and replay_identical
+            return ("coco crash-drill (standing)", ok,
+                    f"minted=21 persisted=rolling_back recovered={recovered} balance19={balance19} "
+                    f"replay_identical={replay_identical} (injected={len(injected)} forwarded={len(forwarded)})")
+        finally:
+            if proxy is not None:
+                proxy.terminate()
+                try:
+                    proxy.wait(timeout=10)
+                except Exception:
+                    proxy.kill()
+            _shutil.rmtree(run, ignore_errors=True)
+
+    try:
+        _name, _ok, _detail = _drill_leg()
+    except Exception as _e:  # noqa: BLE001
+        _name, _ok, _detail = "coco crash-drill (standing)", False, f"leg error: {_e.__class__.__name__}: {str(_e)[:120]}"
+    check(_name, _ok, _detail)
+
     fails = [r for r in results if not r[1]]
     print(f"\n{'=' * 60}\nCERTIFICATION: {len(results) - len(fails)}/{len(results)} PASS" +
           (" — DEPLOY NOT LIVE YET (expected pre-deploy)" if fails else " — CLEAN"))
