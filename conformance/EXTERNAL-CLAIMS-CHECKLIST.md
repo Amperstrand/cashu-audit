@@ -38,3 +38,36 @@ coverage tables) must pass:
 If any step cannot be completed, the claim is downgraded to *unverified* in the
 external text, or held. Silence about uncertainty is how test suites end up
 arguing for things that aren't true.
+
+---
+
+# Ops addendum — infra-mutation rules (from the 2026-11-12 wrong-workdir incident)
+
+Written after the vps-mint "ghost keyset" resolved to our own `config init`
+silently targeting an abandoned mint in `$HOME` while we theorized for hours
+about hidden history. Four links in that chain, four rules that break them:
+
+1. **Target echo before mutation.** Before any command that reads-or-writes a
+   named resource (mint DB, ledger, unit, volume), print the *resolved* target
+   — absolute path, identity read FROM that target (pubkey/keysets/version) —
+   and diff it against the pre-flight record. If the command has silent
+   defaults (workdir, host, port, profile), the resolved value is the first
+   thing to check, not the last. The migration guides' "record everything
+   first" ritual IS this mechanism; recording without diffing is decoration.
+2. **Attribution before explanation.** When an error names an identifier,
+   grep the target for it *before theorizing*. If the target provably lacks
+   the identifier → you are talking to the wrong target. (We ran the grep,
+   got zero hits, and still spent hours on ghost theories.)
+3. **Falsify before irreversible.** Any destructive/irreversible action
+   justified by a diagnosis (fresh-ledger, wipe, reset, reseed) requires the
+   minimal experiment that would falsify the diagnosis to have been run
+   against a COPY first. The 10-minute "init the backup with the correct
+   workdir" experiment existed; it just never ran before the decision.
+4. **Second key for irreversibles.** Destructive actions get an independent
+   premise-check by a second operator/agent (the same two-key rule the repo
+   ruleset applies to merges). Single-operator momentum is how a wrong
+   premise survives into an irreversible action.
+
+Plus the standing rule the incident re-proved: a theory that survives without
+reproduction for more than ~30 minutes gets its *assumptions* re-verified, not
+its elaboration extended.
