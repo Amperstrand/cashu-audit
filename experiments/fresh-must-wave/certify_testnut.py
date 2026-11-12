@@ -67,6 +67,7 @@ def main():
             time.sleep(1)
         st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11/check", {"quotes": [q3]})
         ent = json.loads(b)[0] if st == 200 and b.startswith("[") else {}
+        ua_at_paid = ent.get("updated_at")
         check("NUT-04 #118 check fields present (PAID)",
               st == 200 and ent.get("amount_paid") == 4 and ent.get("amount_issued") == 0
               and isinstance(ent.get("updated_at"), int),
@@ -90,8 +91,9 @@ def main():
         ent = json.loads(b)[0] if st == 200 and b.startswith("[") else {}
         check("NUT-04 #118 check fields present (ISSUED)",
               st == 200 and ent.get("amount_paid") == 4 and ent.get("amount_issued") == 4
-              and isinstance(ent.get("updated_at"), int),
-              f"{st} ap={ent.get('amount_paid')!r} ai={ent.get('amount_issued')!r} ua={ent.get('updated_at')!r}")
+              and isinstance(ent.get("updated_at"), int)
+              and ent.get("updated_at") > (ua_at_paid or 0),
+              f"{st} ap={ent.get('amount_paid')!r} ai={ent.get('amount_issued')!r} ua={ent.get('updated_at')!r} (paid-time ua={ua_at_paid})")
     else:
         check("NUT-04 #377-epoch GET accounting after full mint", False, f"quote create {st}")
 
