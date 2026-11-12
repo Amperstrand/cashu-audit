@@ -161,6 +161,10 @@ tooling — py_ecc installed and pairing-verified 2026-10-25).
 ### NUT-00 — deep
 Hold: secret-encoding campaign (issues/nut00-secret-encoding.md,
 POSITION-mint-leniency, AB-TEST-redemption-rules, registry row);
+2026-11-12: entropy-trap leniency MEASURED cross-family (six-arm corpus)
+— cf accepts proofs whose C_ is unbound to hash_to_curve(secret) where
+cdk/ns reject via Y-keyed state; masks buggy wallets; fix venue
+cashu-cf#122 (registry row 52c871b, conformance scenario pins it);
 V1/V2/V4 token formats (FINDINGS-2026-10-22-keyset-ids-nut02-v4pool,
 V4-token-URL violations); GONUTS divergence; amount-serialization issue.
 Gap: no doc owns the **2026-02 conventions pass (#322)** delta; V4 token
