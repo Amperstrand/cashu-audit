@@ -95,3 +95,25 @@ Verdict cells measured 2026-11-11; identities verbatim in reports/.
 3. Triage: melt_change overpay arithmetic; entropy-trap intent-research
    → registry row (owner-gated).
 4. Tracker: NUT-00 card (entropy trap), NUT-19/03 cards unchanged.
+
+## Addendum 2026-11-12 late — FUNDED signut corpus run (reports/signut-funded-matrix.md)
+
+With the rail restored (cln-first auto-pay; bark wedged, see cf#120),
+signut ran the full 130-scenario corpus funded: **107 pass / 14 fail /
+9 skip**. All previously-funding-blocked cells now PASS on the real-CLN
+env (mint_tokens_after_quote, restore_returns_signatures, the DLEQ
+legs).
+
+All 14 failures classify:
+- 13 × melt-success class, ONE identity: 400 payment_failed/20004
+  "Destination said it doesn't know invoice" — the scenarios melt
+  invoices created ON the target (no invoice_oracle attached by
+  run_matrix), and a real-CLN backend cannot pay its own scenario
+  invoices (circular-routing constraint). INFRASTRUCTURE, not mint
+  bugs — my manual real-HTLC melt cycle on signut succeeded with an
+  invoice sourced directly from cln-swap. Next runner step: a
+  cln-oracle invoice source for real-LN targets.
+  (Correction 2026-11-12: the Phase B commit message claimed reports/
+  was banked — it was not; reports/ lands with THIS commit.)
+- 1 × secret_encoding_entropy_trap_rejected = the pinned cf#122
+  finding (by design RED until the fix deploys).
