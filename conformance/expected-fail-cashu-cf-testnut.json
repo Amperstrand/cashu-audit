@@ -1,5 +1,4 @@
 {
- "errid_mint_quote_unit_unsupported_code_11013": "MEASURED 2026-11-12: cf accepts mint quotes for unsupported units (200/UNPAID, no error) instead of 11013 \u2014 lenient-boundary divergence (cf-side).",
- "melt_change_returned_for_overpay": "MEASURED 2026-11-12: cf change = 12 where the quote math bounds it to 13-14 (inputs 16 - amount 2 - fee<=reserve 1) \u2014 cf charges one sat beyond the modelled fee. Registry candidate (change-math class); wallets must derive the ceiling from their stored quote, not the response (the #46 contract already does).",
- "secret_encoding_entropy_trap_rejected": "MEASURED 2026-11-12: cf accepts entropy-blinded proofs at the NUT-00 verification boundary \u2014 lenient; would mask buggy wallets (cf-side)."
+ "errid_mint_quote_unit_unsupported_code_11013": "MEASURED 2026-11-12 (confirmed on rerun with corrected fixtures): cf accepts mint quotes for unsupported units (200/UNPAID, no error) instead of 11013 \u2014 lenient-boundary divergence (cf-side).",
+ "secret_encoding_entropy_trap_rejected": "MEASURED 2026-11-12 (confirmed on rerun): cf accepts entropy-blinded proofs at the NUT-00 verification boundary \u2014 lenient; would mask buggy wallets (cf-side)."
 }

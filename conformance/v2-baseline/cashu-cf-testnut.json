@@ -1,6 +1,6 @@
 {
  "arm": "cashu-cf-testnut",
- "target_identity": "Nutshell-CF/0.0.1",
+ "target_identity": "Nutshell-CF/0.0.1 (self-reported)",
  "verdicts": {
   "batch_check_rejects_too_many": "PASS",
   "batch_check_returns_quotes": "PASS",
@@ -52,7 +52,7 @@
   "keyset_keys_are_valid_pubkeys": "PASS",
   "keysets_returns_active_keyset": "PASS",
   "melt_change_omitted_without_outputs": "PASS",
-  "melt_change_returned_for_overpay": "FAIL",
+  "melt_change_returned_for_overpay": "PASS",
   "melt_htlc_preimage_and_signature_succeeds": "PASS",
   "melt_htlc_preimage_only_fails": "PASS",
   "melt_htlc_preimage_only_no_pubkeys_succeeds": "PASS",

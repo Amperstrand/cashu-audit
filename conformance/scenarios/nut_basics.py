@@ -649,11 +649,21 @@ def _(mint: MintClient) -> ScenarioResult:
             Result.FAIL, f"first melt failed ({s1}): {fmt_body(b1)[:90]}",
         )
     s2, b2 = mint.melt(quote["quote"], inputs, outputs)
-    if s2 == 200:
+    # 2026-11-12 (murdawkmedia): the name says CACHED, so the verdict must
+    # require an identical body — any second 200 used to pass, which a
+    # non-identical synthetic answer proved false-positive. The swap twin
+    # already demanded equality.
+    if s2 == 200 and b2 == b1:
         return ScenarioResult(
             "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
             Result.PASS,
-            "cached 200" + (" (identical)" if b2 == b1 else " (non-identical body)"),
+            "cached 200 (identical body)",
+        )
+    if s2 == 200:
+        return ScenarioResult(
+            "melt_replay_returns_cached_response", "NUT-19 Replay Caching",
+            Result.FAIL,
+            f"second 200 with a NON-identical body — answered, not cached: {fmt_body(b2)[:90]}",
         )
     return ScenarioResult(
         "melt_replay_returns_cached_response", "NUT-19 Replay Caching",

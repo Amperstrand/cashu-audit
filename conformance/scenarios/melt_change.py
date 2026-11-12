@@ -70,8 +70,13 @@ def _(mint: MintClient) -> ScenarioResult:
     # fake spends 0), so the spec-stable assertion is the NUT-08 range.
     change_sum = sum(s.get("amount", 0) for s in change)
     fee_reserve = melt_resp.get("fee_reserve", 0)
-    upper = total - melt_amount      # backend spent nothing
-    lower = total - melt_amount - fee_reserve  # backend spent the whole reserve
+    # NUT-02 input fees are part of the melt equation and must be inside the
+    # bounds (2026-11-12: murdawkmedia caught their omission — the cashu-cf
+    # testnut active keyset charges input_fee_ppk=10, i.e. 1 sat rounded per
+    # input, which made its honest change=12 fall outside our old [13,14]).
+    input_fees = builder.calc_fee(len(proofs))
+    upper = total - melt_amount - input_fees      # backend spent nothing
+    lower = total - melt_amount - fee_reserve - input_fees  # whole reserve spent
     if not (lower <= change_sum <= upper):
         return ScenarioResult(
             "melt_change_returned_for_overpay", "NUT-08 Melt Change",
