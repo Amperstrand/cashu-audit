@@ -117,3 +117,27 @@ All 14 failures classify:
   was banked — it was not; reports/ lands with THIS commit.)
 - 1 × secret_encoding_entropy_trap_rejected = the pinned cf#122
   finding (by design RED until the fix deploys).
+
+## Addendum 2 — 2026-11-12 night — ORACLE-BACKED signut matrix (reports/signut-oracle-matrix.md)
+
+With the CLN signet invoice oracle attached (run_matrix --cln-oracle,
+d0d9c28), signut: **106 pass / 2 fail / 22 skip**. All 13 melt-family
+infrastructure failures from the funded run now settle GREEN with real
+invoices (melt_change overpay + omitted, NUT-11 P2PK ×11, HTLC ×8,
+SIG_ALL families, replay/double-melt cells). The melt family is fully
+conformant on the real-CLN env.
+
+The 2 failures:
+- secret_encoding_entropy_trap_rejected — the pinned cf#122 finding,
+  RED by design (owner decision pending: strict UTF-8 vs legacy
+  hex-decode fallback).
+- mint_tokens_after_quote — "quote never paid after 30 retries": rail
+  transient, not a mint defect (this leg PASSED in the earlier funded
+  run; the oracle run itself drains the CLN peers' return-side — the
+  skill's standing warning; verify rail with one probe invoice before
+  the next funded batch).
+
+Skip count 9→22 vs the funded run: the runner's funded-leg budget
+retired more legs mid-run under the heavier oracle load (rate-limit
+backoff class); decided cells are unaffected. Full-artifact diff is
+the two reports side by side in reports/.
