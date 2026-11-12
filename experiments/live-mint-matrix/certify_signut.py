@@ -98,12 +98,16 @@ def main():
     check("S7 malformed-B_ on UNPAID quote -> recorded (ordering identity)",
           st == 400, f"{st} {b[:110]}")
 
-    # S11 + S2: fund a fresh quote, then re-check fields (PAID)
-    st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": 21, "unit": "sat"})
+    # S11 + S2: fund a fresh quote, then re-check fields (PAID).
+    # NOTE amount 32 (listed on the power-of-2 keyset) — a single 21-sat
+    # output is KEYLESS and post-9d8e2971 the mint rejects it (currently as
+    # a 500, see cashu-cf keyless-mint-identity issue; pinned separately
+    # in the K1 leg below).
+    st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": 32, "unit": "sat"})
     q2 = json.loads(b)["quote"]
     inv = json.loads(b)["request"]
     pok, pdet = pay(inv)
-    check("S11 payment rail pays 21-sat signut invoice", pok, pdet)
+    check("S11 payment rail pays 32-sat signut invoice", pok, pdet)
     paid = False
     for _ in range(45):
         st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{q2}")
@@ -118,22 +122,49 @@ def main():
     check("S2 #118 check fields present (PAID)", fields_paid,
           f"{st} ap={ent.get('amount_paid')!r} ai={ent.get('amount_issued')!r} ua={ent.get('updated_at')!r} state={ent.get('state')!r}")
 
-    # Full mint + S3/S10: GET accounting staleness + updated_at monotonicity
+    # Full mint + S3/S10: GET accounting staleness + updated_at monotonicity.
+    # Retry once on non-200: signut rate-limits bursts (observed intermittent
+    # non-200 on the certifier's rapid-fire sequence; standalone always 200s).
     ua_before = ent.get("updated_at")
-    st, b = mg.http("POST", f"{base}/v1/mint/bolt11", {"quote": q2, "outputs": [out(21, kid)]})
-    mint_ok = st == 200
+    mint_ok, mint_detail = False, "never attempted"
+    for attempt in range(3):
+        st, b = mg.http("POST", f"{base}/v1/mint/bolt11", {"quote": q2, "outputs": [out(32, kid)]})
+        mint_ok, mint_detail = st == 200, f"{st} {b[:90]}"
+        if mint_ok:
+            break
+        time.sleep(3)
     st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{q2}")
     g = json.loads(b) if st == 200 else {}
     check("S3 GET accounting after full mint (fresh, not stale)",
-          mint_ok and g.get("amount_issued") == 21 and isinstance(g.get("updated_at"), int)
+          mint_ok and g.get("amount_issued") == 32 and isinstance(g.get("updated_at"), int)
           and (ua_before is None or g.get("updated_at") > ua_before),
-          f"mint={mint_ok} ap={g.get('amount_paid')!r} ai={g.get('amount_issued')!r} ua={g.get('updated_at')!r} state={g.get('state')!r}")
+          f"mint={mint_ok} ({mint_detail}) ap={g.get('amount_paid')!r} ai={g.get('amount_issued')!r} ua={g.get('updated_at')!r} state={g.get('state')!r}")
     st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11/check", {"quotes": [q2]})
     ent2 = json.loads(b)[0] if st == 200 and b.startswith("[") else {}
     check("S10 updated_at bumps on issuance (check path)",
           ent2.get("updated_at") is not None and ua_before is not None
           and ent2.get("updated_at") > ua_before,
           f"before={ua_before!r} after={ent2.get('updated_at')!r} ai={ent2.get('amount_issued')!r}")
+
+    # K1 (cf#120): keyless single-output mint (21 on power-of-2 keyset) must
+    # NOT sign. CURRENT identity post-9d8e2971: 500 internal_error/10000
+    # (mis-mapped; swap path serves a clean 400). This leg pins "not signed,
+    # quote stays claimable" — tighten to st == 400 when cf#120 deploys.
+    st, b = mg.http("POST", f"{base}/v1/mint/quote/bolt11", {"amount": 21, "unit": "sat"})
+    if st == 200:
+        qk = json.loads(b)["quote"]
+        pay(json.loads(b)["request"])
+        for _ in range(45):
+            st, b = mg.http("GET", f"{base}/v1/mint/quote/bolt11/{qk}")
+            if st == 200 and json.loads(b).get("state") == "PAID":
+                break
+            time.sleep(2)
+        st, b = mg.http("POST", f"{base}/v1/mint/bolt11", {"quote": qk, "outputs": [out(21, kid)]})
+        st2, c = mg.http("POST", f"{base}/v1/mint/quote/bolt11/check", {"quotes": [qk]})
+        entk = json.loads(c)[0] if st2 == 200 and c.startswith("[") else {}
+        check("K1 keyless mint not signed; quote still claimable",
+              st != 200 and entk.get("amount_issued") == 0,
+              f"{st} {b[:70]} | ai_after={entk.get('amount_issued')!r}")
 
     # S8: swap legs via mg.mint_proofs (CLN rail funds its internal quote)
     p, e = mg.mint_proofs(base, ks, {64: [f"sgn-{secrets.token_hex(4)}"]})
