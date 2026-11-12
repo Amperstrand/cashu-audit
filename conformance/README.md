@@ -124,7 +124,7 @@ melt-success scenario before this).
   hosts with a broken docker bridge hairpin — ai-legion; GH runners don't
   need it).
 - Reference verdicts: ns-0.20.3 98P/8EF/6S · ns-0.21.0 104P/2EF/6S ·
-  cdk-0.18.1 102P/4EF/5S+1 non-gating TIMEOUT · cdk-0.18.3 107P/4EF/5S (2026-10-30 lane run: the same four documented divergences as 0.18.2 — no drift). Note 0.21.0 passes all six
+  cdk-0.18.1 102P/4EF/5S+1 non-gating TIMEOUT · cdk-0.18.3 119P/6EF/5S (no behavioral drift vs 0.18.2; +18 scenarios incl. melt-change + replay columns) · cdk-0.18.3 107P/4EF/5S (2026-10-30 lane run: the same four documented divergences as 0.18.2 — no drift). Note 0.21.0 passes all six
   0.20.3 SIG_ALL/HTLC positioned divergences — the lane reproduces the
   registry's convergence data deterministically.
 
