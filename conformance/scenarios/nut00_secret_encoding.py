@@ -193,3 +193,56 @@ def _(mint: MintClient) -> ScenarioResult:
         Result.PASS,
         f"forged C rejected ({code}: {str(data)[:120]})",
     )
+
+
+@scenario("secret_encoding_v2_lossy_class_rejected", CAT)
+def _(mint: MintClient) -> ScenarioResult:
+    """cashu-ts v1-v3.1 class: bind over RAW entropy, publish lossy UTF-8.
+
+    v2-era cashu-ts bound signatures to hash_to_curve(randomBytes(32)) and
+    published new TextDecoder().decode(raw) — measured 0/200 random secrets
+    survive that publish losslessly (0/200 even valid UTF-8, 0/200 hex-shaped).
+    No convention can re-derive the point from the published string, so every
+    conforming mint — and every hex-fallback mint, since the string is never
+    hex-shaped — must reject the spend. Companion to the entropy-trap leg: it
+    separates "legacy-compat leniency" (trap leg) from "unverifiable class"
+    (this leg) — research/FINDINGS-2026-11-13-nut00-secret-encoding-utf8.md.
+    """
+    entropy = os.urandom(32)
+    published = entropy.decode("utf-8", errors="replace")
+    hexish = len(published) == 64 and all(c in "0123456789abcdef" for c in published)
+    if hexish:
+        return ScenarioResult(
+            "secret_encoding_v2_lossy_class_rejected", CAT, Result.SKIP,
+            "probe unlucky: lossy decode happened to stay hex-shaped (retry)",
+        )
+    Y_raw = hash_to_curve(entropy)
+    builder = ProofBuilder(mint)
+    keyset_id, keys = builder.get_active_keyset()
+    r = PrivateKey()
+    B_ = pubkey_add(Y_raw, r.public_key)
+    amount = 64
+    api_outputs = [{"amount": amount, "id": keyset_id, "B_": B_.format().hex()}]
+    signatures = _mint_outputs(mint, amount, api_outputs)
+    if not signatures:
+        return ScenarioResult(
+            "secret_encoding_v2_lossy_class_rejected", CAT,
+            Result.FAIL, "no signatures returned from mint",
+        )
+    from coincurve import PublicKey
+    C_ = PublicKey(bytes.fromhex(signatures[0]["C_"]))
+    C = step3_alice(C_, r, PublicKey(bytes.fromhex(keys[amount])))
+    proof = {"amount": amount, "secret": published, "C": C.format().hex(), "id": keyset_id}
+    swap_total = amount - builder.calc_fee(1)
+    swap_outputs = builder.create_outputs(swap_total, lambda: generate_secret())
+    code, data = mint.try_swap([proof], builder.outputs_to_api(swap_outputs))
+    if code == 200:
+        return ScenarioResult(
+            "secret_encoding_v2_lossy_class_rejected", CAT, Result.FAIL,
+            "MINT ACCEPTED a raw-entropy-bound proof with lossy non-hex published "
+            "secret: no derivation convention can verify it (verification gap)",
+        )
+    return ScenarioResult(
+        "secret_encoding_v2_lossy_class_rejected", CAT, Result.PASS,
+        f"v2-class lossy-secret proof rejected ({code}: {str(data)[:120]})",
+    )
