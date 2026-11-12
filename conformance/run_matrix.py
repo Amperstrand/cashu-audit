@@ -44,11 +44,45 @@ def capture_mint_identity(url: str) -> str:
         return f"identity-unavailable ({str(e)[:60]})"
 
 
-def run_all(mint_url: str) -> list[ScenarioResult]:
+class ClnSignetOracle:
+    """Invoice oracle backed by the inr2 cln-swap-signet node (2026-11-12).
+
+    Real signet invoices a real-LN target (signut's CLNrest backend) can
+    actually PAY — unlike invoices created on the target itself (a real
+    backend cannot pay its own; wire identity: 20004 'Destination said it
+    doesn't know invoice'). Amounts in SAT (invoice takes msat).
+    """
+
+    def __init__(self) -> None:
+        import itertools
+        self._counter = itertools.count(1)
+
+    def mint_quote(self, amount: int) -> dict:
+        import json as _json
+        import subprocess
+        import time as _time
+        label = f"clnoracle-{int(_time.time())}-{next(self._counter)}"
+        r = subprocess.run(
+            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+             "inr2.cashu.exchange",
+             f"docker exec cln-swap-signet lightning-cli --network=signet invoice {amount * 1000} {label} oracle"],
+            capture_output=True, text=True, timeout=60)
+        if r.returncode != 0:
+            raise RuntimeError(f"cln oracle invoice failed: {(r.stderr or r.stdout)[:100]}")
+        return {"request": _json.loads(r.stdout)["bolt11"]}
+
+
+def run_all(mint_url: str, family: str | None = None, cln_oracle: bool = False) -> list[ScenarioResult]:
     mint = MintClient(mint_url)
+    if cln_oracle:
+        mint.invoice_oracle = ClnSignetOracle()  # type: ignore[attr-defined]
     results: list[ScenarioResult] = []
 
     scenarios = all_scenarios()
+    if family:
+        def _module_of(s) -> str:
+            return getattr(s, "module", "") or s.run.__module__.split(".")[-1]
+        scenarios = [s for s in scenarios if _module_of(s).startswith(family)]
     if not scenarios:
         print(f"  No scenarios registered")
         return results
@@ -69,6 +103,8 @@ def main():
     parser.add_argument("--mint", action="append", dest="mints", help="Mint URL (can repeat)")
     parser.add_argument("--mints-file", help="YAML file with mint URLs")
     parser.add_argument("--output", default="reports/matrix.md", help="Output file")
+    parser.add_argument("--family", help="run only scenarios whose module starts with this (e.g. melt)")
+    parser.add_argument("--cln-oracle", action="store_true", help="attach the inr2 cln-swap-signet invoice oracle (real-LN targets: signut)")
     args = parser.parse_args()
 
     mint_urls: list[str] = []
@@ -94,7 +130,7 @@ def main():
         print(f"\n{'='*60}")
         print(f"Testing mint: {url}  [{identities[url]}]")
         print(f"{'='*60}")
-        all_results[url] = run_all(url)
+        all_results[url] = run_all(url, family=args.family, cln_oracle=args.cln_oracle)
 
     matrix = generate_matrix(all_results, mint_urls, identities=identities)
     Path(args.output).write_text(matrix)
