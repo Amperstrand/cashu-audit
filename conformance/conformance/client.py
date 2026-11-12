@@ -47,21 +47,38 @@ class MintClient:
         code, data = self._post("/v1/mint/quote/bolt11", {"amount": amount, "unit": unit})
         if code != 200:
             raise RuntimeError(f"mint_quote failed ({code}): {data}")
-        # Auto-pay via bark with round-robin across multiple wallets
+        # Auto-pay with rail fallback (2026-11-12): cln rail first (proven —
+        # must_gap_vectors MUST_GAP_AUTO_PAY path; pays the mint's own signet
+        # invoices circularly), bark round-robin as fallback (the bark wallets
+        # wedge when Ark rounds stop confirming on ark.signet.2nd.dev —
+        # observed exit-depth-100 + pending_in_round with 0 spendable; the
+        # mint_quote rail must not depend on one wallet backend's health).
         invoice = data.get("request", "")
         if invoice and not invoice.startswith("dummy-"):
             import subprocess
-            global _bark_rr_idx
-            _WALLETS = [".bark1", ".bark2", ".bark3", ".bark4", ".bark5"]
-            wallet = _WALLETS[_bark_rr_idx % len(_WALLETS)]
-            _bark_rr_idx += 1
-            try:
-                subprocess.run(
-                    f"ssh -o ConnectTimeout=5 root@inr2.cashu.exchange 'sudo -u t4 timeout 30 bark --datadir /home/t4/{wallet} ln pay invoice --wait {invoice}'",
-                    shell=True, timeout=45, capture_output=True
-                )
-            except Exception:
-                pass
+            paid = False
+            if invoice.startswith("lntb"):
+                try:
+                    r = subprocess.run(
+                        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+                         "inr2.cashu.exchange",
+                         "docker exec cln-swap-signet lightning-cli --network=signet pay " + invoice],
+                        capture_output=True, timeout=90)
+                    paid = r.returncode == 0
+                except Exception:
+                    paid = False
+            if not paid:
+                global _bark_rr_idx
+                _WALLETS = [".bark1", ".bark2", ".bark3", ".bark4", ".bark5"]
+                wallet = _WALLETS[_bark_rr_idx % len(_WALLETS)]
+                _bark_rr_idx += 1
+                try:
+                    subprocess.run(
+                        f"ssh -o ConnectTimeout=5 root@inr2.cashu.exchange 'sudo -u t4 timeout 30 bark --datadir /home/t4/{wallet} ln pay invoice --wait {invoice}'",
+                        shell=True, timeout=45, capture_output=True
+                    )
+                except Exception:
+                    pass
         return data
 
     def mint_tokens(self, quote: str, outputs: list[dict]) -> dict:
