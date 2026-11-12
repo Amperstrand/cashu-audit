@@ -162,8 +162,17 @@ def main():
         st, b = mg.http("POST", f"{base}/v1/mint/bolt11", {"quote": qk, "outputs": [out(21, kid)]})
         st2, c = mg.http("POST", f"{base}/v1/mint/quote/bolt11/check", {"quotes": [qk]})
         entk = json.loads(c)[0] if st2 == 200 and c.startswith("[") else {}
-        check("K1 keyless mint not signed; quote still claimable",
-              st != 200 and entk.get("amount_issued") == 0,
+        # Tightened 2026-11-12: cf#120 fix (f32988e0) deployed fleet-wide and
+        # wire-verified by the deploy agent — the mint-path identity is now the
+        # 400/14005 invalid_request shape (was the pinned 500/10000).
+        body = {}
+        try:
+            body = json.loads(b)
+        except Exception:
+            pass
+        check("K1 keyless mint rejected 400/14005; quote still claimable",
+              st == 400 and body.get("code") == 14005 and "keyless" in str(body.get("detail", ""))
+              and entk.get("amount_issued") == 0,
               f"{st} {b[:70]} | ai_after={entk.get('amount_issued')!r}")
 
     # S8: swap legs via mg.mint_proofs (CLN rail funds its internal quote)
