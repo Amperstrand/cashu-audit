@@ -33,3 +33,7 @@ EOF
 done
 [ $rc -eq 0 ] && echo "clean: no drift smells found" || echo "REVIEW NEEDED: re-read the flagged assertions against their names (EXTERNAL-CLAIMS-CHECKLIST rule 1)"
 exit $rc
+
+echo "== type-equality check: direct body == comparisons without canonicalization =="
+grep -rn -E 'b2 == b1|body2 == body1|resp2 == resp1|\.json\(\) ==' . --include='*.py' | grep -v canon && rc=1
+echo "(any hit above: replace with canonical-dump comparison — see negative_controls.py canon())"
