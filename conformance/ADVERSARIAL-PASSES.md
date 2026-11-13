@@ -87,9 +87,23 @@ Run it in the pre-cite pass alongside `scenario-drift-lint.sh`.
     (3) For each error path: what does the code INFER from a rejection? Any
         inference from an error identity must hold across all three
         implementation families or be refused.
-    (4) Check every comparison of received data for comparator semantics
-        (type coercion, decoded-vs-raw, order sensitivity).
-    (5) Output: findings as reproducible inputs (curl/python), each with its
+    (4) VALUE-FLOW pass (added after the #1212 fee miss): for every numeric
+        field written from caller or wire input, state the DOMAIN-valid range
+        (e.g. fee vs the operation's reserve — never the type maximum) and
+        trace the value into every downstream aggregate (budgets, sums,
+        counters, cost models). A value that passes field validation but
+        poisons an aggregate is a finding even if nothing crashes.
+    (5) Check every comparison of received data for comparator semantics
+        (type coercion, decoded-vs-raw, order sensitivity). Run
+        dead-bound-lint.sh on the diff — every type-maximum comparison must
+        justify itself or be replaced with the domain bound.
+    (6) PROBE-ON-HEAD: for each suspected gap, write the smallest real probe
+        against the actual branch and run it (then remove it). A finding is
+        ready to report when the probe shows the bad value accepted AND its
+        downstream consequence — felixfelix-bot's #1212 demonstration is the
+        template: 'ACCEPTED fee=9223372036854775807 (reserve was 100)' plus
+        'a 10 msat send is now refused'.
+    (7) Output: findings as reproducible inputs (curl/python), each with its
         honest control; then the falsification experiments you would demand
         before merge, most-destructive first.
 
