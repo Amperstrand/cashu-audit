@@ -41,3 +41,16 @@ low value, skip unless cheap).
 - nut12 runs: /tmp/nut12-testnut.md, /tmp/nut12-signut.md (copied to
   research/evidence/2026-11-13-wave2/)
 - Probe script shape: MintClient.mint_tokens → signatures[].dleq
+
+## Addendum — self-payment design survey (cf#123, 2026-11-13)
+
+Owner question (internal vs backend pass-through) answered from source:
+nutshell ledger.py:1216 melt_mint_settle_internally (row locks, fee=0);
+cdk melt_saga/mod.rs:497 attempt_internal_settlement (SettlementDecision
+enum, single-tx settle, WAL marker, synthetic payment id for recovery
+parity); lnbits-cashu = nutshell-based (archived). Spec NUT-05: silent.
+Third design: tessera/ecash explicit `self` method (product feature, not
+routing). cf's path already matches the reference semantics (atomic
+invoice claims); GH #50 race solved; S9-locked. Issue filed arguing both
+sides + recommendation A (stay internal; add internal_settlement event +
+cdk-style synthetic payment id for observability parity).
