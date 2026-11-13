@@ -35,6 +35,28 @@ import urllib.request  # noqa: E402
 
 
 # ---------- mutation taxonomy (grow as new classes are found) ----------
+
+def _has_state(node) -> bool:
+    if isinstance(node, dict):
+        if isinstance(node.get("state"), str):
+            return True
+        return any(_has_state(v) for v in node.values())
+    if isinstance(node, list):
+        return any(_has_state(v) for v in node)
+    return False
+
+
+def _lower_states(node) -> None:
+    if isinstance(node, dict):
+        if isinstance(node.get("state"), str):
+            node["state"] = node["state"].lower()
+        for v in node.values():
+            _lower_states(v)
+    elif isinstance(node, list):
+        for v in node:
+            _lower_states(v)
+
+
 def mutate(doc, mode, ctx):
     """Return a mutated copy of a JSON response doc, or None to pass through."""
     if mode == "replay_nonidentical" and ctx.get("melt_posts", 0) >= 2 and "change" in doc:
@@ -51,6 +73,36 @@ def mutate(doc, mode, ctx):
     if mode == "change_type_float" and isinstance(doc.get("change"), list) and doc["change"]:
         m = copy.deepcopy(doc)
         m["change"][0]["amount"] = float(m["change"][0].get("amount", 0))
+        return m
+    # --- round 2 taxonomy: identity / shape / state / crypto surfaces ---
+    if mode == "errid_swap_code" and isinstance(doc.get("code"), (int, str)):
+        m = copy.deepcopy(doc)
+        m["code"] = 10001  # wrong registered code, same shape
+        m["detail"] = "mutated identity"
+        return m
+    if mode == "state_lower" and _has_state(doc):
+        m = copy.deepcopy(doc)
+        _lower_states(m)  # case-mutate state enums ANYWHERE in the tree
+        return m
+    if mode == "info_drop_pubkey" and "pubkey" in doc and "nuts" in doc:
+        m = copy.deepcopy(doc)
+        del m["pubkey"]  # required NUT-06 field dropped
+        return m
+    if mode == "swap_replay_nonidentical" and ctx.get("swap_posts", 0) >= 2 and "signatures" in doc:
+        m = copy.deepcopy(doc)
+        if isinstance(m["signatures"], list) and m["signatures"]:
+            m["signatures"][0]["amount"] = True  # type-coerced second swap answer
+        return m
+    if mode == "dleq_corrupt" and isinstance(doc.get("signatures"), list) and doc["signatures"]:
+        m = copy.deepcopy(doc)
+        sig = m["signatures"][0]
+        if "dleq" in sig and isinstance(sig["dleq"], dict):
+            sig["dleq"]["e"] = "00" * 32  # invalid DLEQ proof, valid signature
+            return m
+    if mode == "restore_drop_sig" and isinstance(doc.get("signatures"), list) and len(doc["signatures"]) > 0 \
+            and ctx.get("restore_posts", 0) >= 1:
+        m = copy.deepcopy(doc)
+        m["signatures"] = m["signatures"][:-1]  # mint withholds one signature
         return m
     return None
 
@@ -78,6 +130,10 @@ class ProxyHandler(BaseHTTPRequestHandler):
             status, rb = e.code, e.read()
         if self.command == "POST" and self.path.endswith("/v1/melt/bolt11"):
             self.ctx["melt_posts"] = self.ctx.get("melt_posts", 0) + 1
+        if self.command == "POST" and self.path.endswith("/v1/swap"):
+            self.ctx["swap_posts"] = self.ctx.get("swap_posts", 0) + 1
+        if self.command == "POST" and self.path.endswith("/v1/restore"):
+            self.ctx["restore_posts"] = self.ctx.get("restore_posts", 0) + 1
         try:
             doc = json.loads(rb)
             m = mutate(doc, self.mode, self.ctx) if self.mode != "honest" else None
@@ -136,6 +192,19 @@ def main() -> int:
         ("melt_change_returned_for_overpay", "honest", "PASS"),
         ("melt_change_returned_for_overpay", "change_minus_one", "FAIL"),
         ("melt_change_returned_for_overpay", "change_type_float", "FAIL"),
+        # --- round 2: the suite's other cited families ---
+        ("swap_replay_returns_cached_response", "honest", "PASS"),
+        ("swap_replay_returns_cached_response", "swap_replay_nonidentical", "FAIL"),
+        ("errid_swap_spent_proofs_code_11001", "honest", "PASS"),
+        ("errid_swap_spent_proofs_code_11001", "errid_swap_code", "FAIL"),
+        ("checkstate_unspent_returns_unspent", "honest", "PASS"),
+        ("checkstate_unspent_returns_unspent", "state_lower", "FAIL"),
+        # info-shape controls need an arm where mint_info_returns_required_fields
+        # passes honest (ns family) — cdk is seeded-FAIL for it; run via --arm-url.
+        ("dleq_proof_valid", "honest", "PASS"),
+        ("dleq_proof_valid", "dleq_corrupt", "FAIL"),
+        ("restore_returns_signatures", "honest", "PASS"),
+        ("restore_returns_signatures", "restore_drop_sig", "FAIL"),
     ]
     by_name = {s.name: s for s in all_scenarios()}
 
