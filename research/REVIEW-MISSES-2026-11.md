@@ -122,3 +122,33 @@ implementation (derives, never ingests) and five centuries of ledger practice
 (the aggregate owner bounds the input). The honest framing for the thread:
 not "you're wrong," but "this layer is under-specified in the ecosystem, and
 both the reference wallet and payment-ledger practice point the same way."
+
+---
+
+## Session closeout addendum (2026-11-13): the full lesson inventory
+
+Three misses this month, each a different failure mode, each now covered:
+
+| # | Miss | Failure mode | Catching tool |
+|---|---|---|---|
+| 1 | Fixture false-positives (murdawkmedia, 2 rounds) | Graded own homework; read verdict text not assertion code | negative_controls.py, scenario-drift-lint.sh |
+| 2 | Wrong-workdir "ghost" | Silent default + theorized instead of suspecting the target | mint-upgrade-preflight.sh, attribution rule |
+| 3 | Unbounded-fee review (felixfelix-bot) | Read guard's presence, not sufficiency; no value-flow step | dead-bound-lint.sh, value-flow prompt step |
+
+**Meta-lesson**: each miss produced a tool; each tool found the next bug.
+The value-flow pass (built from miss 3) immediately found four overflow sites
+in the gonuts wallet — including the ceiling itself.
+
+**Session-specific addenda**:
+- The pinned-source rule extends to code CITED in reviews (murdawk pinned
+  SHA b2035a35, we cited "v0.18.3" loosely — his quote was right, ours wrong)
+- A correct finding about one instance does not license a class label
+  ("dead" → "prove the domain range")
+- The rotation e2e failure is infrastructure debt, not a test failure:
+  0.18.x's config-init requirement breaks the env-var-based cloud-lab compose;
+  the Dockerfile bump alone is insufficient
+
+**Architectural position recorded** (#1210/#1211): we already support Lightning
+through Cashu — the melt path IS Lightning support. Direct Lightning clients
+on the router duplicate the mint's role, expand attack surface, and muddy the
+trust model. Waiting for murdawk's deployment scenario before deciding.
