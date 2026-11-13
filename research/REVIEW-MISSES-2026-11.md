@@ -72,3 +72,53 @@ aggregates?
 3. **When a result names something the target provably lacks, suspect the
    target before the theory.** And when a finding is reported by someone
    else: reproduce it before concurring (we now did — it took one probe).
+
+---
+
+## Appendix (2026-11-13): is the fee-bound question well-studied? Ecosystem survey
+
+**NUT-05 spec**: `fee_reserve` is defined as a *quote-time estimate* ("the
+additional fee reserve for using the method; the wallet provides proofs
+covering at least amount + fee_reserve + fee"). The spec is silent on what
+happens when the actual fee exceeds the reserve — no bound, no reconciliation
+vocabulary. So there is no spec position to cite; both murdawk's
+consumer-verifies and the journal-bounds positions are spec-compatible.
+
+**cdk** (the reference implementation): in `add_transaction_for_pending_melt`
+the recorded fee is **derived, never ingested**: `fee = proofs_total
+.checked_sub(amount).checked_sub(change_total)` — saturating subtraction, so
+the recorded fee structurally cannot exceed the inputs the wallet itself
+committed. The number of record is computed from other verified quantities,
+not accepted from a caller. cdk#2859 (open) is tightening exactly this fee
+accounting further. **This is the strongest precedent against unbounded
+ingestion: the reference wallet derives fees rather than accepting them.**
+
+**nuts issues**: #480 (blank-output sizing when inputs exceed invoice —
+adjacent, change-side), #335 "Capped Input Fee melt quotes" (closed proposal —
+the community has already tried to formalize fee caps at the quote layer),
+#364 (zero fee_reserve for internal channels — reserve is a policy knob, not
+a law). No issue found that discusses the *journal/ledger* layer's
+responsibility for fee magnitude. **The layer in question appears
+under-specified ecosystem-wide — which is itself worth saying.**
+
+**Payment-ledger engineering** (outside Cashu, heavily studied): the invariant
+literature is unanimous that a ledger must enforce its invariants *at the
+write boundary*, not trust callers to pre-check — "re-validate on every Post
+rather than trusting the caller to have pre-checked" (five-invariants
+pattern); amounts stored as integers with **overflow checks on running sums**
+precisely because "a malicious or buggy caller cannot wrap around to zero";
+balances derived from entries, never written from caller input. Double-entry's
+zero-sum rule is an *ingestion* constraint: the ledger rejects what it can't
+balance at the door. The consistent principle across Stripe/Square/bank-grade
+ledger write-ups: **the entity that enforces an aggregate owns the bounds of
+what feeds the aggregate.** Verification of external truth stays with the
+caller; magnitude bounds at the posting boundary belong to the ledger.
+
+**Our position after the survey** (context, not verdict): murdawk's
+settlement-verification doctrine is correct and matches cdk practice; but the
+specific question — may an unbounded caller-supplied number feed the journal's
+own budget aggregate — has a clear answer in both the reference
+implementation (derives, never ingests) and five centuries of ledger practice
+(the aggregate owner bounds the input). The honest framing for the thread:
+not "you're wrong," but "this layer is under-specified in the ecosystem, and
+both the reference wallet and payment-ledger practice point the same way."
