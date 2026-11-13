@@ -191,7 +191,15 @@ def _(mint: MintClient) -> ScenarioResult:
                 Result.FAIL, f"no mint pubkey for amount {amt}",
             )
         dleq = sig["dleq"]
-        if not _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex):
+        try:
+            ok_dleq = _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex)
+        except Exception as e:  # negative-controls: hostile scalars/points must
+            # FAIL cleanly, not crash on library raises (e.g. scalar out of range)
+            return ScenarioResult(
+                "dleq_proof_valid", CAT,
+                Result.FAIL, f"dleq validation raised: {type(e).__name__}: {e}",
+            )
+        if not ok_dleq:
             return ScenarioResult(
                 "dleq_proof_valid", CAT,
                 Result.FAIL,
@@ -293,7 +301,15 @@ def _(mint: MintClient) -> ScenarioResult:
                 Result.FAIL, f"no mint pubkey for amount {amt}",
             )
         dleq = sig["dleq"]
-        if not _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex):
+        try:
+            ok_dleq = _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex)
+        except Exception as e:  # negative-controls: hostile scalars/points must
+            # FAIL cleanly, not crash on library raises (e.g. scalar out of range)
+            return ScenarioResult(
+                "dleq_proof_valid", CAT,
+                Result.FAIL, f"dleq validation raised: {type(e).__name__}: {e}",
+            )
+        if not ok_dleq:
             return ScenarioResult(
                 "dleq_proof_in_signature_response", CAT,
                 Result.FAIL,
@@ -430,7 +446,15 @@ def _(mint: MintClient) -> ScenarioResult:
                 name, CAT, Result.FAIL, f"no mint pubkey for amount {amt}",
             )
         dleq = sig["dleq"]
-        if not _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex):
+        try:
+            ok_dleq = _verify_dleq(out.B_, sig["C_"], dleq["e"], dleq["s"], a_hex)
+        except Exception as e:  # negative-controls: hostile scalars/points must
+            # FAIL cleanly, not crash on library raises (e.g. scalar out of range)
+            return ScenarioResult(
+                "dleq_proof_valid", CAT,
+                Result.FAIL, f"dleq validation raised: {type(e).__name__}: {e}",
+            )
+        if not ok_dleq:
             return ScenarioResult(
                 name, CAT, Result.FAIL,
                 f"restore DLEQ verification failed for amount {amt}",

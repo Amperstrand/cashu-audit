@@ -68,6 +68,14 @@ def _(mint: MintClient) -> ScenarioResult:
     # spent (0 ≤ fee_spent ≤ fee_reserve — the reference FakeWallets
     # differ: ns spends up to its reserve, cdk part of it, the gonuts
     # fake spends 0), so the spec-stable assertion is the NUT-08 range.
+    # type guard (negative-controls: float/bool amounts must FAIL cleanly,
+    # not crash the denomination math downstream)
+    if any(not isinstance(s.get("amount"), int) or isinstance(s.get("amount"), bool) for s in change):
+        return ScenarioResult(
+            "melt_change_returned_for_overpay", "NUT-08 Melt Change",
+            Result.FAIL,
+            f"change amounts not integers: {[s.get('amount') for s in change]}",
+        )
     change_sum = sum(s.get("amount", 0) for s in change)
     fee_reserve = melt_resp.get("fee_reserve", 0)
     # NUT-02 input fees are part of the melt equation and must be inside the

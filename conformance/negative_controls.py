@@ -166,6 +166,7 @@ def boot_arm():
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm-url")
+    ap.add_argument("--cases", default="core", help="core | info (info = NUT-06 shape family, needs an arm where it passes honest)")
     a = ap.parse_args()
 
     arm = None
@@ -199,13 +200,18 @@ def main() -> int:
         ("errid_swap_spent_proofs_code_11001", "errid_swap_code", "FAIL"),
         ("checkstate_unspent_returns_unspent", "honest", "PASS"),
         ("checkstate_unspent_returns_unspent", "state_lower", "FAIL"),
-        # info-shape controls need an arm where mint_info_returns_required_fields
-        # passes honest (ns family) — cdk is seeded-FAIL for it; run via --arm-url.
         ("dleq_proof_valid", "honest", "PASS"),
         ("dleq_proof_valid", "dleq_corrupt", "FAIL"),
         ("restore_returns_signatures", "honest", "PASS"),
         ("restore_returns_signatures", "restore_drop_sig", "FAIL"),
     ]
+    if a.cases == "info":
+        # NUT-06 shape family: needs an arm where the scenario passes honest
+        # (ns/cf family — cdk is seeded-FAIL for shape reasons); via --arm-url.
+        cases = [
+            ("mint_info_returns_required_fields", "honest", "PASS"),
+            ("mint_info_returns_required_fields", "info_drop_pubkey", "FAIL"),
+        ]
     by_name = {s.name: s for s in all_scenarios()}
 
     rows, bad = [], 0

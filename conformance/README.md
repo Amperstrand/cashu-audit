@@ -99,6 +99,15 @@ and OpenTollGate/tollgate#30).
   03:37 UTC, success — ~20 min scheduler jitter past the 03:17 target;
   the TEMP evidence cron was removed after it fired once, PR #52).
 
+## Pre-cite pass (mandatory before citing any scenario verdict externally)
+
+1. `python3 tools/scenario-drift-lint.sh` — name/assertion smells.
+2. `python3 conformance/negative_controls.py` — core mutation matrix (ALL GREEN
+   required; refused-by-crash rows are tracked polish, not false positives).
+3. `python3 conformance/negative_controls.py --arm-url <ns-family-mint> --cases info`
+   — the NUT-06 shape family (needs an arm where it passes honest).
+See EXTERNAL-CLAIMS-CHECKLIST.md and ADVERSARIAL-PASSES.md for the full method.
+
 ## Weekly conformance-v2 lane (ops)
 
 `.github/workflows/conformance-v2.yml` (Mondays 06:00 UTC + dispatch): the
