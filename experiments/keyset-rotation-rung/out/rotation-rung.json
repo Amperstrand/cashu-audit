@@ -1,0 +1,104 @@
+{
+  "target": "http://127.0.0.1:8796",
+  "P1_pre": {
+    "active": "002cdbccb16a5a0b",
+    "minted_swap": 8,
+    "minted_melt": 8,
+    "keyset_of_proofs": "002cdbccb16a5a0b",
+    "on_default_keyset": true
+  },
+  "P2_rotate": {
+    "http": 500,
+    "body": {
+      "error": "rotate_failed",
+      "detail": "Keyset v1 unit=sat: max_order is required in KEYSETS config. KEYSET_DEFAULT_MAX_ORDER fallback has been removed. Configure KEYSETS in wrangler.toml with explicit max_order for each version/unit combination."
+    }
+  },
+  "P3_keysets": {
+    "states": {
+      "00dd7e7af0e9cf72": [
+        false,
+        "sat",
+        0
+      ],
+      "00b782b1d9de6cbe": [
+        false,
+        "sat",
+        0
+      ],
+      "009543064793b3af": [
+        false,
+        "sat",
+        0
+      ],
+      "007283de5bb25ab5": [
+        false,
+        "sat",
+        0
+      ],
+      "002cdbccb16a5a0b": [
+        true,
+        "sat",
+        10
+      ],
+      "008f03923b8d5891": [
+        false,
+        "usd",
+        0
+      ],
+      "006171eb2c2beb67": [
+        true,
+        "usd",
+        0
+      ]
+    },
+    "A_listed": true,
+    "B_listed": null,
+    "A_active": true,
+    "B_active": null
+  },
+  "P4_swap_A": {
+    "verdict": "200-redeemed",
+    "inputs": 8,
+    "outputs": 7,
+    "new_keyset": "002cdbccb16a5a0b",
+    "outputs_on_B": null
+  },
+  "P6_mint_under_A": {
+    "http": 200,
+    "body": {
+      "signatures": [
+        {
+          "amount": 4,
+          "id": "002cdbccb16a5a0b",
+          "C_": "038450d51d0034d531ccc33a104289e0c95a9cfb112902e13eff42970427720a33",
+          "dleq": {
+            "e": "dde5f9f56d3581deb32b2abd34ec0629f54b2438b9e7b4a53534706d0f30c857",
+            "s": "63b4059395acb7d276f930025468377efffd75ea2f54436fdb8900d3834e40d8"
+          }
+        }
+      ]
+    }
+  },
+  "P7_mint_default": {
+    "keyset": "002cdbccb16a5a0b",
+    "on_B": null
+  },
+  "P5_melt_A": {
+    "http": 200,
+    "state": "PAID",
+    "error": null
+  },
+  "P8_checkstate_A": {
+    "http": 200,
+    "body": {
+      "states": [
+        {
+          "Y": "02ebb69033b8e56125db0b615315534ff026025c634ac3cfd62d39a1628c4e52fb",
+          "state": "SPENT",
+          "witness": null
+        }
+      ]
+    }
+  }
+}
