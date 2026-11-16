@@ -1,0 +1,792 @@
+{
+ "ts": "20261116-060626",
+ "arms": [
+  {
+   "name": "cdk-latest",
+   "family": "cdk",
+   "image": "cashubtc/mintd:latest",
+   "git": null,
+   "url": "http://127.0.0.1:53003",
+   "identity": "cdk-mintd/0.18.3"
+  },
+  {
+   "name": "nutshell-latest",
+   "family": "nutshell",
+   "image": "cashubtc/nutshell:latest",
+   "git": null,
+   "url": "http://127.0.0.1:41025",
+   "identity": "Nutshell/0.22.1"
+  },
+  {
+   "name": "cdk-0.18.0",
+   "family": "cdk",
+   "image": "cashubtc/mintd:0.18.0",
+   "git": null,
+   "url": "http://127.0.0.1:41715",
+   "identity": "cdk-mintd/0.18.0"
+  },
+  {
+   "name": "cdk-0.18.3",
+   "family": "cdk",
+   "image": "cashubtc/mintd:0.18.3",
+   "git": null,
+   "url": "http://127.0.0.1:50117",
+   "identity": "cdk-mintd/0.18.3"
+  },
+  {
+   "name": "nutshell-0.20.3",
+   "family": "nutshell",
+   "image": "cashubtc/nutshell:0.20.3",
+   "git": null,
+   "url": "http://127.0.0.1:51497",
+   "identity": "Nutshell/0.20.3"
+  }
+ ],
+ "probe_results": {
+  "cdk-latest": {
+   "identity": "cdk-mintd/0.18.3",
+   "url": "http://127.0.0.1:53003",
+   "cells": {
+    "ctrl_p2pk_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '0318e2df454de4b8564720d71613825bb23f8d522da6f7957897b192020ad83dc0', 'dleq': {'e': '37e"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "ctrl_htlc_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '03a6436d2575002b6bbf97976566564c991513dcb4764abe7f5867d2ad020a3727', 'dleq': {'e': '179"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1_unknown_kind_no_witness": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '03f392bbf278dd6fb0f6dd7059d0dd0778077f884f96d0074cfaff93e4b9dc3aba', 'dleq': {'e': '3f1"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1b_malformed_pubkey_lock_voiding": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d2_duplicate_tags_first_wins": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '02cf51ffb7fcf58faa2f418cca1816a1ed2fbd7b75eaa80fd8c6b16d8ee70ab581', 'dleq': {'e': '53f"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d3_nsigs_exceeds_pubkeys_refund": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '031e4dad310acad847150c93a795090e6bf0f52df41cde4995817f50c34d89690d', 'dleq': {'e': 'b24"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d4_empty_pubkeys_tag": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '029d4b5f65272e03513e58f79e2c86e77c610c21e760575c3f623df3099102c53d', 'dleq': {'e': 'd52"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d5_htlc_uppercase_hash": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '038eb288a233bea770fe3dcc69e5b8343578861bf6b22e4c668ef863473789029d', 'dleq': {'e': '0c3"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6_htlc_refund_sigs_only_witness": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6b_htlc_refund_preimage_null": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6c_htlc_refund_dummy_preimage": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '010a14db49691d780c886f503f3594fec965a23c27395f6cc4f6a690c3f4500f0a', 'C_': '0255579cd5ec4e6f86ec49c57ba5d588e90512077d3fa1debb6d412aa9ed7c6d68', 'dleq': {'e': '22a"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d7_duplicate_signature": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d8_witness_on_plain_secret": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'Witness is not a p2pk witness'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    }
+   }
+  },
+  "nutshell-latest": {
+   "identity": "Nutshell/0.22.1",
+   "url": "http://127.0.0.1:41025",
+   "cells": {
+    "ctrl_p2pk_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '02f5c05b4cb92330aaf31df0a1cdc9274306f20705e34b071f5e4ec995695a8fc2', 'dleq': {'e': 'f18"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "ctrl_htlc_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '022fa352aabd95619d49afa43835ccc7246304d8042567d6f6ad822b22570b4f27', 'dleq': {'e': 'dea"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1_unknown_kind_no_witness": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'unsupported NUT-10 secret kind: MBS', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d1b_malformed_pubkey_lock_voiding": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'malformed NUT-10 secret: invalid compressed public key.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d2_duplicate_tags_first_wins": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'malformed NUT-10 secret: duplicate n_sigs tag.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d3_nsigs_exceeds_pubkeys_refund": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'malformed NUT-10 secret: n_sigs exceeds available pubkeys.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d4_empty_pubkeys_tag": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'malformed NUT-10 secret: invalid pubkeys tag.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d5_htlc_uppercase_hash": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'malformed NUT-10 secret: invalid HTLC hash.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6_htlc_refund_sigs_only_witness": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '0228bfd39a6adf2e3f3fdc6c19a96cb3d24f3d68157dbd1a52e719c236f2ea60b0', 'dleq': {'e': '580"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6b_htlc_refund_preimage_null": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '038d31730037de5d3c3eae0bdf6482de3e35b01a10c4af2786e75111b47283bc7c', 'dleq': {'e': '4bf"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6c_htlc_refund_dummy_preimage": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '03ae4f58383e44707720b7532d02ad728fe72fafded133a9c0f57be077daf9933d', 'dleq': {'e': '034"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d7_duplicate_signature": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '02a44ff6bbec378537e5c6b66b7bafc6c6484fa29b6bee8b779be38d35841aae66', 'dleq': {'e': '59a"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d8_witness_on_plain_secret": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01363b2fca60aed59dcddae15bae5db35faa5b4a385829fd98e38f3c787eaa53e7', 'amount': 2, 'C_': '032749677f28c91fb34ce28e7dc1bca24600c06d47cc5b07402a7a25dc0cb7f01d', 'dleq': {'e': 'e1d"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    }
+   }
+  },
+  "cdk-0.18.0": {
+   "identity": "cdk-mintd/0.18.0",
+   "url": "http://127.0.0.1:41715",
+   "cells": {
+    "ctrl_p2pk_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '02957ffad542c0af6fdb2a2d60e09c5767d16fc0c0847d4371e4612e7ce892ae96', 'dleq': {'e': '7f2"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "ctrl_htlc_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '02f07d99d96fb97b9ce09e78c0060aa699605cba5cc40976ca9f61b6490a92ee9f', 'dleq': {'e': '6ed"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1_unknown_kind_no_witness": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '0395d363dcd7a8151ff64137a61a8ce71a4df567c970439b4fa2ccf592eab2ec82', 'dleq': {'e': '73d"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1b_malformed_pubkey_lock_voiding": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d2_duplicate_tags_first_wins": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '038a15f85d2d93c292cc8ac6ec447c741e5501fbc45aec72998f579cffe5e74a8a', 'dleq': {'e': 'b36"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d3_nsigs_exceeds_pubkeys_refund": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '020487ec9f5f49bec485689c89107a09e272887fdddef6cdf2df17e9d211e93eb4', 'dleq': {'e': 'cc5"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d4_empty_pubkeys_tag": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '038e3be4e70d5a746ce0e405f4dfdc9838bb459d45b3f0706f02cc0af86aecba67', 'dleq': {'e': '32f"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d5_htlc_uppercase_hash": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '0208e60b5cfc8bbb0b1c212d06fa4ac7dd57f622e94efebe6104d27917f9580a33', 'dleq': {'e': 'fa0"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6_htlc_refund_sigs_only_witness": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6b_htlc_refund_preimage_null": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6c_htlc_refund_dummy_preimage": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '01e29df37e11ed3b5e3a533947a4aac1fb87f70f5e78d9b44d78bf50ea3454c9da', 'C_': '0248490a87e7123be71e9abbdb1d5700fd96afb3fc1e582257bc0b41f3ac1c410b', 'dleq': {'e': '78b"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d7_duplicate_signature": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d8_witness_on_plain_secret": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'Witness is not a p2pk witness'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    }
+   }
+  },
+  "cdk-0.18.3": {
+   "identity": "cdk-mintd/0.18.3",
+   "url": "http://127.0.0.1:50117",
+   "cells": {
+    "ctrl_p2pk_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '037d2f06e8f0d472ae1e13d2bb3cd774b137e41350fed2742d9e88b5d6e4d54401', 'dleq': {'e': 'f56"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "ctrl_htlc_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '0309713e88f56f938a5be0efa49ae932303a1c6eb9484d2f8f2b07de006e71cf7d', 'dleq': {'e': '8f0"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1_unknown_kind_no_witness": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '02ae540f424a18d018279633b55e54252339115efc904bc2181808955481aba47f', 'dleq': {'e': 'ab7"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1b_malformed_pubkey_lock_voiding": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d2_duplicate_tags_first_wins": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '03308222fd360c56860ee2e44e12cf297c1b88ac6b8e8699a7ad733d9f816bc603', 'dleq': {'e': '5f4"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d3_nsigs_exceeds_pubkeys_refund": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '026f4c2adaa0ccb49e8b07786c9e051396d61c6b421ca599f88a336bd778be6a4a', 'dleq': {'e': '113"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d4_empty_pubkeys_tag": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '0317e8840bc2293aa86504e523f81f053e3ac8027e20eb1a576d53c9e23f1d383e', 'dleq': {'e': 'c1b"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d5_htlc_uppercase_hash": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '02582a49ca3381ed4fa5924c1319061cd6a8a029d602af95aecf05e4027b053364', 'dleq': {'e': '4e9"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6_htlc_refund_sigs_only_witness": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6b_htlc_refund_preimage_null": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 50000, 'detail': 'Secret is not a HTLC secret'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d6c_htlc_refund_dummy_preimage": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'amount': 8, 'id': '0113da06473baf3f76afe4802abca55fe4ea6e22ad969f27c0e20c7ff5c83f156d', 'C_': '032f60ac78d3dae1a5f6bc54f6ce463edfa421756efdb62adbd66a580f82d85e0e', 'dleq': {'e': '02f"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d7_duplicate_signature": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'P2PK spend conditions are not met'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d8_witness_on_plain_secret": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'code': 20008, 'detail': 'Witness is not a p2pk witness'}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    }
+   }
+  },
+  "nutshell-0.20.3": {
+   "identity": "Nutshell/0.20.3",
+   "url": "http://127.0.0.1:51497",
+   "cells": {
+    "ctrl_p2pk_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '036db413556d5bc33bb15c5cd8a02ed65f4a3b06398bcaedb11f7ee1481daa6a3b', 'dleq': {'e': 'fe1"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "ctrl_htlc_canonical": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '02b901fddfe4cfd0b54f914ed7a8b106b6f1fb2c867e33a05879b0ea918b103e3a', 'dleq': {'e': '001"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d1_unknown_kind_no_witness": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': \"'MBS' is not a valid SecretKind\", 'code': 0}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d1b_malformed_pubkey_lock_voiding": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'Witness is missing for p2pk signature', 'code': 0}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d2_duplicate_tags_first_wins": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '03ad17dd544109862c385fb607bfe2e7d936958571de839061c350aecd694f16af', 'dleq': {'e': '41b"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d3_nsigs_exceeds_pubkeys_refund": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '03ec16d11e2447bd1179081d535ca35d94505ec3045efb0e0a6d8d7f95b9e321c6', 'dleq': {'e': '5f2"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d4_empty_pubkeys_tag": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '03581c25e3c797a602fc47755d56821b7621ccb332aba0a80987b523ccf1997b45', 'dleq': {'e': '813"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d5_htlc_uppercase_hash": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '03de8af04afd14288737c33d65bfa4594b8e77032982eecdcdc4124ae4f4466d58', 'dleq': {'e': 'cdc"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6_htlc_refund_sigs_only_witness": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '02afa4ad7f93dcd845dea92d1cdb6d27d92c9847b42ad6cd0e8148176ffa150645', 'dleq': {'e': '775"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6b_htlc_refund_preimage_null": {
+     "runs": [
+      {
+       "verdict": "ACCEPT",
+       "code": 200,
+       "detail": "{'signatures': [{'id': '01c232fbd434647b2e1c6e191d8b073f577c5d068e271393acc41b1bcc271dc594', 'amount': 2, 'C_': '038b02d7a37436fbb762d89cddfdc38945d2c862a5e92c55160bf4bc6f708f7d5f', 'dleq': {'e': 'cfe"
+      }
+     ],
+     "verdict": "ACCEPT",
+     "stable": true
+    },
+    "d6c_htlc_refund_dummy_preimage": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'HTLC preimage does not match.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d7_duplicate_signature": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'signatures must be unique.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    },
+    "d8_witness_on_plain_secret": {
+     "runs": [
+      {
+       "verdict": "REJECT",
+       "code": 400,
+       "detail": "{'detail': 'witness data not allowed without a spending condition.', 'code': 11000}"
+      }
+     ],
+     "verdict": "REJECT",
+     "stable": true
+    }
+   }
+  }
+ }
+}
