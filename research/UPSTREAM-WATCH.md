@@ -99,3 +99,14 @@ OK research/releases/cashu-ts-4.13.1.md: 19 commits, NUTs: NUT-10, NUT-11, NUT-1
 ```
 Read the digest, then the tracker cards it names.
 
+
+## Run 2026-11-18 04:47 UTC
+
+- CHANGE: NUTs 1363de4132->a5559d99e2 (1 commits, timelines regenerated)
+
+### NUTs spec moved
+
+```
+2026-11-17 a5559d9 NUT-28: refuse a slot index outside 0-255 (#470)
+```
+

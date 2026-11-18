@@ -2,7 +2,7 @@
 
 Status: `mandatory`
 History: 18 commits · first 2023-01-27 · last 2026-08-15
-Generated from cashubtc/NUTs @ 1363de4 (2026-10-23) — `tools/spec_history.py`
+Generated from cashubtc/NUTs @ a5559d9 (2026-11-17) — `tools/spec_history.py`
 
 Newest first. Rename rows mark spec-file renames tracked by `--follow`.
 

@@ -2,7 +2,7 @@
 
 Status: `optional`
 History: 3 commits · first 2025-01-29 · last 2026-10-20
-Generated from cashubtc/NUTs @ 1363de4 (2026-10-23) — `tools/spec_history.py`
+Generated from cashubtc/NUTs @ a5559d9 (2026-11-17) — `tools/spec_history.py`
 
 Newest first. Rename rows mark spec-file renames tracked by `--follow`.
 

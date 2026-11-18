@@ -1,6 +1,6 @@
 # SPEC-HISTORY INDEX — cashubtc/NUTs change timeline summary
 
-Generated from cashubtc/NUTs @ `1363de4` (2026-10-23) by `tools/spec_history.py --refresh`.
+Generated from cashubtc/NUTs @ `a5559d9` (2026-11-17) by `tools/spec_history.py --refresh`.
 Per-NUT timelines in `nut-NN.md`. Dates are commit dates, not PR-open dates.
 
 | NUT | Title | Status | First commit | Last changed | Commits |
@@ -33,8 +33,8 @@ Per-NUT timelines in `nut-NN.md`. Dates are commit dates, not PR-open dates.
 | NUT-25 | NUT-25: BOLT12 | `optional` | 2025-08-28 | 2026-10-20 | 6 |
 | NUT-26 | NUT-26: Payment Request Bech32m Encoding | `optional` | 2026-01-11 | 2026-10-20 | 5 |
 | NUT-27 | NUT-27: Nostr Mint Backup | `optional` | 2026-01-11 | 2026-10-20 | 3 |
-| NUT-28 | NUT-28: Pay-to-Blinded-Key (P2BK) | `optional` | 2026-02-16 | 2026-06-28 | 2 |
+| NUT-28 | NUT-28: Pay-to-Blinded-Key (P2BK) | `optional` | 2026-02-16 | 2026-11-17 | 3 |
 | NUT-29 | NUT-29: Batched Minting | `optional` | 2026-03-09 | 2026-10-20 | 13 |
 | NUT-30 | NUT-30: Payment Method: Onchain | `optional` | 2026-05-20 | 2026-10-20 | 6 |
 
-Total: 31 NUTs, 373 tracked commits.
+Total: 31 NUTs, 374 tracked commits.
