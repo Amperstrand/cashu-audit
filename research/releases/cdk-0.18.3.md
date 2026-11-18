@@ -1,6 +1,6 @@
 # cdk 0.18.3 — NUT-impact digest
 
-Released: 2026-10-28 · range `v0.18.2..v0.18.3` · 6 commits · generated 2026-10-30 by `tools/release_digest.py`
+Released: 2026-10-28 · range `v0.18.2..v0.18.3` · 6 commits · generated 2026-11-18 by `tools/release_digest.py`
 Maps to arms: cdk 0.18.x
 
 ## NUTs touched → tracker cards to re-check
