@@ -1,25 +1,25 @@
 # SPEC-HISTORY INDEX — cashubtc/NUTs change timeline summary
 
-Generated from cashubtc/NUTs @ `a5559d9` (2026-11-17) by `tools/spec_history.py --refresh`.
+Generated from cashubtc/NUTs @ `8f83a97` (2026-11-19) by `tools/spec_history.py --refresh`.
 Per-NUT timelines in `nut-NN.md`. Dates are commit dates, not PR-open dates.
 
 | NUT | Title | Status | First commit | Last changed | Commits |
 |---|---|---|---|---|---|
 | NUT-00 | NUT-00: Notation, Utilization, and Terminology | `mandatory` | 2023-01-27 | 2026-10-23 | 31 |
-| NUT-01 | NUT-01: Mint public key exchange | `mandatory` | 2023-01-27 | 2026-10-20 | 12 |
-| NUT-02 | NUT-02: Keysets and fees | `mandatory` | 2023-01-27 | 2026-10-20 | 14 |
+| NUT-01 | NUT-01: Mint public key exchange | `mandatory` | 2023-01-27 | 2026-11-19 | 13 |
+| NUT-02 | NUT-02: Keysets and fees | `mandatory` | 2023-01-27 | 2026-11-19 | 15 |
 | NUT-03 | NUT-03: Swap tokens | `mandatory` | 2023-01-27 | 2026-10-20 | 13 |
 | NUT-04 | NUT-04: Mint tokens | `mandatory` | 2023-01-27 | 2026-10-20 | 31 |
 | NUT-05 | NUT-05: Melting tokens | `mandatory` | 2023-01-27 | 2026-10-20 | 32 |
 | NUT-06 | NUT-06: Mint information | `mandatory` | 2023-01-27 | 2026-08-15 | 18 |
 | NUT-07 | NUT-07: Token state check | `optional` | 2023-03-09 | 2026-10-20 | 17 |
-| NUT-08 | NUT-08: Lightning fee return | `optional` | 2023-03-09 | 2026-10-20 | 20 |
+| NUT-08 | NUT-08: Lightning fee return | `optional` | 2023-03-09 | 2026-11-19 | 21 |
 | NUT-09 | NUT-09: Restore signatures | `optional` | 2023-04-05 | 2026-10-20 | 13 |
-| NUT-10 | NUT-10: Spending conditions | `optional` | 2023-10-13 | 2026-10-20 | 12 |
-| NUT-11 | NUT-11: Pay to Public Key (P2PK) | `optional` | 2023-10-13 | 2026-10-20 | 21 |
+| NUT-10 | NUT-10: Spending conditions | `optional` | 2023-10-13 | 2026-11-19 | 13 |
+| NUT-11 | NUT-11: Pay to Public Key (P2PK) | `optional` | 2023-10-13 | 2026-11-19 | 22 |
 | NUT-12 | NUT-12: Offline ecash signature validation | `optional` | 2023-11-05 | 2026-10-20 | 12 |
 | NUT-13 | NUT-13: Deterministic Secrets | `optional` | 2024-03-22 | 2026-10-20 | 13 |
-| NUT-14 | NUT-14: Hashed Timelock Contracts (HTLCs) | `optional` | 2024-04-24 | 2026-10-20 | 11 |
+| NUT-14 | NUT-14: Hashed Timelock Contracts (HTLCs) | `optional` | 2024-04-24 | 2026-11-19 | 12 |
 | NUT-15 | NUT-15: Partial multi-path payments | `optional` | 2024-04-24 | 2026-10-20 | 11 |
 | NUT-16 | NUT-16: Animated QR codes | `optional` | 2024-05-23 | 2026-10-20 | 3 |
 | NUT-17 | NUT-17: WebSockets | `optional` | 2024-06-26 | 2026-10-20 | 7 |
@@ -37,4 +37,4 @@ Per-NUT timelines in `nut-NN.md`. Dates are commit dates, not PR-open dates.
 | NUT-29 | NUT-29: Batched Minting | `optional` | 2026-03-09 | 2026-10-20 | 13 |
 | NUT-30 | NUT-30: Payment Method: Onchain | `optional` | 2026-05-20 | 2026-10-20 | 6 |
 
-Total: 31 NUTs, 374 tracked commits.
+Total: 31 NUTs, 380 tracked commits.

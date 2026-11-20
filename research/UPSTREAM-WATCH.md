@@ -110,3 +110,17 @@ Read the digest, then the tracker cards it names.
 2026-11-17 a5559d9 NUT-28: refuse a slot index outside 0-255 (#470)
 ```
 
+
+## Run 2026-11-20 04:47 UTC
+
+- CHANGE: NUTs a5559d99e2->8f83a97450 (4 commits, timelines regenerated)
+
+### NUTs spec moved
+
+```
+2026-11-19 8f83a97 NUT-18: regenerate two creqA test vectors (#475)
+2026-11-19 67b82e1 NUT-11, NUT-14: a key-only spending condition tag is malformed (#474)
+2026-11-19 75ce1c3 NUT-01, NUT-02, NUT-08: accepted outputs are signed after keyset rotation; zero-value signatures MUST be omitted (#436)
+2026-11-11 95c5329 NUT-18: regenerate two creqA test vectors
+```
+

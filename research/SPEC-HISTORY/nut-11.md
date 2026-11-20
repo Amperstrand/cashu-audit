@@ -1,13 +1,14 @@
 # NUT-11: Pay to Public Key (P2PK) — spec change history
 
 Status: `optional` · depends on: NUT-10, NUT-08
-History: 21 commits · first 2023-10-13 · last 2026-10-20
-Generated from cashubtc/NUTs @ a5559d9 (2026-11-17) — `tools/spec_history.py`
+History: 22 commits · first 2023-10-13 · last 2026-11-19
+Generated from cashubtc/NUTs @ 8f83a97 (2026-11-19) — `tools/spec_history.py`
 
 Newest first. Rename rows mark spec-file renames tracked by `--follow`.
 
 | Date | Commit | Subject | Rename |
 |---|---|---|---|
+| 2026-11-19 | `67b82e1b59` | NUT-11, NUT-14: a key-only spending condition tag is malformed (#474) |  |
 | 2026-10-20 | `48b6fc26ff` | Editorial pass: broken anchors, invalid JSON, and names no NUT defines (#454) |  |
 | 2026-09-14 | `8c9cf2b9a4` | NUT-11: define lock state when now equals locktime (#440) |  |
 | 2026-06-09 | `2814335d16` | Merge pull request #358 from robwoodgate/nut11-malformed |  |

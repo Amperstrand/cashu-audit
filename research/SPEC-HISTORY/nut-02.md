@@ -1,13 +1,14 @@
 # NUT-02: Keysets and fees — spec change history
 
 Status: `mandatory`
-History: 14 commits · first 2023-01-27 · last 2026-10-20
-Generated from cashubtc/NUTs @ a5559d9 (2026-11-17) — `tools/spec_history.py`
+History: 15 commits · first 2023-01-27 · last 2026-11-19
+Generated from cashubtc/NUTs @ 8f83a97 (2026-11-19) — `tools/spec_history.py`
 
 Newest first. Rename rows mark spec-file renames tracked by `--follow`.
 
 | Date | Commit | Subject | Rename |
 |---|---|---|---|
+| 2026-11-19 | `75ce1c3e45` | NUT-01, NUT-02, NUT-08: accepted outputs are signed after keyset rotation; zero-value signatures MUST be omitted (#436) |  |
 | 2026-10-20 | `48b6fc26ff` | Editorial pass: broken anchors, invalid JSON, and names no NUT defines (#454) |  |
 | 2026-01-18 | `dcbc47bdcc` | Fix grammar: use 'inactivate' when rotating keysets (#330) |  |
 | 2026-01-11 | `cc6d06f7d9` | NUT-01: include keyset metadata in /keys response (#325) |  |

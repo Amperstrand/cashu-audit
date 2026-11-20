@@ -1,13 +1,14 @@
 # NUT-10: Spending conditions — spec change history
 
 Status: `optional`
-History: 12 commits · first 2023-10-13 · last 2026-10-20
-Generated from cashubtc/NUTs @ a5559d9 (2026-11-17) — `tools/spec_history.py`
+History: 13 commits · first 2023-10-13 · last 2026-11-19
+Generated from cashubtc/NUTs @ 8f83a97 (2026-11-19) — `tools/spec_history.py`
 
 Newest first. Rename rows mark spec-file renames tracked by `--follow`.
 
 | Date | Commit | Subject | Rename |
 |---|---|---|---|
+| 2026-11-19 | `67b82e1b59` | NUT-11, NUT-14: a key-only spending condition tag is malformed (#474) |  |
 | 2026-10-20 | `48b6fc26ff` | Editorial pass: broken anchors, invalid JSON, and names no NUT defines (#454) |  |
 | 2025-12-16 | `779993681c` | Add NUT-10 tag clarification (#320) |  |
 | 2025-05-29 | `8fe0ee2f32` | Fixes a few typos |  |

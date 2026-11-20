@@ -1,13 +1,14 @@
 # NUT-14: Hashed Timelock Contracts (HTLCs) — spec change history
 
 Status: `optional` · depends on: NUT-10, NUT-11
-History: 11 commits · first 2024-04-24 · last 2026-10-20
-Generated from cashubtc/NUTs @ a5559d9 (2026-11-17) — `tools/spec_history.py`
+History: 12 commits · first 2024-04-24 · last 2026-11-19
+Generated from cashubtc/NUTs @ 8f83a97 (2026-11-19) — `tools/spec_history.py`
 
 Newest first. Rename rows mark spec-file renames tracked by `--follow`.
 
 | Date | Commit | Subject | Rename |
 |---|---|---|---|
+| 2026-11-19 | `67b82e1b59` | NUT-11, NUT-14: a key-only spending condition tag is malformed (#474) |  |
 | 2026-10-20 | `48b6fc26ff` | Editorial pass: broken anchors, invalid JSON, and names no NUT defines (#454) |  |
 | 2026-06-28 | `2ea80f14cc` | docs(nut14): clarify pubkey-less HTLC spends on preimage alone |  |
 | 2026-02-16 | `8da1abdef2` | NUTXX - ECDH-derived Pay-to-Blinded-Key (P2BK) (#300) |  |
