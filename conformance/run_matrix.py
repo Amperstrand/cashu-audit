@@ -72,6 +72,59 @@ class ClnSignetOracle:
         return {"request": _json.loads(r.stdout)["bolt11"]}
 
 
+def load_expected_fail_manifest(identity: str) -> dict[str, str] | None:
+    """Map a mint identity (``name / impl/version``) to its expected-fail
+    seed, when one exists. Mirrors the v2 lane's per-arm seeds so a live
+    ``run_matrix`` pass stops re-reporting documented divergences as fresh
+    failures: a FAIL listed here becomes XFAIL with the seed's
+    justification as the note; only unlisted FAILs gate the exit code.
+    """
+    import json
+    import re
+
+    m = re.search(r"(cdk|nutshell|cashu)[a-z-]*?[-/]v?(\d+\.\d+\.\d+)", identity)
+    if not m:
+        return None
+    path = Path(__file__).parent / f"expected-fail-{m.group(1)}-{m.group(2)}.json"
+    if not path.is_file():
+        return None
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return None
+
+
+# The v2 lane documents this class: FakeWallet mints auto-settle their own
+# invoices, so every melt-success scenario that creates an invoice and then
+# melts against it races the auto-settle and sees 20006 "Invoice already
+# paid" (CONFORMANCE-README, invoice-oracle arm). Identity-match the error
+# so a live-mint lane run classifies it as environment, not mint divergence.
+ORACLE_RACE_MARKERS = ("invoice already paid", "invoice is already paid")
+
+
+def classify_results(
+    results: list[ScenarioResult], manifest: dict[str, str] | None
+) -> tuple[int, int]:
+    """Downgrade documented failures in place. Returns (known, environment)."""
+    known = environment = 0
+    for r in results:
+        if r.result != Result.FAIL:
+            continue
+        if manifest and r.name in manifest:
+            r.note = f"KNOWN ({manifest[r.name][:120]})"
+            r.result = Result.XFAIL
+            known += 1
+        elif any(marker in r.note.lower() for marker in ORACLE_RACE_MARKERS):
+            r.note = (
+                "ENVIRONMENT (fakewallet auto-settles invoices — use the "
+                "v2 lane's invoice-oracle arm for melt-success verdicts)"
+            )
+            r.result = Result.XFAIL
+            environment += 1
+    return known, environment
+
+
+
 def run_all(mint_url: str, family: str | None = None, cln_oracle: bool = False) -> list[ScenarioResult]:
     mint = MintClient(mint_url)
     if cln_oracle:
@@ -132,13 +185,29 @@ def main():
         print(f"{'='*60}")
         all_results[url] = run_all(url, family=args.family, cln_oracle=args.cln_oracle)
 
+    known_total = env_total = 0
+    for url, rs in all_results.items():
+        manifest = load_expected_fail_manifest(identities[url])
+        if manifest is None and "unknown-version" not in identities[url]:
+            print(f"  note: no expected-fail seed matched '{identities[url]}'")
+        known, environment = classify_results(rs, manifest)
+        known_total += known
+        env_total += environment
+
     matrix = generate_matrix(all_results, mint_urls, identities=identities)
     Path(args.output).write_text(matrix)
     print(f"\nMatrix written to {args.output}")
 
+    if known_total or env_total:
+        print(
+            f"{known_total} known divergence(s) downgraded to XFAIL "
+            f"(seed-justified), {env_total} environment failure(s) "
+            "downgraded (oracle race)"
+        )
+
     total_fail = sum(1 for rs in all_results.values() for r in rs if r.result == Result.FAIL)
     if total_fail:
-        print(f"\n{total_fail} failure(s) detected")
+        print(f"\n{total_fail} UNEXPECTED failure(s) detected")
         sys.exit(1)
 
 
