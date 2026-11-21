@@ -270,7 +270,7 @@ def evaluate_nostr_body(body: dict, event: dict) -> list[str]:
         if not candidates:
             problems.append(f"missing tag {name}")
             continue
-        if not any(all(match(v, a)[0] for v, a in zip(rest, cand)) for cand in candidates):
+        if not any(all(match(a, v)[0] for v, a in zip(rest, cand)) for cand in candidates):
             problems.append(f"tag {name} shape {rest} not found in {candidates}")
     for name in body.get("tags_omit", []):
         if name in tag_map:
