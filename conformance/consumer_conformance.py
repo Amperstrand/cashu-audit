@@ -341,9 +341,24 @@ def evaluate_response(resp: requests.Response, response_spec: dict) -> list[str]
     return problems
 
 
+def _materialize_repeated(spec: str) -> str | None:
+    """Corpus bodies use the prose notation "'x' repeated 1048577 times" --
+    materialize it, or the 1mib vector sends a 30-byte literal string
+    (live-found 2026-11-21: the fork correctly answered invalid-token for
+    the literal and the vector misread as a fork divergence)."""
+    m = re.fullmatch(r"'(.)' repeated (\d+) times", spec.strip())
+    if not m:
+        return None
+    return m.group(1) * int(m.group(2))
+
+
 def http_body_for(harness: ConsumerHarness, body_spec: dict) -> tuple[str | None, str]:
     if "inline" in body_spec:
-        return body_spec["inline"], ""
+        body = body_spec["inline"]
+        expanded = _materialize_repeated(body)
+        if expanded is not None:
+            return expanded, ""
+        return body, ""
     if "fixture" in body_spec:
         p = harness.corpus_dir / body_spec["fixture"]
         return p.read_text().strip() if p.is_file() else None, f"fixture {body_spec['fixture']} missing"
