@@ -43,6 +43,10 @@ jobs:
             target: "ns210=nutshell:cashubtc/nutshell:0.21.0"
             seed: conformance/expected-fail-nutshell-0.21.0.json
             image: cashubtc/nutshell:0.21.0
+          - arm: nutshell-0.22.1
+            target: "ns221=nutshell:cashubtc/nutshell:0.22.1"
+            seed: conformance/expected-fail-nutshell-0.22.1.json
+            image: cashubtc/nutshell:0.22.1
           - arm: cdk-0.18.1
             target: "cdk181=cdk:cashubtc/mintd:0.18.1"
             seed: conformance/expected-fail-cdk-0.18.1.json
