@@ -6,5 +6,6 @@
     "mint_info_returns_required_fields": "ARM CONFIG ARTIFACT: lane TOML sets no mint name (identical to 0.18.1)",
     "swap_wrong_keyset_fails": "SHAPE: cdk validates NUT-02 keyset IDs at deserialization (422) before the semantic swap check (identical to 0.18.1)",
     "mpp_subsat_partial_boundary": "REGISTRY DRIFT: sub-sat partial ACCEPTED (amount=1, Math.ceil overcharge) \u2014 the scenario pins cashu-cf's fix (92da59a6, issue #49); cdk docker arms don't carry it.",
-    "melt_change_outputs_cap": "REGISTRY DRIFT: 101 outputs trip duplicate-output 11008 \u2014 the scenario pins cashu-cf's cap (b473a00d, issue #100); needs per-arm output uniqueness."
+    "melt_change_outputs_cap": "REGISTRY DRIFT: 101 outputs trip duplicate-output 11008 \u2014 the scenario pins cashu-cf's cap (b473a00d, issue #100); needs per-arm output uniqueness.",
+    "nut11 duplicate spending tag rejected": "DIVERGENCE (found 2026-11-26, the #474 absorption): cdk 0.18.3 ACCEPTS a P2PK secret with a duplicate spending-condition tag (spend 200, signatures returned) where NUT-11 (pre-#474 wording already) + both nutshell arms reject as unspendable \u2014 strictness gap, registry row filed."
 }
