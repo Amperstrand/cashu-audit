@@ -124,3 +124,15 @@ Read the digest, then the tracker cards it names.
 2026-11-11 95c5329 NUT-18: regenerate two creqA test vectors
 ```
 
+
+## Run 2026-11-26 06:07 UTC
+
+- CHANGE: cashu-ts release(s) v5.0.0-rc.14, v4.14.0 (published 2026-11-25) — OK research/releases/cashu-ts-4.14.0.md: 47 commits, NUTs: NUT-10, NUT-11, NUT-13, NUT-14, NUT-19
+
+### cashu-ts v5.0.0-rc.14, v4.14.0
+
+```
+OK research/releases/cashu-ts-4.14.0.md: 47 commits, NUTs: NUT-10, NUT-11, NUT-13, NUT-14, NUT-19
+```
+Read the digest, then the tracker cards it names.
+
