@@ -1,8 +1,10 @@
 {
- "batch_mint_rejects_too_many_outputs": "SHAPE: cdk's strict QuoteId UUID parse (422) fires before the too-many-outputs check (identical to 0.18.1)",
- "errid_swap_outputs_already_signed_code_11003": "POSITIONED: cdk returns the byte-identical cached response instead of 11003 (the NUT-19 replay divergence row; companion of swap/melt_replay_returns_cached_response PASS).",
- "errid_validation_error_nut00_envelope": "SHAPE: non-hex C_ in a NUT-00 envelope is rejected with cdk's validation error shape, not the registered code/phrase (error-identity class, registry-linked).",
- "htlc_locktime_after_expiry_refund_succeeds": "POSITIONED: cdk's HTLC refund-path witness handling \u2014 'Secret is not a HTLC secret' (code 50000); registry cdk#2252 item 6 family (identical to 0.18.1 \u2014 no drift)",
- "mint_info_returns_required_fields": "ARM CONFIG ARTIFACT: lane TOML sets no mint name (identical to 0.18.1)",
- "swap_wrong_keyset_fails": "SHAPE: cdk validates NUT-02 keyset IDs at deserialization (422) before the semantic swap check (identical to 0.18.1)"
+    "batch_mint_rejects_too_many_outputs": "SHAPE: cdk's strict QuoteId UUID parse (422) fires before the too-many-outputs check (identical to 0.18.1)",
+    "errid_swap_outputs_already_signed_code_11003": "POSITIONED: cdk returns the byte-identical cached response instead of 11003 (the NUT-19 replay divergence row; companion of swap/melt_replay_returns_cached_response PASS).",
+    "errid_validation_error_nut00_envelope": "SHAPE: non-hex C_ in a NUT-00 envelope is rejected with cdk's validation error shape, not the registered code/phrase (error-identity class, registry-linked).",
+    "htlc_locktime_after_expiry_refund_succeeds": "POSITIONED: cdk's HTLC refund-path witness handling \u2014 'Secret is not a HTLC secret' (code 50000); registry cdk#2252 item 6 family (identical to 0.18.1 \u2014 no drift)",
+    "mint_info_returns_required_fields": "ARM CONFIG ARTIFACT: lane TOML sets no mint name (identical to 0.18.1)",
+    "swap_wrong_keyset_fails": "SHAPE: cdk validates NUT-02 keyset IDs at deserialization (422) before the semantic swap check (identical to 0.18.1)",
+    "mpp_subsat_partial_boundary": "REGISTRY DRIFT: sub-sat partial ACCEPTED (amount=1, Math.ceil overcharge) \u2014 the scenario pins cashu-cf's fix (92da59a6, issue #49); cdk docker arms don't carry it.",
+    "melt_change_outputs_cap": "REGISTRY DRIFT: 101 outputs trip duplicate-output 11008 \u2014 the scenario pins cashu-cf's cap (b473a00d, issue #100); needs per-arm output uniqueness."
 }

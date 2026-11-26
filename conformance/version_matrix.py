@@ -164,9 +164,17 @@ class Arm:
 
     def _bring_up_nutshell(self) -> None:
         self.container = f"abm-{self.name}"
+        # Stale-name class (2026-11-26, this host): a previous run whose
+        # tear-down was refused (docker-guard on unlabeled containers)
+        # leaves the name squatting — the next `docker run --name` fails
+        # silently and wait_ready polls a port nobody owns for 240s.
+        # Pre-remove (best-effort) + label the container so the guard
+        # accepts OUR teardown on guarded hosts.
+        sh(["docker", "rm", "-f", self.container])
         net, listen_port = self._net_args()
         sh(["docker", "run", "-d", *net,
             "--name", self.container,
+            "--label", "ai-legion.lane=cashu-audit",
             "-e", "MINT_BACKEND_BOLT11_SAT=FakeWallet",
             "-e", "MINT_LISTEN_HOST=127.0.0.1" if self.host_network else "MINT_LISTEN_HOST=0.0.0.0",
             "-e", f"MINT_LISTEN_PORT={listen_port}",
@@ -211,8 +219,10 @@ class Arm:
             raise RuntimeError(f"cdk config init failed for {self.name}: "
                                f"{init.stdout[-200:]} {init.stderr[-200:]}")
         self.container = f"abm-{self.name}"
+        sh(["docker", "rm", "-f", self.container])
         sh(["docker", "run", "-d", *net,
             "--name", self.container, "-v", f"{self.workdir}:/data",
+            "--label", "ai-legion.lane=cashu-audit",
             "-e", f"AB_CDK_MNEMONIC={self.mnemonic}",
             self.image, "cdk-mintd", "-w", "/data"])
 
@@ -221,9 +231,11 @@ class Arm:
         # CDK_MINTD) — note CDK_MINTD_LN_BACKEND, not CDK_MINTD_BACKEND,
         # and LISTEN_HOST/LISTEN_PORT, not HOST/PORT.
         self.container = f"abm-{self.name}"
+        sh(["docker", "rm", "-f", self.container])
         net, listen_port = self._net_args()
         sh(["docker", "run", "-d", *net,
             "--name", self.container,
+            "--label", "ai-legion.lane=cashu-audit",
             "-e", "CDK_MINTD_LN_BACKEND=FakeWallet",
             "-e", "CDK_MINTD_FAKE_WALLET_SUPPORTED_UNITS=sat",
             "-e", f"CDK_MINTD_LISTEN_HOST={'127.0.0.1' if self.host_network else '0.0.0.0'}",

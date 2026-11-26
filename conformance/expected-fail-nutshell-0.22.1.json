@@ -1,0 +1,9 @@
+{
+    "errid_swap_unknown_keyset_code_12001": "CARRIED+DRIFT: 0.22.1 collapses the error identity to code=11000 'keyset id unknown.' (0.21.0 seed recorded the 12001 class) — error-identity catalogue row update.",
+    "errid_swap_underfunded_code_11005": "CARRIED+DRIFT: 0.22.1 returns code=11000 'input amounts (8) less than output amounts (16).' (0.21.0 seed recorded the 11005 class).",
+    "errid_mint_quote_unit_unsupported_code_11013": "REGISTRY DRIFT (cross-arm, not 0.22-specific — fails identically on 0.21.0): ns returns code=0 detail='eth' for an unsupported unit vs NUT-19's 11013 class; the scenario postdates both seeds (error-identity catalogue).",
+    "ws_mint_quote_unknown_quote_rejected": "CARRIED: unknown-quote subscribe acked OK (NUT-18 surface divergence, ns family).",
+    "mint_quote_zero_amount_fails": "CARRIED: FastAPI 422 pydantic detail, not a NUT-19 error body (wire-shape class, version fact).",
+    "mpp_subsat_partial_boundary": "REGISTRY DRIFT (cross-arm): both ns arms answer 'backend does not support mpp.' (11000) — the scenario pins cashu-cf's sub-sat boundary (92da59a6, issue #49); ns docker arms lack the capability.",
+    "melt_change_outputs_cap": "REGISTRY DRIFT (cross-arm): 101 change outputs trip the duplicate-output check (11008) before any cap — the scenario pins cashu-cf's cap (b473a0, issue #100) and needs per-arm output uniqueness to probe it on docker arms."
+}
